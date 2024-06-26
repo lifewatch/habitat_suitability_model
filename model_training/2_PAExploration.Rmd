@@ -1,0 +1,35 @@
+---
+title: "Exploration of the joined PA data"
+author: "Jo-Hannes Nowé"
+output: 
+  pdf_document: default
+  html_document: default
+---
+
+THIS SCRIPT NEEDS TO BE UPDATED
+
+# Loading the required packages
+```{r}
+library(dplyr)
+library(sf)
+library(ggplot2)
+library(lubridate)
+library(stringr)
+library(ows4R)
+library(readr)
+library(CoordinateCleaner)
+```
+
+```{r}
+load('data/derived_data/absence.RData')
+load('data/derived_data/presence.RData')
+PA <- rbind(mydata.eurobis,absence)
+save(PA,file=paste0("data/derived_data/PA.RData"))
+```
+
+Now we also want to investigate some summary characteristics of this joined dataframe.
+
+```{r}
+summary(PA)
+```
+

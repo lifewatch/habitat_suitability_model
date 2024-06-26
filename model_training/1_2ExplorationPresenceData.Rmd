@@ -1,0 +1,48 @@
+---
+title: "Downloading the occurrence data"
+author: "Jo-Hannes Nowé"
+output: 
+  pdf_document: default
+  html_document: default
+---
+
+THIS SCRIPTS NEEDS TO BE UPDATED
+
+# Loading the required packages
+
+```{r}
+library(eurobis)
+# #library(maptools)
+ library(sf)
+# library(maps)
+ library(ggplot2)
+# library(lubridate)
+library(CoordinateCleaner)
+# library(arulesViz)
+library(tidyverse)
+# library(worrms)
+```
+
+
+# Checking the presence data temporal and spatial scale
+
+```{r}
+ggplot(study_area)+
+  geom_sf()+
+  geom_point(data=mydata_eurobis,x=mydata_eurobis$decimallongitude,y=mydata_eurobis$decimallatitude)
+```
+
+
+```{r, fig.width=8, fig.height=12}
+
+ggplot(study_area)+
+  geom_sf()+
+  geom_point(data=mydata_eurobis,x=mydata_eurobis$decimallongitude,y=mydata_eurobis$decimallatitude)+
+  theme(plot.title = element_text(size=20), axis.title= element_text(size = 16),
+          text = element_text(size = 16))+
+    facet_wrap(~month, nrow= 4)+
+    theme_void()+
+    theme(strip.background=element_blank(), #remove strip background
+          strip.text= element_text(size=12))
+```
+

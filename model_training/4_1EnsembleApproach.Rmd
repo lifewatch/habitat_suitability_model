@@ -1,0 +1,344 @@
+---
+title: "Tidymodels ensemble approach"
+author: "Jo-Hannes Nowé"
+output: 
+html_document:
+  toc=TRUE
+---
+
+# Loading the required packages
+```{r}
+library(tidymodels)
+#devtools::install_github("jiho/autoplot")
+library(autoplot)
+library(stacks) #for ensembling the individual models together
+library(workflows)
+library(ranger) #for the randomforest model
+library(mgcv) #for the GAM model
+library(xgboost) #for the xgboost model
+library(earth) #for the MARS model
+```
+
+# Load data
+
+We start with presence-(pseudo)absence data that is coupled to certain environmental layers.
+This is the necessary starting point of this script, from here on we then build the 
+different individual models and combine them in an ensemble. (Possible to run the different
+models in parallel?).
+
+```{r}
+# Load presence-absence related to environmental data
+PAdata <- file.path(datadir,"PA_env.RData")
+
+load(PAdata)
+#Turn our occurrence into a factor so that there are two known levels, either
+#present or absent.
+PA_env$occurrenceStatus<-factor(PA_env$occurrenceStatus)
+#Remove all these columns because the data we want to predict on also only has the environmental values,
+#model will only accept input to predict on with the same columns as the data the model was trained on.
+PA_env <- PA_env%>%select(-c(scientificnameaccepted,decimallongitude,decimallatitude,datecollected,day,month,year,year_month,geometry))%>%
+  drop_na()%>%
+  mutate(bathy=slice_1_img)%>%
+  select(-slice_1_img)
+
+#Why make this into a tibble?
+data <- as_tibble(PA_env)%>%
+  dplyr::select(c(-ID,-scientificname))
+data
+```
+
+# Data splitting
+Need to split into a test and training set. Training set is used for training and validation.
+The test set is kept separate and only used for performance evaluation.
+We use a 80/20 distribution of train-test.
+Out of this 80% training set, we use 10% each fold for validation.
+
+Still need to implement cross-validation
+
+```{r}
+set.seed(222)
+#Put 4/5 in the training set
+data_split<- initial_split(data, prop=4/5)
+
+#Create data frames for the two sets:
+train_data <- training(data_split)
+test_data <- testing(data_split)
+
+#Create folds in the training data so we can do our validation.
+#Out of the 80% reserved for training data, use 10% each time for validation
+#This is why we choose the number of folds v=8
+folds <- vfold_cv(train_data, v=8)
+folds
+```
+
+
+# Pre-process your data with recipes
+Recipes can be used to define the formula, the dependent variable, predictors, others.
+The roles of the recipe can also be updated when necessary. This recipe is then 
+provided to the workflow, giving information about the necessary relations to calculate.
+
+Variables are the original columns in the data. These can then be used to define a
+formula. Roles define how variables will be used in the model. Examples are predictor,
+response, and case weight. Terms are columns in a design matrix, synonymous with
+features in machine learning. Variables that have predictor roles would automatically be
+main effect terms. 
+
+```{r}
+#The general form is: recipe(formula, data)
+
+#The formula is only used to declare the variables, their roles and nothing else.
+#All the rest can be added later.
+
+#Doesn't matter the data here is train_data. Just used to catalog the names of the 
+#variables and their types. 
+#The formula here states that occurrenceStatus is modelled in relation to all the other columns
+Occurrence_rec <- 
+  recipe(occurrenceStatus ~., data=train_data)
+
+#Can also do some pre-processing of the variables with this recipe, but which should you do?
+# step_* functions
+#Can also provide some checks here. These check_* functions conduct some sort of 
+#data validation, if no issue is found, they return the data as it is, otherwise they show an error.
+```
+
+
+The dot indicates to use all other variables as predictors
+A recipe is associated with the data set used to create the model. We can add roles to the recipe, using
+update_role() lets the recipe know that two of the variables have the role "Location"
+so it tells the recipe to keep these two variables but not use them as either outcomes
+or predictors. Keeping some variables without using them in the model can be useful
+for determining if certain values were wrongly predicted. 
+
+# Fit a model with a recipe, using a model workflow
+# Making an ensemble model with stacks
+
+In stacks, you need to save the assessment of predictions and workflow in your
+tune_grid(), tune_bayes() or fit_resamples() objects by setting control arguments
+save_pred=TRUE and save_workflow = TRUE. 
+
+Each model definition must share the same rsample rset object. 
+
+```{r}
+#We already generated our our rsample rset objects
+data_split
+train_data
+test_data
+
+#We also already made some folds
+folds
+
+#And a recipe
+Occurrence_rec
+
+#Define a certain metric?
+#metric <- metric_set(rmse)
+```
+Above we talked about saving the information in the resulting objects. This can also
+be done by using control_stack_*() functions.
+
+```{r}
+#Because we use tune_grid()
+ctrl_grid <- control_stack_grid()
+ctrl_res <- control_stack_resamples()
+```
+
+The random forest model is a model that does not require a lot of tuning, which is 
+why we just give fixed values.
+```{r}
+
+#set the number of trees to 500 (also the default), use it for classification into
+#presence-absence, and the algorithm to ranger (also the default)
+rf_mod <- rand_forest(trees=500,mode="classification",engine="ranger")
+
+#After your model is defined, create a worfklow object and add your model and recipe
+rf_wf <-
+  workflow() %>%
+  add_model(rf_mod) %>%
+  add_recipe(Occurrence_rec)
+
+#The workflow can then be fit or tuned, in this case it's fit but with resamples
+#so we have to provide the folds
+#Runs +- 2min
+rf_fit <-
+    fit_resamples(
+    rf_wf,
+    resamples = folds,
+    control = ctrl_res
+  )
+#With resamples as we need to provide this type to the stack command later
+rf_fit
+```
+
+```{r}
+rf_fit
+#Predict based on the test set, as noted need to make folds of this
+#predict and ppass the type parameter to get out a probability.
+rf_pred <- predict(rf_fit,test_data)%>%
+  bind_cols(predict(rf_fit,test_data, type="prob")) %>%
+  #To be able to compare the real value to the predicted one
+  bind_cols(test_data %>%
+              dplyr::select(occurrenceStatus)) #need to specify due to conflict by loading tidymodels
+rf_pred
+#Just one of the possible evaluation metrics, need to decide which ones to use
+rf_pred %>%
+  roc_auc(truth = occurrenceStatus, .pred_0)
+  
+rf_pred %>%
+  accuracy(truth= occurrenceStatus, .pred_class)
+
+```
+
+# Tuning model parameters
+```{r}
+#More information found on https://parsnip.tidymodels.org/reference/details_gen_additive_mod_mgcv.html
+gam_mod <- gen_additive_mod(adjust_deg_free = tune()) %>% 
+  set_engine("mgcv") %>% 
+  set_mode("classification")
+gam_wf <-
+  workflow()%>%
+  add_recipe(Occurrence_rec)%>%
+  add_model(gam_mod, formula = occurrenceStatus ~ s(bathy)+ s(temp)+ s(sal) + s(npp))
+gam_grid <- grid_regular(adjust_deg_free(),
+                         levels=4)
+gam_fit <-
+  gam_wf%>%
+  tune_grid(
+    resamples = folds,
+    grid=gam_grid,
+    control=ctrl_grid
+  )
+#started at 16:30 - 16:43
+# gam_res <-gam_fit%>%
+#   collect_metrics()
+# gam_best <- gam_fit%>%
+#   select_best("accuracy")
+# gam_final_wf <- gam_wf%>%
+#   finalize_workflow(gam_best)
+# #Need to also give in the control here, otherwise doesn't work
+# gam_fit <- gam_final_wf%>%
+#   last_fit(data_split,
+#            control=ctrl_grid)
+```
+
+```{r}
+#Tune the xgboost model, see: https://parsnip.tidymodels.org/reference/details_boost_tree_xgboost.html
+xgb_mod <- boost_tree(
+  trees = tune(),
+  tree_depth = tune(),
+  learn_rate = tune()
+) %>%
+  set_engine("xgboost") %>%
+  set_mode("classification")
+xgb_wf <- workflow() %>%
+  add_model(xgb_mod) %>%
+  add_recipe(Occurrence_rec)
+#grid_regular chooses sensible hyperparameter values to try, but want to choose ourself
+#Can give th elower and upper bound limit we want to use
+xgb_grid <- parameters(trees(),
+                          tree_depth(c(3,20)),
+                          learn_rate(c(-4,0)))
+xgb_grid <- grid_regular(xgb_grid,
+                           levels=c(trees=5,tree_depth=3,learn_rate=3))
+```
+
+```{r}
+xgb_fit <- 
+  xgb_wf %>% 
+  tune_grid(
+    resamples = folds,
+    grid = xgb_grid,
+    control=ctrl_grid)
+#Runs for +- 40min
+xgb_fit
+```
+
+```{r}
+#devtools::install_github("tidymodels/tune")
+#Need to update to this version of the tune package, otherwise it fails
+mars_mod <- 
+    mars(prod_degree = tune(), prune_method = tune()) %>% 
+    # This model can be used for classification or regression, so set mode
+    set_mode("classification") %>% 
+    set_engine("earth")#,glm=list(family=binomial))
+mars_mod
+mars_grid <- grid_regular(prod_degree(),prune_method(),
+                          levels=c(prod_degree=2,prune_method=2))
+mars_grid
+mars_wf <-
+  workflow()%>%
+  add_model(mars_mod)%>%
+  add_recipe(Occurrence_rec)
+mars_fit <-
+  mars_wf%>%
+  tune_grid(
+    resamples = folds,
+    grid=mars_grid,
+    control=ctrl_grid
+  )
+
+mars_fit
+```
+
+Now specify a random forest model that we are not optimizing.
+
+
+Now we have XX candidate models (1 RF, xx GAM, xx XGB and xx MARS). 
+We want to create a data stack: tibbles containing an assessment set predictions for 
+each candidate ensemble member. It work a bit like the basic ggplot() constructor.
+The function creates a basic structure that the object will be built on top of.
+
+```{r}
+stack_data <- 
+  stacks() %>%
+  add_candidates(rf_fit) %>%
+  add_candidates(mars_fit)%>%
+  add_candidates(gam_fit)%>%
+  add_candidates(xgb_fit)
+  
+stack_data
+```
+
+The first column gives the first response value and the remaining columns give the
+assessment set predictions for each ensemble member. In regression there is 1 column
+per ensemble member. In classification settings, as many columns as levels of the outcome variable
+per candidate ensemble member. 
+
+```{r}
+stack_mod <-
+  stack_data %>%
+  blend_predictions()
+#16h28-16h29
+#Problem that there are much more member models for xgboost?
+#However there was only 1 random forest and seemed to be good.
+stack_mod
+```
+Blend predictions performs regularization to figure out how we can combine the outputs
+from the stack members to come up with the final solution. Regularization needed
+as the ensemble members are highly correlated. Candidates with non-zero stacking 
+coefficients become members. 
+We can tune the penalty parameter of this blend_predictions as well, see:
+https://stacks.tidymodels.org/articles/basics.html
+
+```{r}
+#Now fit the whole model on the training set
+stack_fit <-
+  stack_mod %>%
+  fit_members()
+#16h30 - 16h33
+stack_fit
+```
+
+
+```{r}
+#Saving the model
+saveRDS(stack_fit,file.path(datadir,"stacked_model.rds"))
+
+#testing if the saving went as planned
+#stack_fit <- readRDS("stacked_model.rds")
+```
+
+
+
+
+
+

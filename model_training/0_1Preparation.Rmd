@@ -1,0 +1,42 @@
+---
+title: "Folder structure preparation"
+author: "Jo-Hannes Nowé"
+date: "05-04-2024"
+output: 
+  pdf_document:default
+---
+
+A script to prepare the folder structure and download all the used packages.
+
+```{r folder-structure, EVAL=FALSE}
+############# Define different folders
+downloaddir <- "data/raw_data"
+datadir     <- "data/derived_data"
+mapsdir     <- "product/maps"
+rasterdir   <- "product/species_rasters"
+plotsdir    <- "product/species_plots"
+envdir <-"data/raw_data/environmental_layers"
+occdir <-"data/raw_data/occurrences"
+spatdir <- "data/raw_data/spatial_layers"
+folderstruc <- c(downloaddir,
+                 datadir,
+                 mapsdir,
+                 rasterdir,
+                 plotsdir,
+                 envdir,
+                 occdir,
+                 spatdir)
+
+############# Check for their existence, create if missing
+for(i in 1:length(folderstruc)){
+  if(!dir.exists(folderstruc[i])){
+  # If not, create the folder
+  dir.create(folderstruc[i],recursive = TRUE)
+  cat("Folder created:", folderstruc[i], "\n")
+} else {
+  cat("Folder already exists:", folderstruc[i], "\n")
+}
+}
+```
+
+

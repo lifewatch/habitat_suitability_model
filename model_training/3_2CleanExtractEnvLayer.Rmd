@@ -1,0 +1,183 @@
+---
+title: "Extract the environmental data associated to the species distribution data"
+author: "Jo-Hannes Nowé"
+output: 
+html_document:
+  toc=TRUE
+---
+
+# Loading the required packages
+```{r}
+library(terra)
+```
+```{r}
+#Read in the PA data
+load(file.path(datadir,'PA.RData'))
+
+#Load in environmental layers
+#To get it into a SpatRaster object
+tempsal <- terra::rast('data/raw_data/cmems_mod_glo_phy_my_0.083deg_P1M-m_so-thetao_12.00W-13.58E_47.25N-61.75N_0.49m_1999-01-01-2021-06-01.nc')
+
+#if the object is a spatraster you need to give a list of the length of the layers describing where you want each layer to go
+splitlist <- c(rep(1,270),rep(2,270))
+tempsal_dataset <- split(tempsal,splitlist)
+sal <- tempsal_dataset[[1]]
+sal
+temp <- tempsal_dataset[[2]]
+temp
+```
+
+
+```{r}
+#This code is written to give out year_month combinations for the entirety of the environmental layers as we want to work on monthly resolution
+# Generate year and month sequences
+years <- 1999:2022
+months <- 1:12
+
+# Create empty vector to store year_month values
+year_month_factor <- character(length(years) * length(months))
+
+# Populate year_month vector
+index <- 1
+for (year in years) {
+  for (month in months) {
+    year_month_factor[index] <- paste0(year, "_", sprintf("%02d", month))
+    index <- index + 1
+  }
+}
+
+# Convert year_month to ordered factor
+year_month_factor <- factor(year_month_factor, levels = unique(year_month_factor), ordered = TRUE)
+PA <- PA%>%
+  mutate(year_month=paste(year, sprintf("%02d", month), sep = "_"))%>%
+  mutate(year_month=factor(year_month, levels = levels(year_month_factor)))
+```
+
+
+
+
+```{r}
+#temp has 270 layers= 22*12months + 6 months (1999-01-01 till 2021-06-01)
+PA <- PA%>%filter(datecollected<"2021-07-01")
+```
+
+```{r}
+#NPP
+npp <- terra::rast("data/raw_data/cmems_mod_glo_bgc_my_0.083deg-lmtl_PT1D-i_npp_12.00W-13.58E_47.25N-61.75N_1999-01-01-2022-12-31.nc")
+npp
+tijd <- time(npp)
+ym_tijd <- format(tijd, "%Y_%m")
+ym_tijd <- factor(ym_tijd, levels = unique(ym_tijd), ordered = TRUE)
+splitlijst <- as.numeric(ym_tijd)
+npp_dataset <- split(npp,splitlijst)
+npp_dataset
+mean_npp <- list()
+for(i in 1:length(npp_dataset)){
+  mean_npp[[i]] <- app(npp_dataset[[i]],fun=mean)
+}
+time(mean_npp)
+mean_npp <-rast(mean_npp)
+```
+
+
+#Now for the bathymetry layer
+
+Manually create the folder "bathy_sliced" first, tried to include it in the code but for some reason couldn't create it.
+
+```{r}
+## general data handling
+library(XML)
+library(dplyr)
+library(tidyr)
+library(reshape2)
+library(downloader)
+
+library(raster)
+library(sp)
+library(mapdata)
+library(maptools)
+library(ncdf4)
+library(tiff)
+
+ifelse(!dir.exists(file.path(envdir, "bathy_sliced")), dir.create(file.path(envdir, "bathy_sliced")), FALSE)
+xmin<- -12.0
+xmax <- 13.6
+ymin <- 47.2
+ymax <- 61.8
+stepsize <- 0.8
+number_of_slices <- (xmax-xmin)/stepsize
+for(i in 1:number_of_slices){
+beginslice <- xmin + (i-1)*stepsize
+endslice <- xmin + i*stepsize
+#We get an error because the file is too big, will split up in horizontal slices, and then merge together later 
+con <-paste0("https://ows.emodnet-bathymetry.eu/wcs?service=wcs&version=1.0.0&request=getcoverage&coverage=emodnet:mean&crs=EPSG:4326&BBOX=",beginslice,",47.2,",endslice,",61.8&format=image/tiff&interpolation=nearest&resx=0.08333333&resy=0.08333333")
+nomfich <- file.path(envdir,paste0("bathy_sliced/","slice_",i, "_img.tiff"))
+download(con, nomfich, quiet = TRUE, mode = "wb")
+
+}
+
+
+#merge them together
+bathyrasters <- list()
+for(file in list.files(file.path(envdir,"bathy_sliced"))){
+ bathyrasters[[file]] <- rast(file.path(envdir,paste0("bathy_sliced/",file))) 
+}
+#Put the different spatrasters together in a spatrastercollection
+bathy_coll <- sprc(bathyrasters)
+
+#Merge the spatrastercollection
+bathy <- merge(bathy_coll)
+bathy[bathy>0] <- NA
+```
+
+# Extraction of values related to the occurrence points
+
+Now that we have the environmental layers loaded as spatial rasters, we need to extract the right values.
+It is easiest to download them first for all the months and then just select the right monthly value for each point.
+
+```{r}
+#For temperature
+rastertemp <- terra::extract(x=temp, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+#takes 20seconds
+resulttemp <- data.frame(temp = rastertemp[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+
+#For NPP
+rasternpp <- terra::extract(x=mean_npp, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+#takes 20seconds
+resultnpp <- data.frame(npp = rasternpp[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+
+
+#For salinity
+rastersal <- terra::extract(x=sal, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+#takes 20seconds
+
+resultsal <- data.frame(sal = rastersal[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+
+#For bathymetry
+resultbathy <- terra::extract(x=bathy, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+#don't need to choose the right month, because bathy info is the same over the different months, only have one value
+
+```
+
+```{r}
+ggplot()+
+  geom_spatraster(data=bathy)
+
+mean_npp_test <- mean_npp[[1]]
+
+ggplot()+
+  geom_spatraster(data=mean_npp[[1]])
+
+ggplot()+
+  geom_spatraster(data=temp[[1]])
+
+ggplot()+
+  geom_spatraster(data=sal[[1]])
+```
+
+```{r}
+PA_env <- cbind(PA,resulttemp,resultsal,resultnpp,resultbathy)
+save(PA_env,file=file.path("data","PA_env.RData"))
+```
+
+

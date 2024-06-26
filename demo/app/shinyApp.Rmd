@@ -1,0 +1,90 @@
+---
+title: "Tidymodels ensemble approach"
+author: "Jo-Hannes Nowé"
+output: 
+html_document:
+  toc=TRUE
+---
+
+# Loading the required packages
+
+```{r}
+library(shiny)
+library(leaflet)
+library(raster)
+ 
+# Define UI
+ui <- fluidPage(
+  tags$head(
+    tags$style(HTML("
+            body {
+                background-color: #333333; /* dark grey */
+                color: white; /* text color */
+            }
+            .text-box {
+                background-color: black;
+                color: white;
+                padding: 10px;
+                border-radius: 5px;
+                white-space: pre-line; /* Preserve line breaks */
+            }
+        "))
+  ),
+  titlePanel("Species Habitat Suitability Maps"),
+  fluidRow(
+    column(
+      width = 5,
+      mainPanel(
+        h3("Introduction"),
+        p("This application displays habitat suitability maps for selected species from 2020 to 2100."),
+        p("A red to orange to yellow to green to blue to dark blue colour scale is used to indicate habitat suitability:"),
+        tags$ul(
+          tags$li("red = low suitability"),
+          tags$li("dark blue = high suitability"),
+          tags$li("all suitability is between 0 and 1")
+        ),
+        p("A species, variable, and year can be selected using the options below."),
+        selectInput("species", "Select Species:", choices = c("Harbour porpoise")),
+        sliderInput("month", "Select Month:", min = 1, max = 12, value = 1, step = 1)
+      )
+    ),
+    column(
+      width = 7,
+      leafletOutput("map", width = "100%", height = "800px"),
+      verbatimTextOutput("additional_text")
+    )
+  )
+)
+ 
+# Define server logic
+server <- function(input, output) {
+  output$map <- renderLeaflet({
+    # Load TIFF file based on selected species, variable, and year
+    species <- input$species
+    month <- input$month
+    file_path <- paste0("PredictionRasters/Month", month, ".tif")
+    suitability_raster <- raster(file_path)
+    # Calculate the extent of the study area
+    raster_ext <- extent(suitability_raster)
+    leaflet() %>%
+      setView(lng = mean(c(raster_ext@xmin, raster_ext@xmax)), 
+              lat = mean(c(raster_ext@ymin, raster_ext@ymax)), zoom = 5.1) %>%
+      addProviderTiles("Esri.WorldImagery") %>%
+      addRasterImage(suitability_raster, opacity = 0.8) %>%
+      addLegend("bottomright", title = "Habitat Suitability",
+                colors = c("red", "orange", "yellow", "green", "blue", "darkblue"),
+                labels = c("Low", "", "", "", "", "High"),
+                opacity = 0.8)
+  })
+  output$additional_text <- renderText({
+    "We employed a mechanistic niche modelling approach that mathematically describes each species' specific ecological niche based on their responses to temperature and salinity. This approach, utilizing fuzzy logic principles, provided a more nuanced understanding than traditional methods. Climate prediction data from Bio-ORACLE (www.bio-oracle.org) was incorporated, focusing on sea surface temperature and salinity. Baseline data from 2010 established the foundation for the current scenario, while future projections spanned from 2020 to 2090, covering each decade under six Shared Socioeconomic Pathways (SSPs) – including the most extreme scenario, SSP585.
+ 
+        Team 
+        Our team comprises scientists and data managers from Flanders Marine Institute and Gent University: Rutendo Musimwa, Ward Standaert, Martha Stevens, Salvador Jesus Fernandez Bejarano, Carlota Muñiz, Elisabeth Debusschere, Steven Pint and Gert Everaert"
+  })
+}
+ 
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+

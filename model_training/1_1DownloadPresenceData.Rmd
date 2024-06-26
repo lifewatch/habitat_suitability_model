@@ -1,0 +1,188 @@
+---
+title: "Downloading the occurrence data from eurOBIS"
+author: "Jo-Hannes Nowé"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading the required packages
+```{r packages}
+library(eurobis)
+library(maptools)
+library(dplyr)
+library(sf)
+library(maps)
+library(ggplot2)
+library(lubridate)
+library(CoordinateCleaner)
+library(arulesViz)
+library(tidyverse)
+library(worrms)
+#library("devtools")
+#devtools::install_github("vlizBE/imis")
+require(imis)
+```
+
+
+# Defining the study area
+The proposed study area concerns OSPAR regions II, III 
+More information about these regions can be found on: https://www.ospar.org/convention/the-north-east-atlantic.
+There are observations in OSPAR regions I and IV, however when working at a monthly
+resolution, the spatial extent of the points is rather limited and these two OSPAR regions
+lack points in multiple year_months. 
+
+```{r shapefiles}
+#Download and unzip the OSPAR shapefiles
+#Found on https://odims.ospar.org/en/submissions/ospar_regions_2017_01_002/
+url <- "https://odims.ospar.org/public/submissions/ospar_regions/regions/2017-01/002/ospar_regions_2017_01_002-gis.zip"
+download.file(url,paste0(spatdir,"/OSPAR_REGIONS.zip"),mode="wb")
+unzip(zipfile=paste0(spatdir,"/OSPAR_REGIONS.zip"),exdir=spatdir)
+
+#Visualize the different regions
+#Need to load arulesviz package, otherwise error
+OSPAR<- st_read(paste0(spatdir,"/ospar_regions_2017_01_002.shp"))
+ggplot(OSPAR)+
+  geom_sf()
+```
+
+
+As said before we only retain region II and III in order to not interpolate
+our predictions to the other areas based on the few occurrences. 
+
+
+```{r OSPAR}
+#Only keeping region II and III from the shapefile.
+OSPAR <- OSPAR[OSPAR$Region=="II"|OSPAR$Region=='III',]
+#Only keeping the region and geometry info
+OSPAR<- OSPAR %>% dplyr::select(Region)
+#Not necessary anymore
+OSPAR <- st_make_valid(OSPAR)
+
+#Bring together the different OSPAR regions into one area
+study_area <- st_union(OSPAR)
+plot(study_area)
+```
+
+# Download Occurrence data from eurOBIS
+
+```{r download-eurobis}
+#Does not work on this version, but on the R3.6.3 version
+#scientificname <- "Phocoena phocoena"
+#aphiaid <- eurobis_name2id(scientificname)
+
+#In this version (R4.2.2) need to directly specify the aphiaid
+aphiaid <- 137117
+
+#Does not work when knitting, but works when running seperately
+mydata.eurobis<- eurobis_occurrences_full(aphiaid=aphiaid)
+#save(mydata.eurobis, file=paste0("data/raw_data/mydata.eurobis.RData"))
+#load(paste0(occDir,"data/raw_data/mydata.eurobis.RData"))
+
+ggplot(study_area)+
+  geom_sf()+
+  geom_point(data=mydata.eurobis,x=mydata.eurobis$decimallongitude,y=mydata.eurobis$decimallatitude)
+```
+Before filtering the columns of interest and doing some feature engineering we create the
+metadatalist, giving information about the different datasets used for the presence data.
+
+```{r metadata-function}
+# function to read dataset characteristics
+
+fdr2<-function(dasid){
+  datasetrecords <- datasets(dasid)
+  dascitations <- getdascitations(datasetrecords)
+  if(nrow(dascitations)==0)dascitations<-tibble(dasid=as.character(dasid),title="",citation="")
+  if(nrow(dascitations)==1) if(is.na(dascitations$citation)) dascitations$citation<-""
+  daskeywords <- getdaskeywords(datasetrecords)
+  if(nrow(daskeywords)==0)daskeywords<-tibble(dasid=as.character(dasid),title="",keyword="")
+  if(nrow(daskeywords)==1) if(is.na(daskeywords$keyword))daskeywords$keyword<-""
+  dascontacts <- getdascontacts(datasetrecords)
+  if(nrow(dascontacts)==0)dascontacts<-tibble(dasid=as.character(dasid),title="",contact="")
+  if(nrow(dascontacts)==1) if(is.na(dascontacts$contact))dascontacts$contact<-""
+  dastheme <- getdasthemes(datasetrecords)
+  if(nrow(dastheme)==0)dastheme<-tibble(dasid=as.character(dasid),title="",theme="")
+  if(nrow(dastheme)==1) if(is.na(dastheme$theme))dastheme$theme<-""
+  dastheme2 <- aggregate(theme ~ dasid, data = dastheme, paste, 
+                         collapse = " , ")
+  daskeywords2 <- aggregate(keyword ~ dasid, data = daskeywords, 
+                            paste, collapse = " , ")
+  dascontacts2 <- aggregate(contact ~ dasid, data = dascontacts, 
+                            paste, collapse = " , ")
+  output <- dascitations %>% left_join(dascontacts2, by = "dasid") %>% 
+    left_join(dastheme2, by = "dasid") %>% left_join(daskeywords2, 
+                                                     by = "dasid")
+  return(output)
+}
+
+```
+
+```{r create-metadata}
+datasetidsoi <- mydata.eurobis %>% distinct(datasetid) %>% 
+  mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
+#==== retrieve data by dataset ==============
+all_info <- data.frame()
+for (i in datasetidsoi$datasetid){
+  dataset_info <- fdr2(i)
+  all_info <- rbind(all_info, dataset_info)
+}
+names(all_info)[1]<-"datasetid"
+write.csv(all_info,file=file.path(datadir,"allDatasets.csv"),row.names = F)
+alldataset <- read.csv(file.path(datadir,"allDatasets.csv"))
+```
+
+
+```{r pre-processing}
+# Select columns of interest
+mydata.eurobis <- mydata.eurobis %>%
+  dplyr::select(scientificnameaccepted,decimallongitude,decimallatitude,datecollected)%>%
+  filter(!is.na(datecollected))%>%
+  # Give date format to eventDate and fill out month and year columns and assign 1 to occurrenceStatus
+  dplyr::mutate(occurrenceStatus = 1,day = day(datecollected),month = month(datecollected),year=year(datecollected))
+
+#check which occurrence points fall within the study area
+within_area <- st_contains(study_area,mydata.eurobis)[[1]]
+
+#Only retain points inside the study area
+mydata.eurobis <- mydata.eurobis[within_area,]
+
+#Check if it worked as intended
+ggplot(data=mydata.eurobis,x=decimallongitude,y=decimallatitude)+
+  geom_sf(data=study_area)+
+  geom_sf()
+
+mydata.eurobis <- mydata.eurobis%>%
+  dplyr::filter(year>=1999 & year<=2022)%>%
+  arrange(datecollected)%>%
+  mutate(year_month=paste(year,month,sep='-'))%>%
+  mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))
+```
+
+
+Observations already go through a couple of data quality controls before entering
+the (eur)OBIS datasets. The biggest remaining issue are duplicates. These can be 
+removed by using the **Coordinatecleaner** package. We consider distinct observations
+with the same longitude, latitude, species and date as duplicates. Only the first
+observation of each duplicate is kept in the dataset.
+
+
+```{r remove-duplicates}
+#Remove duplicates
+mydata.eurobis <- cc_dupl(mydata.eurobis, lon = "decimallongitude", lat = "decimallatitude",
+                        value = "clean",species="scientificnameaccepted", additions=
+                 "datecollected")
+```
+# First exploratory analysis of the observations.
+## Checking the temporal coverage.
+
+# Checking spatial coverage and bias
+
+
+```{r}
+mydata.eurobis
+save(mydata.eurobis, file = file.path(datadir,"presence.RData"))
+save(study_area, file = file.path(datadir,"study_area.RData"))
+```
+
