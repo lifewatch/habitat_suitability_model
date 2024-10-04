@@ -1,15 +1,5 @@
----
-title: "Downloading the occurrence data from eurOBIS"
-author: "Jo-Hannes Nowé"
-output: html_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
 # Loading the required packages
-```{r packages}
+
 library(eurobis)
 library(maptools)
 library(dplyr)
@@ -24,34 +14,19 @@ library(worrms)
 #library("devtools")
 #devtools::install_github("vlizBE/imis")
 require(imis)
-```
+
 
 
 # Defining the study area
-The proposed study area concerns ospar regions II, III 
-More information about these regions can be found on: https://www.ospar.org/convention/the-north-east-atlantic.
-There are observations in ospar regions I and IV, however when working at a monthly
-resolution, the spatial extent of the points is rather limited and these two ospar regions
-lack points in multiple year_months. 
-
-```{r shapefiles}
 #Download and unzip the ospar shapefiles
-#Found on https://odims.ospar.org/en/submissions/ospar_regions_2017_01_002/
 url <- "https://odims.ospar.org/public/submissions/ospar_regions/regions/2017-01/002/ospar_regions_2017_01_002-gis.zip"
 download.file(url,paste0(spatdir,"/ospar_REGIONS.zip"),mode="wb")
 unzip(zipfile=paste0(spatdir,"/ospar_REGIONS.zip"),exdir=spatdir)
 
 #Visualize the different regions
-#Need to load arulesviz package, otherwise error
 ospar<- st_read(paste0(spatdir,"/ospar_regions_2017_01_002.shp"))
-```
 
 
-As said before we only retain region II and III in order to not interpolate
-our predictions to the other areas based on the few occurrences. 
-
-
-```{r ospar}
 #Only keeping region II and III from the shapefile.
 ospar <- ospar[ospar$Region %in% region,]
 ggplot(data=ospar)+geom_sf()
@@ -62,22 +37,18 @@ ospar <- st_make_valid(ospar)
 
 #Bring together the different ospar regions into one area
 spatial_extent <- st_union(ospar)
-plot(spatial_extent)
-```
+
 
 # Download Occurrence data from eurOBIS
 
-```{r download-eurobis}
+
 
 #Does not work when knitting, but works when running seperately
 mydata.eurobis<- eurobis_occurrences_full(aphiaid=aphia_id)
 #save(mydata.eurobis, file=paste0("data/raw_data/mydata.eurobis.RData"))
 #load(paste0(occDir,"data/raw_data/mydata.eurobis.RData"))
-```
-Before filtering the columns of interest and doing some feature engineering we create the
-metadatalist, giving information about the different datasets used for the presence data.
 
-```{r metadata-function}
+
 # function to read dataset characteristics, code from: https://github.com/EMODnet/EMODnet-Biology-Benthos_greater_North_Sea
 
 fdr2<-function(dasid){
@@ -106,9 +77,9 @@ fdr2<-function(dasid){
   return(output)
 }
 
-```
 
-```{r create-metadata}
+
+
 datasetidsoi <- mydata.eurobis %>% distinct(datasetid) %>% 
   mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
 #==== retrieve data by dataset ==============
@@ -118,16 +89,27 @@ for (i in datasetidsoi$datasetid){
   all_info <- rbind(all_info, dataset_info)
 }
 names(all_info)[1]<-"datasetid"
-write.csv(all_info,file=file.path(datadir,"allDatasets.csv"),row.names = F)
+write.csv(all_info,file=file.path(datadir,"allDatasets.csv"),row.names = F, append=FALSE)
 alldataset <- read.csv(file.path(datadir,"allDatasets.csv"))
-```
 
 
-```{r pre-processing}
+
+
 #Fit the datafiltering in here as well. 
+#because in the description of SCANS, the word stranding is also mentioned, wrongly discarding this dataset
+alldataset <- alldataset %>%
+  rowwise() %>%
+  mutate("discard"=any(across(-description, ~grepl(paste(word_filter, collapse = "|"), .,ignore.case=TRUE))))
+
+alldataset_selection<-alldataset%>%
+  filter(discard==FALSE)
+
+alldataset_flagged <- alldataset%>%
+  filter(discard==TRUE)
+
 # Select columns of interest
 mydata.eurobis <- mydata.eurobis %>%
-  dplyr::select(scientificnameaccepted,decimallongitude,decimallatitude,datecollected)%>%
+  dplyr::select(scientificnameaccepted,decimallongitude,decimallatitude,datecollected,geometry=the_geom)%>%
   filter(!is.na(datecollected))%>%
   # Give date format to eventDate and fill out month and year columns and assign 1 to occurrenceStatus
   dplyr::mutate(occurrenceStatus = 1,day = day(datecollected),month = month(datecollected),year=year(datecollected))
@@ -143,28 +125,16 @@ mydata.eurobis <- mydata.eurobis%>%
   arrange(datecollected)%>%
   mutate(year_month=paste(year,month,sep='-'))%>%
   mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))
-```
 
 
-Observations already go through a couple of data quality controls before entering
-the (eur)OBIS datasets. The biggest remaining issue are duplicates. These can be 
-removed by using the **Coordinatecleaner** package. We consider distinct observations
-with the same longitude, latitude, species and date as duplicates. Only the first
-observation of each duplicate is kept in the dataset.
 
 
-```{r remove-duplicates}
+
 #Remove duplicates
 mydata.eurobis <- cc_dupl(mydata.eurobis, lon = "decimallongitude", lat = "decimallatitude",
-                        value = "clean",species="scientificnameaccepted", additions=
-                 "datecollected")
-```
+                          value = "clean",species="scientificnameaccepted", additions=
+                            "datecollected")
 
-
-
-```{r}
-mydata.eurobis
 save(mydata.eurobis, file = file.path(datadir,"presence.RData"))
 save(spatial_extent, file = file.path(datadir,"spatial_extent.RData"))
-```
 

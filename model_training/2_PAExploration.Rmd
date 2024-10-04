@@ -30,6 +30,48 @@ save(PA,file=paste0("data/derived_data/PA.RData"))
 Now we also want to investigate some summary characteristics of this joined dataframe.
 
 ```{r}
+ggplot(ospar)+
+  geom_sf()
+```
+
+```{r}
+ggplot(study_area)+
+  geom_sf()+
+  geom_point(data=mydata.eurobis,x=mydata.eurobis$decimallongitude,y=mydata.eurobis$decimallatitude)
+```
+
+```{r}
+#Info on the datasets and the one filtered out.
+```
+
+
+```{r}
 summary(PA)
 ```
 
+```{r, fig.width=8, fig.height=12}
+puntdata <- absence%>%
+  filter(year>1999)%>%
+  filter(year<2006)%>%
+  mutate(year=factor(year),month=factor(month))
+
+for (jaar in levels(puntdata$year)){
+  plotdata <- puntdata %>%
+    filter(year==jaar)#%>%
+   # mutate(month=factor(month,levels=new_order))
+  
+plot<-ggplot(data=study_area) +
+    geom_sf()+
+    theme_minimal()+
+    geom_point(data=plotdata, aes(x=decimallongitude,y=decimallatitude,colour="red"),show.legend=FALSE) +
+    theme(plot.title = element_text(size=20), axis.title= element_text(size = 16),
+          text = element_text(size = 16))+
+    labs(title = paste("target group records",jaar))+
+    facet_wrap(~month, nrow= 4)+
+    theme_void()+
+    theme(strip.background=element_blank(), #remove strip background
+          strip.text= element_text(size=12))
+print(plot)
+}
+
+```

@@ -5,9 +5,11 @@ date: "May 30, 2024"
 output: html_document
 ---
 
-THIS SCRIPT NEEDS TO BE UPDATED!
-See https://support.bccvl.org.au/support/solutions/articles/6000127046-sdm-interpretation-of-model-outputs
-For a good overview of what to provide to the user. 
+
+
+# General outline of the report
+
+
 
 # Loading the required packages
 
@@ -34,6 +36,7 @@ model <- readRDS(file.path(datadir,'stacked_model.rds'))
 model$model_metrics
 model$equations
 ```
+
 ```{r}
 # Load presence-absence related to environmental data
 PAdata <- file.path(datadir,"PA_env.RData")
@@ -53,6 +56,7 @@ PA_env <- PA_env%>%select(-c(scientificnameaccepted,decimallongitude,decimallati
 data <- as_tibble(PA_env)
 data
 ```
+
 ```{r}
 set.seed(222)
 #Put 4/5 in the training set
@@ -79,6 +83,7 @@ member_test
 #Might be interesting to also extract the best performing model of the types of models that didn't get included
 #Just to plot their response curves and compare how they look like. 
 ```
+
 ```{r response-curves}
 #Sample random data or use the model data? 
 #Sample random values for our environmental variables
@@ -124,9 +129,6 @@ ggplot(rc)+
   geom_smooth(aes(x = original, y = .pred_1))+
   facet_wrap(~variable, scales = "free")
 ```
-
-
-
 
 ```{r response-curves-members}
 #Sample random data or use the model data? 
@@ -176,6 +178,3 @@ ggplot(rc)+
   facet_wrap(~variable, scales = "free")
 
 ```
-
-
-

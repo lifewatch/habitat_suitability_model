@@ -24,19 +24,6 @@ model <- readRDS(file.path(datadir,"stacked_model.rds"))
 ```
 
 ```{r}
-PAdata <- file.path("data","PA_env.RData")
-load(PAdata)
-#Turn our occurrence into a factor so that there are two known levels, either
-#present or absent.
-data$occurrenceStatus<-factor(data$occurrenceStatus)
-
-#Wrm maken we dit weer in een tibble?
-data <- as_tibble(data)%>%
-  dplyr::select(c(-ID,-scientificname))
-data
-```
-
-```{r}
 set.seed(222)
 #Put 4/5 in the training set
 data_split<- initial_split(data, prop=4/5)
@@ -52,17 +39,13 @@ test_data <- testing(data_split)
 ```{r}
 model #this is the model
 library(caret) #without this it might give an error trying to use a predict function from another package
-library(stacks)
-stack_fit <-
-  model %>%
-  fit_members()
 
 prediction <- predict(model,test_data)%>%
   bind_cols(predict(model,test_data, type="prob")) %>%
   bind_cols(test_data %>%
               dplyr::select(occurrenceStatus))
 prediction
-
+accuracy_vec(prediction$occurrenceStatus,prediction$.pred_class)
 ```
 
 
@@ -78,37 +61,29 @@ predmem <- function(...) predict(..., type="prob",members=TRUE)
 
 ```{r}
 #Load the different layers (see environmental clean script)
-temp
-sal
-mean_npp
-bathy
 
 #Different layers, crop them to the same extent of bathy
-temp <- crop(temp,bathy) #layer1: 1999-01-01 -> layer270: 2021-06-01
-sal <- crop(sal,bathy)#layer1: 1999-01-01 -> layer270: 2021-06-01
+thetao <- crop(thetao,bathy) #layer1: 1999-01-01 -> layer270: 2021-06-01
+so <- crop(so,bathy)#layer1: 1999-01-01 -> layer270: 2021-06-01
 mean_npp <- crop(mean_npp,bathy)#layer1: 1999-01-01 -> layer288: 2022-12-31
-ext(bathy) <- ext(temp) #because there where small differences and then we can't combine them
-bathy <- resample(bathy, temp) #because after the change in extent we couldn't combine them without resampling bathy as its resolution changed
+ext(bathy) <- ext(thetao) #because there where small differences and then we can't combine them
+bathy <- resample(bathy, thetao) #because after the change in extent we couldn't combine them without resampling bathy as its resolution changed
 monthly_prediction <- list()
 #Loop over every monthy layer (Takes +-1 min for 12 months)
-for(i in 1:270){
+for(i in 1:nlyr(thetao)){
   #Get out the right monthly layer and combine them together in a new spatraster that contains one layer for each predictor
-  monthly_info <- c(temp[[i]],sal[[i]],mean_npp[[i]],bathy)
+  monthly_info <- c(thetao[[i]],so[[i]],mean_npp[[i]],bathy)
   #Delete the NA values
   mask <- !is.na(monthly_info)
   monthly_info <- terra::mask(monthly_info,mask)
   #To make sure the names of the layers correpond to the names the model was trained on
   names(monthly_info) <- c(
-            "temp",
-            "sal","npp","bathy")
+            "thetao",
+            "so","npp","bathy")
   monthly_prediction[[i]] <- predict(monthly_info,model,fun=predprob,na.rm=TRUE)
 }
 #To turn it into a raster layer  
 monthly_prediction <- rast(monthly_prediction)
-
-ggplot()+
-  geom_spatraster(data=monthly_prediction[[240]])+
-  scale_fill_viridis_c()#tidyterra package makes this possible
 
 #Write the monthly predictions into tif files for use in Rutendo's shiny app
 for(i in 1:nlyr(monthly_prediction)){
