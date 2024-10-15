@@ -1,30 +1,30 @@
-# Loading the required packages
+#Required packages
 
-library(eurobis)
-library(maptools)
-library(dplyr)
-library(sf)
-library(maps)
-library(ggplot2)
-library(lubridate)
-library(CoordinateCleaner)
-library(arulesViz)
-library(tidyverse)
-library(worrms)
-#library("devtools")
-#devtools::install_github("vlizBE/imis")
-require(imis)
+# library(eurobis)
+# library(maptools)
+# library(dplyr)
+# library(sf)
+# library(maps)
+# library(ggplot2)
+# library(lubridate)
+# library(CoordinateCleaner)
+# library(arulesViz)
+# library(tidyverse)
+# library(worrms)
+# library("devtools")
+# devtools::install_github("vlizBE/imis")
+# require(imis)
 
 
 
 # Defining the study area
 #Download and unzip the ospar shapefiles
 url <- "https://odims.ospar.org/public/submissions/ospar_regions/regions/2017-01/002/ospar_regions_2017_01_002-gis.zip"
-download.file(url,paste0(spatdir,"/ospar_REGIONS.zip"),mode="wb")
-unzip(zipfile=paste0(spatdir,"/ospar_REGIONS.zip"),exdir=spatdir)
+download.file(url,file.path(spatdir,"ospar_REGIONS.zip"),mode="wb")
+unzip(zipfile=file.path(spatdir,"ospar_REGIONS.zip"),exdir=spatdir)
 
 #Visualize the different regions
-ospar<- st_read(paste0(spatdir,"/ospar_regions_2017_01_002.shp"))
+ospar<- st_read(file.path(spatdir,"ospar_regions_2017_01_002.shp"))
 
 
 #Only keeping region II and III from the shapefile.
@@ -39,15 +39,34 @@ ospar <- st_make_valid(ospar)
 spatial_extent <- st_union(ospar)
 
 
-# Download Occurrence data from eurOBIS
+# Make a connection with the data_lake
+data_lake <- S3FileSystem$create(
+  anonymous = T,
+  scheme = "https",
+  endpoint_override = "s3.waw3-1.cloudferro.com"
+)
+eurobis <- arrow::open_dataset(data_lake$path("emodnet/biology/eurobis_occurence_data/eurobisgeoparquet/eurobis_no_partition_sorted.parquet"))
 
-
-
-#Does not work when knitting, but works when running seperately
-mydata.eurobis<- eurobis_occurrences_full(aphiaid=aphia_id)
-#save(mydata.eurobis, file=paste0("data/raw_data/mydata.eurobis.RData"))
-#load(paste0(occDir,"data/raw_data/mydata.eurobis.RData"))
-
+#Downloading the occurrence data from EurOBIS
+bbox <- sf::st_bbox(spatial_extent)
+mydata_eurobis <- eurobis %>%
+  filter(aphiaidaccepted==aphia_id,
+         longitude > bbox[1], longitude < bbox[3],
+         latitude > bbox[2], latitude < bbox[4],
+         observationdate >= as.POSIXct(date_start),
+         observationdate <= as.POSIXct(date_end)) %>%
+  dplyr::select(datasetid,
+                latitude,
+                longitude,
+                time=observationdate,
+                scientific_name = scientificname_accepted,
+                occurrence_id=occurrenceid) %>%
+  mutate(year=year(time),
+         month=month(time),
+         day = day(time))%>%
+  collect()%>%
+  sf::st_as_sf(coords=c("longitude", "latitude"),
+               crs=4326)
 
 # function to read dataset characteristics, code from: https://github.com/EMODnet/EMODnet-Biology-Benthos_greater_North_Sea
 
@@ -80,7 +99,7 @@ fdr2<-function(dasid){
 
 
 
-datasetidsoi <- mydata.eurobis %>% distinct(datasetid) %>% 
+datasetidsoi <- mydata_eurobis %>% distinct(datasetid) %>% 
   mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
 #==== retrieve data by dataset ==============
 all_info <- data.frame()
@@ -108,33 +127,23 @@ alldataset_flagged <- alldataset%>%
   filter(discard==TRUE)
 
 # Select columns of interest
-mydata.eurobis <- mydata.eurobis %>%
-  dplyr::select(scientificnameaccepted,decimallongitude,decimallatitude,datecollected,geometry=the_geom)%>%
-  filter(!is.na(datecollected))%>%
-  # Give date format to eventDate and fill out month and year columns and assign 1 to occurrenceStatus
-  dplyr::mutate(occurrenceStatus = 1,day = day(datecollected),month = month(datecollected),year=year(datecollected))
-
-#check which occurrence points fall within the study area
-within_area <- st_contains(spatial_extent,mydata.eurobis)[[1]]
-
-#Only retain points inside the study area
-mydata.eurobis <- mydata.eurobis[within_area,]
-
-mydata.eurobis <- mydata.eurobis%>%
-  dplyr::filter(datecollected %within% temporal_extent)%>%
-  arrange(datecollected)%>%
+mydata_eurobis <- mydata_eurobis %>%
+  filter(!is.na(time))%>%
+  st_filter(y = spatial_extent)%>%
+  filter(datasetid %in% alldataset_selection$datasetid)%>%
+  dplyr::distinct(occurrence_id,.keep_all = TRUE)%>%
+  arrange(time)%>%
   mutate(year_month=paste(year,month,sep='-'))%>%
-  mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))
-
-
-
-
+  mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))%>%
+  dplyr::mutate(longitude = sf::st_coordinates(.)[,1],
+                latitude = sf::st_coordinates(.)[,2],
+                occurrence_status = 1)%>%
+  dplyr::select(!c(datasetid,occurrence_id))%>%
+  sf::st_drop_geometry()
 
 #Remove duplicates
-mydata.eurobis <- cc_dupl(mydata.eurobis, lon = "decimallongitude", lat = "decimallatitude",
-                          value = "clean",species="scientificnameaccepted", additions=
-                            "datecollected")
+mydata_eurobis <- cc_dupl(mydata_eurobis, lon = "longitude", lat = "latitude",value = "clean",species="scientific_name", additions="time")
 
-save(mydata.eurobis, file = file.path(datadir,"presence.RData"))
+save(mydata_eurobis, file = file.path(datadir,"mydata_eurobis.RData"))
 save(spatial_extent, file = file.path(datadir,"spatial_extent.RData"))
 

@@ -9,7 +9,7 @@ output:
 Before the workflow is started, we prepare the folder structure and download the necessary packages. 
 
 ```{r script0_1}
-source('habitat_suitability_model/model_training/0_1Preparation.R')
+source('0_1Preparation.R')
 ```
 # Defining the study area
 The proposed study area concerns ospar regions II, III 
@@ -34,12 +34,12 @@ observation of each duplicate is kept in the dataset.
 ```{r script1_1}
 region <- c('II','III')
 aphia_id <-126415   #this is alosa fallax phocoena = 137117
-#word_filter <- c()
+word_filter <- c("stranding", "museum")
 #dasid_filter <- c()
 date_start <- "1999-01-01T00:00:00"
 date_end <- "2019-01-01T00:00:00"
 temporal_extent <- lubridate::interval(date_start,date_end)
-source("habitat_suitability_model/model_training/1_1DownloadPresenceData.R")
+source("1_1DownloadPresenceData.R")
 
 #Outputs
 ##presence.rds

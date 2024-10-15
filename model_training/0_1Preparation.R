@@ -28,31 +28,41 @@ for(i in 1:length(folderstruc)){
 }
 
 #Download the necessary R packages
-#Using the pacman R package, multiple packages can be downloaded easily 
-if(!require('pacman'))install.packages('pacman')
-pacman::p_load("arules",
-               "arulesViz",
-               "CoordinateCleaner",
-               "downloader",
-               "earth",
-               "eurobis",
-               "imis",
-               "mgcv",
-               "ows4R",
-               "pacman",
-               "ranger",
-               "raster",
-               "sf",
-               "sp",
-               "stacks",
-               "stats",
-               "terra",
-               "tidymodels",
-               "tidyverse",
-               "utils",
-               "worrms",
-               "xgboost")
-
+#Using the pak R package, multiple packages can be downloaded easily 
+if(!require('pak'))install.packages('pak')
+package_list <- c("arules",
+                  "arrow",
+                  "arulesViz",
+                  "BiocManager",
+                  "CoordinateCleaner",
+                  "dismo",
+                  "doParallel",
+                  "downloader",
+                  "foreach",
+                  "ks",
+                  "mgcv",
+                  "ows4R",
+                  "ranger",
+                  "raster",
+                  "Rarr",
+                  "sdm",
+                  "sf",
+                  "sp",
+                  "spatialEco",
+                  "stacks",
+                  "stats",
+                  "stars",
+                  "terra",
+                  "tidymodels",
+                  "tidyverse",
+                  "utils",
+                  "worrms",
+                  "xgboost")
 #For the packages that need to be installed from github
-pacman::p_install_gh("vlizBE/imis",
-                     "tidymodels/tune")
+package_list_github <-c("vlizBE/imis",
+                        "tidymodels/tune")
+pak::pkg_install(c(package_list,package_list_github))
+
+#Load all the packages with library()
+lapply(package_list, library, character.only = TRUE)
+library(imis)
