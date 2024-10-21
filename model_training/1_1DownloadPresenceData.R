@@ -32,8 +32,7 @@ ospar <- ospar[ospar$Region %in% region,]
 ggplot(data=ospar)+geom_sf()
 #Only keeping the region and geometry info
 ospar<- ospar %>% dplyr::select(Region)
-#Not necessary anymore
-ospar <- st_make_valid(ospar)
+
 
 #Bring together the different ospar regions into one area
 spatial_extent <- st_union(ospar)
@@ -144,6 +143,8 @@ mydata_eurobis <- mydata_eurobis %>%
 #Remove duplicates
 mydata_eurobis <- cc_dupl(mydata_eurobis, lon = "longitude", lat = "latitude",value = "clean",species="scientific_name", additions="time")
 
+#Save output
 save(mydata_eurobis, file = file.path(datadir,"mydata_eurobis.RData"))
 save(spatial_extent, file = file.path(datadir,"spatial_extent.RData"))
+save(alldataset_selection, file = file.path(datadir,"alldataset_selection.RData"))
 

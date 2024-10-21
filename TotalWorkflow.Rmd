@@ -9,7 +9,7 @@ output:
 Before the workflow is started, we prepare the folder structure and download the necessary packages. 
 
 ```{r script0_1}
-source('0_1Preparation.R')
+source('model_training/0_1Preparation.R')
 ```
 # Defining the study area
 The proposed study area concerns ospar regions II, III 

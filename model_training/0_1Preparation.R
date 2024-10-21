@@ -7,6 +7,7 @@ plotsdir    <- "product/species_plots"
 envdir <-"data/raw_data/environmental_layers"
 occdir <-"data/raw_data/occurrences"
 spatdir <- "data/raw_data/spatial_layers"
+scriptsdir <- "model_training/"
 folderstruc <- c(downloaddir,
                  datadir,
                  mapsdir,
@@ -14,7 +15,8 @@ folderstruc <- c(downloaddir,
                  plotsdir,
                  envdir,
                  occdir,
-                 spatdir)
+                 spatdir,
+                 scriptsdir)
 
 #Check for their existence, create if missing
 for(i in 1:length(folderstruc)){
@@ -28,15 +30,11 @@ for(i in 1:length(folderstruc)){
 }
 
 #Download the necessary R packages
-#Using the pak R package, multiple packages can be downloaded easily 
-if(!require('pak'))install.packages('pak')
-package_list <- c("arules",
-                  "arrow",
-                  "arulesViz",
-                  "BiocManager",
+if(!require('renv'))install.packages('renv')
+#Possibly re-start R for renv/activate.R to work.
+package_list <- c("arrow",
                   "CoordinateCleaner",
                   "dismo",
-                  "doParallel",
                   "downloader",
                   "foreach",
                   "ks",
@@ -44,14 +42,12 @@ package_list <- c("arules",
                   "ows4R",
                   "ranger",
                   "raster",
-                  "Rarr",
                   "sdm",
                   "sf",
                   "sp",
                   "spatialEco",
                   "stacks",
                   "stats",
-                  "stars",
                   "terra",
                   "tidymodels",
                   "tidyverse",
@@ -61,8 +57,6 @@ package_list <- c("arules",
 #For the packages that need to be installed from github
 package_list_github <-c("vlizBE/imis",
                         "tidymodels/tune")
-pak::pkg_install(c(package_list,package_list_github))
-
 #Load all the packages with library()
 lapply(package_list, library, character.only = TRUE)
 library(imis)
