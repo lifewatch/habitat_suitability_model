@@ -27,7 +27,7 @@ aphiaid_list <- eurobis %>%
 target_aphiaids <- worrms::wm_classification_(aphiaid_list[[1]])%>%
   dplyr::filter(rank == "Class",
                 scientificname==target_group)%>%
-  dplyr::select(aphiaid=as.numeric("id"))%>%
+  dplyr::select(aphiaid="id")%>%
   dplyr::mutate(aphiaid=as.numeric(aphiaid))
 
 #Download target group points from EurOBIS
