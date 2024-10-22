@@ -58,7 +58,13 @@ species <- worrms::wm_id2name(aphia_id)
 classification <- wm_classification(aphia_id) 
 class <- which(classification[,2]=="Class")
 target_group <- classification[[class,3]]
-#also needs temporal_extent
+
+#load outputs script1_1
+load(file.path(datadir,"alldataset_selection.RData"))
+load(file.path(datadir,"mydata_eurobis.RData"))
+load(file.path(datadir,"spatial_extent.RData"))
+load(file.path(datadir,"ospar.RData"))
+
 source("habitat_suitability_model/model_training/1_3AbsenceCreation.R")
 #output
 ##absence.RData

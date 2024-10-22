@@ -8,7 +8,7 @@ library(ows4R)
 library(readr)
 library(CoordinateCleaner)
 
-alldataset <- read.csv(file.path(datadir,"allDatasets.csv"))
+
 list_dasid <- alldataset_selection$datasetid
 
 #Some workaround to get the Class information while it is not in the parquet file
@@ -23,20 +23,17 @@ aphiaid_list <- eurobis %>%
   distinct()%>%
   collect()
 
-#Check which of the aphiaids belong to the target group (+-25min)
-result <- tibble(Class=purrr::map_vec(aphiaid_list$aphiaid, \(x) ifelse(any(worrms::wm_classification(x)$rank == "Class"),
-                                                                        worrms::wm_classification(x)[[which(worrms::wm_classification(x)$rank == "Class"), 3]],
-                                                                        NA)))
-#returns some empty columns, because e.g Reptilia don't have the class trait and some other aphiaids don't go to class level.
+#Check which of the aphiaids belong to the target group (+-5min)
+target_aphiaids <- worrms::wm_classification_(aphiaid_list[[1]])%>%
+  dplyr::filter(rank == "Class",
+                scientificname==target_group)%>%
+  dplyr::select(aphiaid=as.numeric("id"))%>%
+  dplyr::mutate(aphiaid=as.numeric(aphiaid))
 
-#Keep in this list the aphiaIDs of the target_group
-class_list <- cbind(aphiaid_list, result)
-class_list_filtered <- class_list%>%
-  filter(Class==target_group)
-
-target_background <- eurobis %>%
+#Download target group points from EurOBIS
+target_group <- eurobis %>%
   filter(datasetid %in% list_dasid,
-         aphiaidaccepted %in% class_list_filtered$aphiaid,
+         aphiaidaccepted %in% target_aphiaids$aphiaid,
          longitude > bbox[1], longitude < bbox[3],
          latitude > bbox[2], latitude < bbox[4],
          observationdate >= as.POSIXct(date_start),
@@ -51,10 +48,6 @@ target_background <- eurobis %>%
          month=month(time),
          day = day(time))%>%
   collect()%>%
-  sf::st_as_sf(coords=c("longitude", "latitude"),
-               crs=4326)
-
-target_background <- target_background %>%
   filter(!is.na(time))%>%
   cc_dupl(lon = "longitude",
           lat = "latitude",
@@ -62,51 +55,58 @@ target_background <- target_background %>%
           species="scientific_name",
           additions="time")%>%
   arrange(time)%>%
-  st_filter(y = spatial_extent)%>%
   mutate(year_month=paste(year,month,sep='-'))%>%
   mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))%>%
+  dplyr::filter(year_month %in% levels(mydata_eurobis$year_month))%>% #only keep background for months we have presences in
+  sf::st_as_sf(coords=c("longitude", "latitude"),
+               crs=4326)%>%
+  st_filter(y = spatial_extent)%>% #Only keep those that fall into the spatial_extent.
   dplyr::mutate(longitude = sf::st_coordinates(.)[,1],
-                latitude = sf::st_coordinates(.)[,2],
-                occurrence_status = 0)%>%
-  dplyr::select(!c(datasetid,occurrence_id))%>%
+                latitude = sf::st_coordinates(.)[,2])%>%
+  dplyr::select(!c(datasetid,occurrence_id,year,month,day))%>%
   sf::st_drop_geometry()
 
-year_month <- target_background%>%
-  filter(year_month=="2000-1")
-ggplot(data=spatial_extent)+
-  geom_sf()+
-  geom_sf(data= st_as_sf(year_month,coords=c("longitude","latitude"),crs=4326))
+if(!dir.exists(file.path(datadir,"monthly_bias"))) dir.create(file.path(datadir,"monthly_bias"))
+target_background <- tibble() #create empty tibble
+#Loop over the different months
+for(month in unique(mydata_eurobis$year_month)){
+  #Select the monthly data
+  monthly_data <- target_group%>%
+    filter(year_month == !!month)
+  
+  #Perform a 2d kernel density estimation
+  target_density <- ks::kde(x = cbind(monthly_data$longitude,monthly_data$latitude),
+                            xmin = bbox[1:2],
+                            xmax = bbox[3:4])%>%
+    raster::raster()%>% #cannot use terra::rast direcly
+    terra::rast()
+  #Save the monthly kernel density as a .tif file
+  terra::time(target_density) <- lubridate::floor_date(monthly_data$time[1],
+                                                       unit = "month")#provide the right month information to the raster
+  terra::crs(target_density) <- "EPSG:4326"
+  target_density <- terra::crop(target_density, ospar, mask = TRUE)
+  target_density_normalized <- (target_density - minmax(target_density)[1])/(minmax(target_density)[2]-minmax(target_density)[1])
+  terra::writeCDF(x = target_density_normalized,
+                  filename = file.path(datadir,"monthly_bias",paste0("bias_",month,".nc")),
+                  varname = "density",
+                  longname = "normalized density of the sampling bias",
+                  overwrite = TRUE)
+  #Sample monthly background points based on the sampling bias
+  background <- sdm::background(target_density_normalized,n=500,method = 'gRandom',bias=target_density_normalized)%>%
+    dplyr::select("longitude"=x,
+                  "latitude"=y)%>%
+    dplyr::mutate(time= time(target_density_normalized),
+                  scientific_name = mydata_eurobis$scientific_name[1],
+                  year_month = month,
+                  occurrence_status = 0)
+  target_background <- rbind(target_background,background)
+  
+}
 
-plot(x=year_month$longitude,y=year_month$latitude)
+pback <- rbind(mydata_eurobis,target_background) #presence-background data
+save(target_aphiaids, file=file.path(datadir,"target_aphiaids"))
+save(target_background, file=file.path(datadir,"target_background.RData"))
+save(pback, file = file.path(datadir,"pback.RData"))
 
-
-# Do a 2d kernel density estimation.
-target_density <- ks::kde(cbind(year_month$longitude,year_month$latitude))%>%
-  raster::raster()%>% #cannot use terra::rast direcly
-  terra::rast()
-terra::crs(target_density) <- "EPSG:4326"
-plotdata <- cbind(data.frame(target_density),crds(target_density))
-ggplot(data=spatial_extent)+
-  geom_sf()+
-  geom_raster(data=plotdata,aes(x=x,y=y,fill=layer,alpha = 0.7))+
-  scale_fill_viridis_c()
-
-land_mask <- ifel(raster_bathymetry > 0, NA, raster_bathymetry)
-test <- terra::crop(terratest,land_mask)
-test <- terra::resample(test,land_mask)
-sample_bias <- mask(test, land_mask)
-# Normalize bias file between 0 and 1.
-sample_bias_normalized <- (m - minmax(m)[1])/(minmax(m)[2]-minmax(m)[1])
-background <- sdm::background(raster_bathymetry,n=500,method = 'gRandom',bias=sample_bias_normalized)
-
-ggplot(data=spatial_extent)+
-  geom_sf()+
-  geom_point(data=background,aes(x=x,y=y))
-
-pa_occurrence <- rbind(mydata.eurobis, target_background)
-summary(pa_occurrence)
-
-
-save(absence, file=file.path(datadir,"absence.RData"))
 
 

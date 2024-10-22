@@ -137,7 +137,7 @@ mydata_eurobis <- mydata_eurobis %>%
   dplyr::mutate(longitude = sf::st_coordinates(.)[,1],
                 latitude = sf::st_coordinates(.)[,2],
                 occurrence_status = 1)%>%
-  dplyr::select(!c(datasetid,occurrence_id))%>%
+  dplyr::select(!c(datasetid,occurrence_id,year,month,day))%>%
   sf::st_drop_geometry()
 
 #Remove duplicates
@@ -145,6 +145,7 @@ mydata_eurobis <- cc_dupl(mydata_eurobis, lon = "longitude", lat = "latitude",va
 
 #Save output
 save(mydata_eurobis, file = file.path(datadir,"mydata_eurobis.RData"))
+save(ospar, file = file.path(datadir, "ospar.RData"))
 save(spatial_extent, file = file.path(datadir,"spatial_extent.RData"))
 save(alldataset_selection, file = file.path(datadir,"alldataset_selection.RData"))
 
