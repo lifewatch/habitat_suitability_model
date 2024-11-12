@@ -2,16 +2,11 @@
 library(terra)
 
 #Read in the PA data
-load(file.path(datadir,'PA.RData'))
+load(file.path(datadir,'pback.RData'))
 
 #Load in environmental layers
 #To get it into a SpatRaster object
 tempsal <- terra::rast(file.path(envdir,"tempsal.nc"))
-
-#if the object is a spatraster you need to give a list of the length of the layers describing where you want each layer to go
-
-
-#Need to standardize these numbers
 layer <- nlyr(tempsal)/2
 splitlist <- c(rep(1,layer),rep(2,layer))
 tempsal_dataset <- split(tempsal,splitlist)
@@ -90,6 +85,8 @@ if(!file.exists(file.path(envdir,"bathy.nc"))){
   #Merge the spatrastercollection
   bathy <- merge(bathy_coll)
   bathy[bathy>0] <- NA
+  names(bathy) <-"bathymetry"
+  varnames(bathy) <- "bathymetry"
   writeCDF(bathy,file.path(envdir,"bathy.nc"))
 } else{
   cat("Bathymetry layer already exists")
@@ -105,28 +102,28 @@ if(!file.exists(file.path(envdir,"bathy.nc"))){
 
 
 #For temperature
-rastertemp <- terra::extract(x=thetao, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+rastertemp <- terra::extract(x=thetao, y=pback[,c("longitude","latitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
 #takes 20seconds
-resulttemp <- data.frame(thetao = rastertemp[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+resulttemp <- data.frame(thetao = rastertemp[cbind(1:nrow(pback),as.numeric(pback$year_month))])
 
 #For NPP
-rasternpp <- terra::extract(x=mean_npp, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+rasternpp <- terra::extract(x=mean_npp, y=pback[,c("longitude","latitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
 #takes 20seconds
-resultnpp <- data.frame(npp = rasternpp[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+resultnpp <- data.frame(npp = rasternpp[cbind(1:nrow(pback),as.numeric(pback$year_month))])
 
 
 #For salinity
-rastersal <- terra::extract(x=so, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+rastersal <- terra::extract(x=so, y=pback[,c("longitude","latitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
 #takes 20seconds
 
-resultsal <- data.frame(so = rastersal[cbind(1:nrow(PA),as.numeric(PA$year_month))])
+resultsal <- data.frame(so = rastersal[cbind(1:nrow(pback),as.numeric(pback$year_month))])
 
 #For bathymetry
-resultbathy <- terra::extract(x=bathy, y=PA[,c("decimallongitude","decimallatitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
+resultbathy <- terra::extract(x=bathy, y=pback[,c("longitude","latitude")], method="bilinear", na.rm=TRUE,df=T,ID=FALSE)
 #don't need to choose the right month, because bathy info is the same over the different months, only have one value
 
 
 
-PA_env <- cbind(PA,resulttemp,resultsal,resultnpp,resultbathy)
-save(PA_env,file=file.path(datadir,"PA_env.RData"))
+pback_env <- cbind(pback,resulttemp,resultsal,resultnpp,resultbathy)%>%drop_na()
+save(pback_env,file=file.path(datadir,"pback_env.RData"))
 

@@ -17,6 +17,7 @@
 
 
 
+# spatial_extent ----------------------------------------------------------
 # Defining the study area
 #Download and unzip the ospar shapefiles
 url <- "https://odims.ospar.org/public/submissions/ospar_regions/regions/2017-01/002/ospar_regions_2017_01_002-gis.zip"
@@ -37,6 +38,8 @@ ospar<- ospar %>% dplyr::select(Region)
 #Bring together the different ospar regions into one area
 spatial_extent <- st_union(ospar)
 
+
+# download_presence -------------------------------------------------------
 
 # Make a connection with the data_lake
 data_lake <- S3FileSystem$create(
@@ -60,12 +63,12 @@ mydata_eurobis <- eurobis %>%
                 time=observationdate,
                 scientific_name = scientificname_accepted,
                 occurrence_id=occurrenceid) %>%
-  mutate(year=year(time),
-         month=month(time),
-         day = day(time))%>%
   collect()%>%
   sf::st_as_sf(coords=c("longitude", "latitude"),
                crs=4326)
+
+
+# dataset_metadata --------------------------------------------------------
 
 # function to read dataset characteristics, code from: https://github.com/EMODnet/EMODnet-Biology-Benthos_greater_North_Sea
 
@@ -96,11 +99,11 @@ fdr2<-function(dasid){
 }
 
 
-
+# generate dataset metadata
 
 datasetidsoi <- mydata_eurobis %>% distinct(datasetid) %>% 
   mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
-#==== retrieve data by dataset ==============
+# retrieve data by dataset
 all_info <- data.frame()
 for (i in datasetidsoi$datasetid){
   dataset_info <- fdr2(i)
@@ -111,13 +114,15 @@ write.csv(all_info,file=file.path(datadir,"allDatasets.csv"),row.names = F, appe
 alldataset <- read.csv(file.path(datadir,"allDatasets.csv"))
 
 
+# data_pre-processing -----------------------------------------------------
 
+# Filter out datasets based on a keyword
 
-#Fit the datafiltering in here as well. 
-#because in the description of SCANS, the word stranding is also mentioned, wrongly discarding this dataset
 alldataset <- alldataset %>%
   rowwise() %>%
-  mutate("discard"=any(across(-description, ~grepl(paste(word_filter, collapse = "|"), .,ignore.case=TRUE))))
+  mutate("discard"=any(across(-description, # because in the description of SCANS, the word stranding is also mentioned, wrongly discarding this dataset
+                              ~grepl(paste(word_filter, collapse = "|"),
+                                     .,ignore.case=TRUE))))
 
 alldataset_selection<-alldataset%>%
   filter(discard==FALSE)
@@ -132,16 +137,28 @@ mydata_eurobis <- mydata_eurobis %>%
   filter(datasetid %in% alldataset_selection$datasetid)%>%
   dplyr::distinct(occurrence_id,.keep_all = TRUE)%>%
   arrange(time)%>%
-  mutate(year_month=paste(year,month,sep='-'))%>%
-  mutate(year_month=factor(year_month,levels=unique(year_month),ordered=TRUE))%>%
   dplyr::mutate(longitude = sf::st_coordinates(.)[,1],
                 latitude = sf::st_coordinates(.)[,2],
                 occurrence_status = 1)%>%
-  dplyr::select(!c(datasetid,occurrence_id,year,month,day))%>%
+  dplyr::select(!c(datasetid,occurrence_id))%>%
   sf::st_drop_geometry()
 
 #Remove duplicates
 mydata_eurobis <- cc_dupl(mydata_eurobis, lon = "longitude", lat = "latitude",value = "clean",species="scientific_name", additions="time")
+
+#Add month information
+month(time)
+#Add decadal information
+year(time) - year(time) %% 10 #Floors the data to a certain decade
+factor(time, levels = unique)
+
+mydata_eurobis <- mydata_eurobis%>%
+  mutate(month = month(time), decade= year(time) - year(time) %% 10)%>%
+  mutate(decade= factor(decade,levels=unique(decade)))%>%
+  select(!c(scientific_name,time))
+
+
+# outputs -----------------------------------------------------------------
 
 #Save output
 save(mydata_eurobis, file = file.path(datadir,"mydata_eurobis.RData"))

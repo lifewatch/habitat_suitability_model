@@ -9,25 +9,27 @@ library(ranger) #for the randomforest model
 library(mgcv) #for the GAM model
 library(xgboost) #for the xgboost model
 library(earth) #for the MARS model
-
+library(tidysdm)
 
 # Load data
 
 # Load presence-absence related to environmental data
-load(file.path(datadir,"PA_env.RData"))
+load(file.path(datadir,"pback_env.RData"))
 
 #Turn our occurrence into a factor so that there are two known levels, either
 #present or absent.
-PA_env$occurrenceStatus<-factor(PA_env$occurrenceStatus)
+pback_env$occurrence_status<-factor(pback_env$occurrence_status)
 #Remove all these columns because the data we want to predict on also only has the environmental values,
 #model will only accept input to predict on with the same columns as the data the model was trained on.
-data <- PA_env%>%
-  dplyr::select(-c(scientificnameaccepted,decimallongitude,decimallatitude,datecollected,day,month,year,year_month,geometry))%>%
+data <- pback_env%>%
+  dplyr::select(-c(time,scientific_name,year_month,longitude,latitude))%>%
   drop_na()%>%
-  sf::st_drop_geometry()%>%
+  dplyr::mutate(occurrence_status=factor(occurrence_status,level=c(1,0)))%>% #the first level should be the level of interest (positive class, so presences)
   as_tibble()
 
 # Data splitting
+
+#Generate the custom sets where the background is never included into the test but always in the training
 
 set.seed(222)
 #Put 4/5 in the training set
@@ -42,7 +44,10 @@ test_data <- testing(data_split)
 #This is why we choose the number of folds v=8
 folds <- vfold_cv(train_data, v=8)
 folds
-
+nested_folds <- nested_cv(data,
+                          outside = vfold_cv(5),
+                          inside = vfold_cv(4))
+nested_folds
 
 
 # Pre-process your data with recipes
@@ -56,7 +61,7 @@ folds
 #variables and their types. 
 #The formula here states that occurrenceStatus is modelled in relation to all the other columns
 Occurrence_rec <- 
-  recipe(occurrenceStatus ~., data=train_data)
+  recipe(occurrence_status ~., data=train_data)
 
 #Can also do some pre-processing of the variables with this recipe, but which should you do?
 # step_* functions
@@ -84,11 +89,37 @@ ctrl_res <- control_stack_resamples()
 #set the number of trees to 500 (also the default), use it for classification into
 #presence-absence, and the algorithm to ranger (also the default)
 rf_mod <- rand_forest(trees=500,mode="classification",engine="ranger")
+rf_opt <- rand_forest(trees=2000)%>%
+  set_engine("ranger",
+             splitrule="hellinger",
+             max.depth=2,
+             probability=TRUE,
+             replace=TRUE)%>%
+  set_mode('classification')
+rf_opt <- rand_forest(trees=2000)%>%
+  set_engine("ranger",
+             splitrule=tune(),
+             max.depth=tune())%>%
+  set_mode("classification")
+rf_grid <- parameters(splitrule(c("gini","extratrees","hellinger")),
+                       max.depth(c(2,3,4)))
+tuning_grid <- dials::grid_regular(
+  max.depth(range = c(2, 5)),
+  splitrule(values = c("gini", "extratrees", "hellinger")),
+  levels = 5  # This specifies 5 levels within the range of 2 to 5 for max_depth
+)
+max.depth = 2:5, # this can be a vector of numbers
+splitrule = c("gini", "extratrees", "hellinger"), # only allowed options
 
 #After your model is defined, create a worfklow object and add your model and recipe
 rf_wf <-
   workflow() %>%
   add_model(rf_mod) %>%
+  add_recipe(Occurrence_rec)
+
+rf_wf_opt <-
+  workflow()%>%
+  add_model(rf_opt)%>%
   add_recipe(Occurrence_rec)
 
 #The workflow can then be fit or tuned, in this case it's fit but with resamples
@@ -98,11 +129,42 @@ rf_fit <-
   fit_resamples(
     rf_wf,
     resamples = folds,
-    control = ctrl_res
+    control = ctrl_res,
+    metrics =metric_set(accuracy,
+                        roc_auc,
+                        boyce_cont,
+                        tss,
+                        pr_auc,
+                        sens)
   )
+rf_opt_fit <- fit_resamples(rf_wf_opt,
+  resamples = folds,
+  control=ctrl_res,
+  metrics =metric_set(accuracy,
+                      roc_auc,
+                      boyce_cont,
+                      tss,
+                      pr_auc,
+                      sens))
+rf_rng_shallow <- ranger::ranger(formula = occurrence_status ~ .,
+                         data = train_data, 
+                         num.trees = 2000,
+                         probability = TRUE, # fit a probability forest
+                         splitrule = "hellinger",
+                         max.depth = 2,
+                         replace=TRUE,
+                         class.weights = c(6.67,1)) # fit shallow trees
+
+testpredict<-predict(rf_rng_shallow,train_data)
+testpredict <- testpredict$predictions
 #With resamples as we need to provide this type to the stack command later
 rf_fit
-
+rf_metrics <- collect_metrics(rf_fit)
+rf_opt_metrics <- collect_metrics(rf_opt_fit)
+save(rf_metrics,file=file.path(datadir,"rf_default_metrics.RData"))
+save(rf_fit, file=file.path(datadir, "rf_default_fit.RData"))
+test 
+sens(test,truth="occurrence_status",estimate=".pred_class")
 # Tuning model parameters
 
 #More information found on https://parsnip.tidymodels.org/reference/details_gen_additive_mod_mgcv.html
@@ -150,7 +212,13 @@ xgb_fit <-
   tune_grid(
     resamples = folds,
     grid = xgb_grid,
-    control=ctrl_grid)
+    control=ctrl_grid,
+    metrics =metric_set(accuracy,
+                        roc_auc,
+                        boyce_cont,
+                        tss,
+                        pr_auc,
+                        sens))
 #Runs for +- 40min
 xgb_fit
 

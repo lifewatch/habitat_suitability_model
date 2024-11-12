@@ -39,6 +39,7 @@ package_list <- c("arrow",
                   "foreach",
                   "ks",
                   "mgcv",
+                  "modEvA",
                   "ows4R",
                   "ranger",
                   "raster",
@@ -46,6 +47,7 @@ package_list <- c("arrow",
                   "sf",
                   "sp",
                   "spatialEco",
+                  "spatstat",
                   "stacks",
                   "stats",
                   "terra",
@@ -54,9 +56,6 @@ package_list <- c("arrow",
                   "utils",
                   "worrms",
                   "xgboost")
-#For the packages that need to be installed from github
-package_list_github <-c("vlizBE/imis",
-                        "tidymodels/tune")
 #Load all the packages with library()
 lapply(package_list, library, character.only = TRUE)
 library(imis)
