@@ -11,7 +11,7 @@
 ggplot(data=spatial_extent)+
   geom_sf()+
   theme_minimal()+
-  geom_point(data=mydata_eurobis, aes(x=longitude,y=latitude,colour="red"),show.legend=FALSE) +
+  geom_point(data=mydata_eurobis, aes(x=longitude,y=latitude),colour="black",size=0.01,show.legend=FALSE) +
   theme(plot.title = element_text(size=14), axis.title= element_text(size = 12),
         text = element_text(size = 12))+
   labs(title = paste("eurOBIS occurrence records Harbour porpoise"))+
@@ -34,15 +34,12 @@ ggplot(data = mydata_eurobis, aes(x = as.factor(month))) +
 ggplot(data=spatial_extent)+
   geom_sf()+
   theme_minimal()+
-  geom_point(data=mydata_eurobis, aes(x=longitude,y=latitude,colour="red"),show.legend=FALSE) +
+  geom_point(data=mydata_eurobis, aes(x=longitude,y=latitude),colour="black",size=0.01,show.legend=FALSE) +
   theme(plot.title = element_text(size=14), axis.title= element_text(size = 12),
         text = element_text(size = 12))+
   labs(title = paste("eurOBIS occurrence records Harbour porpoise"))+
   coord_sf(xlim = c(bbox[1],bbox[3]), ylim = c(bbox[2], bbox[4]), expand=FALSE)+
-  facet_wrap(~decade, nrow= 2)+
-  theme_void()+
-  theme(strip.background=element_blank(), #remove strip background
-        strip.text= element_text(size=12))
+  facet_wrap(~decade, nrow= 2)
   
 #Bar plot
 ggplot(data = mydata_eurobis, aes(x = decade)) + 
@@ -89,8 +86,7 @@ ggplot(data, aes(x=as.factor(group_id),y=log(count),fill=year)) +       # Note t
   coord_polar()+
   geom_text(data=label_data, aes(x=group_id, y= log(count)+0.5, label=month, hjust=hjust), color="black", fontface="bold",alpha=0.6, size=2.5, angle= label_data$angle) 
 
-```
-```{r, fig.width=8, fig.height=12}
+
 #Create data
 puntdata <- mydata.eurobis%>%
   mutate(year=ordered(year),month=ordered(month,labels=month.abb))%>%

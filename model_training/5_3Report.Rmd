@@ -1,0 +1,73 @@
+---
+title: "MARCO-BOLO Workflow report"
+author: "Jo-Hannes Nowé"
+output: 
+html_document:
+  toc=TRUE
+---
+
+# Introduction
+
+Habitat suitability models relate the occurrence status of a species to environmental covariates to assess the suitability of a given area. As the data in public repositories (e.g. eurOBIS) is often presence-only, we can only make conclusions about the relative suitability for this given area and species. The goal of this workflow is two-fold: looking into both monthly and decadal trends. The former is done by grouping the long time-period data by their respective month, while the latter groups the data by decade in order to investigate the influence of a changing climate. Additionally, predictions are made for future decades using the bio-oracle future environmental layers under different climate scenarios.
+
+In this workflow, four environmental covariates are used to relate the environment to the presence of a species: sea surface temperature, sea surface salinity, net primary production and bathymetry.
+
+The predictions are made using an ensemble model, combining different individual models often used in ecological modelling to form a more robust prediction. The individual models used in this workflow are Random Forest (RF), Generalized Additive Models (GAM), Extreme Gradient Boosting (XGB), Multivariate Adaptive Regression Splines (MARS) and Maximum Entropy (MaxEnt). For every model, a couple of different configurations are considered, based on existing literature. The best combination of these configurations into a model ensemble is determined by the data itself.   
+
+
+# Input data
+
+As the modelling workflow is automated, it is important to check the data used in the model. Based on different plots and tables, specific aspects of the model are highlighted to define possible areas of trust and caution. 
+
+##SPATIAL EXTENT + CHOSEN BBOX TRENDS
+This plot shows the study area used in the workflow as well as the bounding box of interest. 
+The model is trained on all the species information available in eurOBIS inside this area, between the 01/01/1993 and 31/12/2023.
+The chosen bounding box will be used to show the average trend of habitat suitability over the months/decades.
+
+##SUMMARY EUROBIS DATAFRAME
+The presence data is collected from eurOBIS and stored inside a dataframe with information on the location and time of the observation.
+A lack of presence points would indicate not enough information is available to perform predictions. The species where investigated beforehand on their data availability.
+
+##BARPLOT + SPATIAL PLOTS PRESENCE DATA
+This plot shows the spatial and temporal coverage of the presence data.
+More important than the shear amount of presence points is their coverage in time and space.
+Although the species where also pre-filtered on their data coverage, these plots are still valuable to assess areas where prediction is more or less confident.
+On top of assessing the prediction confidence, also the bias of the data can be viewed using these maps.
+
+##BACKGROUND DATA KERNELS AND ACTUAL BACKGROUND POINTS
+These plots show the kernel density from the target group and the actual background points sampled from this density raster.
+In order to say something about the relative suitability of a species, the total collection of environmental conditions need to be given.
+This is done by providing background points, sampled randomly over the study area. In order to counteract sampling bias, the target-group background method is used, providing a kernel density raster based on the sampling effort of the target group, and subsequently sampling the background with these weights.
+
+##ENVIRONMENTAL PLOTS + SUMMARY ENVIRONMENTAL RASTERLAYERS
+These plots show the environmental raster layers used in the model. Their minimum, maximum and distribution can already be an indication of how they would influence the model. 
+
+##VIOLIN PLOTS PRESENCE-BACKGROUND DATA
+These violin plots show the distribution over the different environmental covariates, both for the presence and background data. The presence data should be a subset of the background data which is a broad collection of all possible environmental conditions the species could encounter in the study area.
+
+##KNNDM PLOT 
+The knndm method is used to make the data folds in the monthly part of the workflow.
+The method works by choosing folds in a way that prepares them for a prediction on the test set.
+The CV-folds should be closely related to the sample-prediction distribution to be sure the training data will be able to correctly assess the test data.
+
+##SUMMARY DATA SPLITTING INTO FOLDS
+This table shows the ratio of points used in the training/testing of the model for each of the folds.
+
+##MESS + AREA OF APPLICABILITY
+The mess and area of applicability rasters show us the similarity of the environmental prediction conditions to those the model was trained on.
+In areas of high similarity, the model is able to correctly assess the suitability based on conditions it is trained on. Decisions about low similarity regions should be made with caution or prevented.
+
+# Model performance
+
+## METRICS COLLECTED OVER THE DIFFERENT FOLDS
+Another way of assessing the confidence of a model prediction is checking the model performance.
+The average model performance over the different folds can give us a good indication on the prediction ability of the model. Although presence-only information is not ideal for evaluating the model, different metrics are provided to allow a more complete assessment. The inner folds are used to determine the optimal model configuration after which this model is trained on the full dataset to make the final predictions. 
+
+# Static plots for the chosen area
+
+##TEMPORAL TREND MONTHLY
+##TEMPORAL TREND DECADAL
+##TEMPORAL TREND PREDICTORS
+
+On these plots the temporal trends can be seen for the bounding box, chosen at the beginning of the workflow.
+In this defined area, the mean value is computed and plotted over time. These plots give information about trends at monthly and decadal level, with also information on the variability of the predictors.

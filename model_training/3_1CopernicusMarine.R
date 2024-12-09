@@ -19,7 +19,7 @@ ymax<- bbox[[4]]
 
 
 cm <- import("copernicusmarine")
-
+#cm$login()
 cm$subset(
   dataset_id="cmems_mod_glo_phy_my_0.083deg_P1M-m",
   variables=c("so", "thetao"),

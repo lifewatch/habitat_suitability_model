@@ -9,6 +9,11 @@ library(readr)
 library(CoordinateCleaner)
 
 
+# THIN THE PRESENT DATA 1 OCC PER CELL ------------------------------------
+
+#use one of the environmental layers.
+
+
 # download_target-group ---------------------------------------------------
 
 list_dasid <- alldataset_selection$datasetid
@@ -67,32 +72,47 @@ target_group <- eurobis %>%
 
 # create monthly bias files ------------------------------------------------
 
+library(spatstat)
+spatial_extent_proj <- st_transform(spatial_extent, crs=25832)
+#as.owin needs a projected CRS, not a geographic (latitude-longitude) CRS like WGS84.
+#We need to reproject out object to a projected CRS, such as UTM, suitable for the analysis in meters.
+#https://epsg.io/25832
+win <- as.owin(spatial_extent_proj)
+
 if(!dir.exists(file.path(datadir,"bias_monthly"))) dir.create(file.path(datadir,"bias_monthly"))
 tgb_month <- tibble() #create empty tibble
 #Loop over the different months
 for(m in unique(mydata_eurobis$month)){
   #Select the monthly data
   monthly_data <- target_group%>%
-    filter(month == m)
+    filter(month == m)%>%
+    st_as_sf(coords = c("longitude","latitude"), crs = 4326)%>%
+    st_transform(crs = 25832)%>%
+    mutate(longitude = st_coordinates(.)[,1],
+           latitude = st_coordinates(.)[,2]) %>%
+    st_drop_geometry()
   
+  #Turn the coordinates into a spatial point process
+  spp <- ppp(x = monthly_data$longitude,
+             y = monthly_data$latitude,
+             window = win)
+  # Calculate the smoothing parameter based on Cronie and Van Lieshout
+  s <- bw.CvL(spp)
   #Perform a 2d kernel density estimation
-  target_density <- ks::kde(x = cbind(monthly_data$longitude,monthly_data$latitude),
-                            xmin = bbox[1:2],
-                            xmax = bbox[3:4])%>%
-    raster::raster()%>% #cannot use terra::rast direcly
-    terra::rast()
+  den <- density.ppp(spp,dimyx = c(320, 210),sigma=s, positive = T)
+  denrast <- terra::rast(den)
+  crs(denrast) <- "EPSG:25832"
+  denrast <- terra::project(denrast, "EPSG:4326")
+  ext(denrast) <- ext(round(st_bbox(spatial_extent),0))
   #Save the monthly kernel density as a .tif file
-  terra::crs(target_density) <- "EPSG:4326"
-  target_density <- terra::crop(target_density, ospar, mask = TRUE)
-  target_density_normalized <- (target_density - minmax(target_density)[1])/(minmax(target_density)[2]-minmax(target_density)[1])
-  terra::writeCDF(x = target_density_normalized,
+  terra::writeCDF(x = denrast,
                   filename = file.path(datadir,"bias_monthly",paste0("bias_",lubridate::month(m,label=TRUE),".nc")),
                   varname = "sampling effort",
-                  longname = paste("normalized density of the sampling bias",
+                  longname = paste("density of the sampling effort",
                                    lubridate::month(m,label=TRUE)),
                   overwrite = TRUE)
   #Sample monthly background points based on the sampling bias
-  tgb <- sdm::background(target_density_normalized,n=2500,method = 'gRandom',bias=target_density_normalized)%>%
+  tgb <- sdm::background(denrast,n=2500,method = 'gRandom',bias=target_density_normalized)%>%
     dplyr::select("longitude"=x,
                   "latitude"=y)%>%
     dplyr::mutate(month = m,
@@ -111,27 +131,34 @@ tgb_decad <- tibble() #create empty tibble
 for(d in unique(mydata_eurobis$decade)){
   #Select the monthly data
   decadal_data <- target_group%>%
-    filter(decade == d)
+    filter(decade == d)%>%
+    st_as_sf(coords = c("longitude","latitude"), crs = 4326)%>%
+    st_transform(crs = 25832)%>%
+    mutate(longitude = st_coordinates(.)[,1],
+           latitude = st_coordinates(.)[,2]) %>%
+    st_drop_geometry()
   
+  #Turn the coordinates into a spatial point process
+  spp <- ppp(x = decadal_data$longitude,
+             y = decadal_data$latitude,
+             window = win)
+  # Calculate the smoothing parameter based on Cronie and Van Lieshout
+  s <- bw.CvL(spp)
   #Perform a 2d kernel density estimation
-  target_density <- ks::kde(x = cbind(decadal_data$longitude,decadal_data$latitude),
-                            xmin = bbox[1:2],
-                            xmax = bbox[3:4],
-                            gridsize= c(300,200))%>% #to get a resolution of 0.083x 0.07
-    raster::raster()%>% #cannot use terra::rast directly
-    terra::rast()
-  #Save the monthly kernel density as a .tif file
-  terra::crs(target_density) <- "EPSG:4326"
-  target_density <- terra::crop(target_density, ospar, mask = TRUE)
-  target_density_normalized <- (target_density - minmax(target_density)[1])/(minmax(target_density)[2]-minmax(target_density)[1])
-  terra::writeCDF(x = target_density_normalized,
+  den <- density.ppp(spp,dimyx = c(320, 210),sigma=s, positive = T)
+  denrast <- terra::rast(den)
+  crs(denrast) <- "EPSG:25832"
+  denrast <- terra::project(denrast, "EPSG:4326")
+  ext(denrast) <- ext(round(st_bbox(spatial_extent),0))
+  #Save the decadal kernel density as a .tif file
+  terra::writeCDF(x = denrast,
                   filename = file.path(datadir,"bias_decad",paste0("bias_",d,".nc")),
                   varname = "sampling effort",
-                  longname = paste("normalized density of the sampling bias",
+                  longname = paste("density of the sampling effort",
                                    d),
                   overwrite = TRUE)
-  #Sample monthly background points based on the sampling bias
-  tgb <- sdm::background(target_density_normalized,n=nrow(decadal_data),method = 'gRandom',bias=target_density_normalized)%>%
+  #Sample decadal background points based on the sampling bias
+  tgb <- sdm::background(denrast,n=nrow(decadal_data),method = 'gRandom',bias=denrast)%>%
     dplyr::select("longitude"=x,
                   "latitude"=y)%>%
     dplyr::mutate(decade = d,
@@ -140,7 +167,6 @@ for(d in unique(mydata_eurobis$decade)){
   tgb_decad <- rbind(tgb_decad,tgb)
   
 }
-
 
 # check plots -------------------------------------------------------------
 

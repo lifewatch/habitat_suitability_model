@@ -26,6 +26,8 @@ unzip(zipfile=file.path(spatdir,"ospar_REGIONS.zip"),exdir=spatdir)
 
 #Visualize the different regions
 ospar<- st_read(file.path(spatdir,"ospar_regions_2017_01_002.shp"))
+st_read(file.path("data",""))
+
 
 
 #Only keeping region II and III from the shapefile.
@@ -47,7 +49,14 @@ data_lake <- S3FileSystem$create(
   scheme = "https",
   endpoint_override = "s3.waw3-1.cloudferro.com"
 )
-eurobis <- arrow::open_dataset(data_lake$path("emodnet/biology/eurobis_occurence_data/eurobisgeoparquet/eurobis_no_partition_sorted.parquet"))
+
+s3_path <- "emodnet/biology/eurobis_occurrence_data/eurobis_occurrences_geoparquet_2024-10-01.parquet"
+eurobis <- open_dataset(
+  s3_path,
+  filesystem = data_lake,
+  format = "parquet"  # Specify the file format
+)
+
 
 #Downloading the occurrence data from EurOBIS
 bbox <- sf::st_bbox(spatial_extent)
@@ -147,10 +156,9 @@ mydata_eurobis <- mydata_eurobis %>%
 mydata_eurobis <- cc_dupl(mydata_eurobis, lon = "longitude", lat = "latitude",value = "clean",species="scientific_name", additions="time")
 
 #Add month information
-month(time)
+
 #Add decadal information
-year(time) - year(time) %% 10 #Floors the data to a certain decade
-factor(time, levels = unique)
+
 
 mydata_eurobis <- mydata_eurobis%>%
   mutate(month = month(time), decade= year(time) - year(time) %% 10)%>%

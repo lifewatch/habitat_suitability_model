@@ -37,6 +37,7 @@ if(!file.exists(file.path(envdir,"mean_npp.nc"))){
 } else {
   cat("Mean npp layer already exists")
   mean_npp <- terra::rast(file.path(envdir,"mean_npp.nc"))
+  mean_npp <- terra::resample(mean_npp, thetao)
 }
 
 
@@ -91,6 +92,7 @@ if(!file.exists(file.path(envdir,"bathy.nc"))){
 } else{
   cat("Bathymetry layer already exists")
   bathy <- terra::rast(file.path(envdir,"bathy.nc"))
+  bathy <- resample(bathy,thetao)
 }
 
 
@@ -124,6 +126,56 @@ resultbathy <- terra::extract(x=bathy, y=pback[,c("longitude","latitude")], meth
 
 
 
+# Generate prediction area months------------------------------------------------
+
+#Want to predict on the monthly averages, so need to calculate them:
+thetao
+so
+mean_npp
+
+#Pseudo-code
+
+##for each predictor layer:
+##Group the information per month
+### assign a month identifier
+month_list <- rep(1:12, length.out = nlyr(thetao))
+
+### split them based on this identifier
+thetao_month <- split(thetao, month_list)
+
+so_month <- split(so, month_list)
+
+npp_month <- split(mean_npp, month_list)
+
+##Take the average value
+thetao_avg <-purrr::map(thetao_month, .f = \(x) terra::app(x,fun=mean))
+so_avg <-purrr::map(so_month, .f = \(x) terra::app(x,fun=mean))
+npp_avg <-purrr::map(npp_month, .f = \(x) terra::app(x,fun=mean))
+
+##Name the rasters appropriately
+names(thetao_avg)<- lubridate::month(1:12,label=TRUE)
+names(so_avg)<- lubridate::month(1:12,label=TRUE)
+names(npp_avg)<- lubridate::month(1:12,label=TRUE)
+
+
+# Generate prediction area decades ----------------------------------------
+decades_list <- year(time(thetao)) - year(time(thetao)) %% 10
+thetao_decad <- split(thetao, decades_list)
+so_decad <- split(thetao, decades_list)
+npp_decad <- split(mean_npp, decades_list)
+
+#Take the average value
+thetao_avg_decad <- purrr::map(thetao_decad, .f = \(x) terra::app(x,fun=mean))
+so_avg_decad <- purrr::map(so_decad, .f = \(x) terra::app(x,fun=mean))
+npp_avg_decad <- purrr::map(npp_decad, .f = \(x) terra::app(x,fun=mean))
+
+#Name the rasters appropriately
+names(thetao_avg_decad) <- unique(sort(decades_list))
+names(so_avg_decad) <- unique(sort(decades_list))
+names(npp_avg_decad) <- unique(sort(decades_list))
+
+
+# SAVE OUTPUT -------------------------------------------------------------
 pback_env <- cbind(pback,resulttemp,resultsal,resultnpp,resultbathy)%>%drop_na()
 save(pback_env,file=file.path(datadir,"pback_env.RData"))
 

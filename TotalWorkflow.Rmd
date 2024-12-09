@@ -36,8 +36,8 @@ region <- c('II','III')
 aphia_id <-137117   #this is alosa fallax phocoena = 137117
 word_filter <- c("stranding", "museum")
 #dasid_filter <- c()
-date_start <- as.POSIXct("1999-01-01")
-date_end <- as.POSIXct("2019-01-01")
+date_start <- as.POSIXct("1993-01-01")
+date_end <- as.POSIXct("2023-12-31")
 temporal_extent <- lubridate::interval(date_start,date_end)
 source("1_1DownloadPresenceData.R")
 

@@ -148,3 +148,54 @@ ggplot(rc)+
   geom_smooth(aes(x = original, y = response,colour=model),se=FALSE)+
   facet_wrap(~variable, scales = "free")
 
+
+
+# threshold metrics -------------------------------------------------------
+
+library(modEvA)
+thresh <-optiThresh(pred=testrf$.pred_1,obs=as.numeric(as.character((testrf$occurrence_status))))
+optiPair(pred=testrf$.pred_1,obs=as.numeric(as.character((testrf$occurrence_status))),measures = c("Sensitivity", "Specificity"), main = "Optimal balance")
+#This gives us a threshold of 0.17
+threshold <- 0.17
+new_pred <- testrf%>%mutate(binary_pred = ifelse(.pred_1 >= threshold, 1, 0))%>%
+  select(binary_pred,occurrence_status)
+new_pred
+sens_vec(estimate=factor(new_pred$binary_pred,levels=c("1","0")),truth=new_pred$occurrence_status)
+spec_vec(estimate=factor(new_pred$binary_pred,levels=c("1","0")),truth=new_pred$occurrence_status)
+
+#testen op de stack data
+stack_test <- stack_data[,1:2]
+threshold <- optiPair(pred=stack_test$.pred_1_ranger_fit_1_2,obs=as.numeric(as.character((stack_test$occurrence_status))),measures = c("Sensitivity", "Specificity"), main = "Optimal balance")$ThreshMean
+
+new_pred <- stack_test%>%mutate(binary_pred = ifelse(.pred_1_ranger_fit_1_2 >= threshold, 1, 0))%>%
+  select(binary_pred,occurrence_status)
+new_pred
+sens_vec(estimate=factor(new_pred$binary_pred,levels=c("1","0")),truth=new_pred$occurrence_status)
+spec_vec(estimate=factor(new_pred$binary_pred,levels=c("1","0")),truth=new_pred$occurrence_status)
+
+
+#Might need to re-scale
+# Misschien probleem dat we moeten rescalen want is relatief 
+testrf <- rf_opt_fit$.predictions[[1]]%>%filter(splitrule=="hellinger")
+normalized <- function(x) (x- min(x))/(max(x) - min(x))
+rf_rescale <- data.frame(pred1=normalized(testrf$.pred_1),
+                         pred0=normalized(testrf$.pred_0),
+                         testrf$occurrence_status)
+rf_rescale
+rf_rescale_diff <- rf_rescale%>%group_by(testrf.occurrence_status)%>%summarize(gem1=median(pred1),gem0=median(pred0))
+rf_rescale_diff
+
+
+# Checking the CV folds ---------------------------------------------------
+#Checking outer folds decadal
+### Checking these folds
+table(pback_decad[outer_decad$splits[[1]]$in_id,4])
+
+ggplot(spatial_extent)+
+  geom_sf()+
+  geom_point(data = pres_decad[-(outer_decad$splits[[4]]$in_id),], aes(x = longitude, y = latitude, colour = decade))
+
+table(pback_decad[outer_decad$splits[[2]]$in_id,3])
+
+#Checking the monthly folds.
+
