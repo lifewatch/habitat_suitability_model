@@ -1,0 +1,55 @@
+---
+title: "Total workflow"
+author: "Jo-Hannes Nowé"
+date: "05-04-2024"
+output: 
+  html_document:default
+---
+
+Run the following scripts in order.
+
+```{r}
+source("code/02_download_presences.R")
+```
+
+```{r}
+source("code/03_download_environment.R")
+```
+
+```{r}
+source("code/04_preprocess_presences.R")
+```
+
+```{r}
+source("code/05_sample_background.R")
+```
+
+```{r}
+source("code/06_extract_environment.R")
+```
+
+```{r}
+source("code/07_PAExploration.R")
+```
+
+
+```{r}
+source("code/08_ensemble_decade.R")
+```
+
+```{r}
+source("code/09_ensemble_month.R")
+```
+
+```{r}
+source("code/10_mapping_predictions.R")
+```
+
+```{r}
+source("code/11_static_plot.R")
+```
+
+Now run the "code/12_report.Rmd" file to knit the report.
+
+
+
