@@ -54,4 +54,9 @@ data/
 # Environmental files
 .nc
 
+
 *.pdf
+
+#geospatial output
+results/geospatial_layers/
+
