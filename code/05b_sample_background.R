@@ -25,18 +25,8 @@ datasets_selection <- read.csv(file.path(datadir, "datasets_selection.csv"))
 tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
 thinned_m <- readRDS(file.path(datadir, "thinned_m.RDS"))
 thinned_d <- readRDS(file.path(datadir, "thinned_d.RDS"))
+target_group <- readRDS(file.path(datadir, "target_group.RDS"))
 # WORKFLOW ----------------------------------------------------------------
-
-# Define the list of datasets that passed through the filtering
-list_dasid <- datasets_selection$datasetid
-
-# For a given species and lists of datasets, download the full target-group occurrences
-target_group <- download_tg(aphia_id = aphiaid, 
-                            list_dasid= list_dasid, 
-                            spatial_extent = bbox, 
-                            temporal_extent = temporal_extent)
-
-target_group <- clean_presence(target_group, study_area, dataset_selection = datasets_selection)
 
 # Thinning to one occurrence per pixel
 thinned_tg_m <- thin_points(
@@ -95,7 +85,6 @@ pback_month <- rbind(thinned_m%>%dplyr::select(-decade), tgb_month) #presence-ba
 saveRDS(pback_month, file = file.path(datadir, "pback_month.RDS"))
 pback_decade <- rbind(thinned_d%>%dplyr::select(-month), tgb_decade)
 saveRDS(pback_decade, file = file.path(datadir,"pback_decade.RDS"))
-saveRDS(target_group, file=file.path(datadir,"target_group.RDS"))
 saveRDS(thinned_tg_m, file=file.path(datadir,"thinned_tg_m.RDS"))
 saveRDS(thinned_tg_d, file=file.path(datadir,"thinned_tg_d.RDS"))
 

@@ -86,7 +86,7 @@ package_list <- c("arrow",
                   "worrms",
                   "xgboost")
 #Load all the packages with library()
-lapply(package_list, library, character.only = TRUE)
+lapply(package_list, require, character.only = TRUE)
 library(imis)
 
 #Define user input choices
