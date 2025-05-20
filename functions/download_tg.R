@@ -8,9 +8,11 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
   target_group <- classification[[class,3]]
   
   #Connect to eurobis database
+  cat("Connecting to Eurobis...\n")
   eurobis <- connect_eurobis()
   
   #Generate a list of all the distinct aphiaids over the datasets
+  cat("Creating list of aphiaids...\n")
   aphiaid_list <- eurobis %>%
     filter(datasetid %in% list_dasid,
            longitude > spatial_extent[1], longitude < spatial_extent[3],
@@ -19,9 +21,11 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
            observationdate <= int_end(temporal_extent)) %>%
     dplyr::select(aphiaid) %>%
     dplyr::distinct()%>%
+    dplyr::filter(!is.na(aphiaid))%>%
     dplyr::collect()
   
   #Check which of the aphiaids belong to the target group (+-5min)
+  cat("Create dataframe of aphiaid class information...\n")
   target_aphiaids <- worrms::wm_classification_(aphiaid_list[[1]])%>%
     dplyr::filter(rank == "Class",
                   scientificname==target_group)%>%
@@ -29,7 +33,9 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
     dplyr::mutate(aphiaid=as.numeric(aphiaid))
   
   #Download target group points from EurOBIS
-  target_group <- eurobis %>%
+  cat("Download Eurobis data...\n")
+  eurobis <- connect_eurobis()
+  target_group_occurrences <- eurobis %>%
     dplyr::filter(datasetid %in% list_dasid,
            aphiaidaccepted %in% target_aphiaids$aphiaid,
            longitude > spatial_extent[1], longitude < spatial_extent[3],
@@ -44,5 +50,5 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
                   occurrence_id = occurrenceid) %>%
     dplyr::collect()
   
-  return(target_group)
+  return(target_group_occurrences)
 }
