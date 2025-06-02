@@ -1,7 +1,7 @@
 {
-  "name": "RWordFrequency",
+  "name": "habitat-suitability-model-01-setup",
   "label": "R word frequency",
-  "description": "This is an example data analysis wrapper for Python",
+  "description": "A script to make the general folder structure and load the necessary packages",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
