@@ -10,7 +10,8 @@ RUN apt-get update && apt-get install -y \
     libblas-dev \
     liblapack-dev \
     gfortran \
-    libudunits2-* \
+    libudunits2-dev \
+    libgdal-dev \
     php-xml \
     curl \
     && apt-get clean \
