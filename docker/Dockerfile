@@ -9,6 +9,15 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libblas-dev \
     liblapack-dev \
+    libudunits2-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libfontconfig1-dev \
+    r-base-dev \
+    r-cran-sf \
+    r-cran-raster \
+    r-cran-rjava \
     gfortran \
     curl \
     && apt-get clean \
