@@ -1,4 +1,4 @@
-FROM robinlovelace/geocompr:ubuntu
+FROM rocker/r-ver:4.2.2
 
 # System dependencies for building R packages
 RUN apt-get update && apt-get install -y \
@@ -9,22 +9,10 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libblas-dev \
     liblapack-dev \
-    libudunits2-dev \
-    libgdal-dev \
-    libgeos-dev \
-    libproj-dev \
-    libfontconfig1-dev \
-    r-base-dev \
-    r-cran-sf \
-    r-cran-raster \
-    r-cran-rjava \
     gfortran \
     curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Set working directory
-WORKDIR /app
 
 # Copy lockfile and project source
 COPY renv.lock ./
