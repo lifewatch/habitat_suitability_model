@@ -11,8 +11,21 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev \
     gfortran \
     curl \
+    libudunits2-dev \
+    libgdal-dev \
+    libgeos-dev \
+    libproj-dev \
+    libfontconfig1-dev \
+    r-base-dev \
+    r-cran-sf \
+    r-cran-raster \
+    r-cran-rjava \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
+
+
+
+
 
 # Set working directory
 WORKDIR /app
