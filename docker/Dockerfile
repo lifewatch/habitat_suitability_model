@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y \
     protobuf-compiler \
     libprotobuf-dev \
     php-xml \
+    libjq-dev \
     curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
