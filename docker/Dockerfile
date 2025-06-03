@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y \
     libudunits2-dev \
     libsodium-dev \
     libgdal-dev \
+    libfontconfig1-dev \
+    freetype2-demos \
     php-xml \
     curl \
     && apt-get clean \
