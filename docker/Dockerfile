@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     liblapack-dev \
     gfortran \
     libudunits2-dev \
+    libsodium-dev \
     libgdal-dev \
     php-xml \
     curl \
