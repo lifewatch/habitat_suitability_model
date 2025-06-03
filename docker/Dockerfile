@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
     libharfbuzz-dev \
     libfribidi-dev \
     freetype2-demos \
+    libprotobuf-dev \
     php-xml \
     curl \
     && apt-get clean \
