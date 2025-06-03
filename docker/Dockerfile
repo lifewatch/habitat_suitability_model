@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     libprotobuf-dev \
     php-xml \
     libjq-dev \
+    libmagick++-dev \
     curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
