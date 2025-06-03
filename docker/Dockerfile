@@ -14,6 +14,8 @@ RUN apt-get update && apt-get install -y \
     libsodium-dev \
     libgdal-dev \
     libfontconfig1-dev \
+    libharfbuzz-dev \
+    libfribidi-dev \
     freetype2-demos \
     php-xml \
     curl \
