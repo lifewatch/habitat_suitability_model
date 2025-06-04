@@ -12,7 +12,15 @@
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": "JSON file containing the setup information"
-    }],
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    }
+  ],
   "outputs": [],
   "resources": {
     "cores": 2,

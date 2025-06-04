@@ -13,13 +13,15 @@
 ##################################################################################
 ##################################################################################
 path = list(
-  output = "/mnt/outputs/01_setup.json",
+  setup = "/mnt/outputs/01_setup.json",
+  study_area_file = "/mnt/outputs/study_area.RDS",
   code = "./code"
 )
 
 # FUNCTIONS ---------------------------------------------------------------
 lapply(list.files("functions", full.names = TRUE),source)
 sapply(list.files(path$code, full.names = T), source)
+lapply(list.files("/wrp/utils", full.names = TRUE, pattern = "\\.R$"), source)
 # INPUT -------------------------------------------------------------------
 
 args = args_parse(commandArgs(trailingOnly = TRUE))
@@ -27,78 +29,14 @@ args = args_parse(commandArgs(trailingOnly = TRUE))
 
 
 # WORKFLOW ----------------------------------------------------------------
-# Define different folders
-downloaddir <- "/mnt/data/raw_data"
-datadir     <- "/mnt/data/derived_data"
-mapsdir     <- "/mnt/results/geospatial_layers"
-modeldir   <- "/mnt/results/models"
-figdir    <- "/mnt/results/figures_tables"
-envdir <-"/mnt/data/raw_data/environmental_layers"
-occdir <-"/mnt/data/raw_data/occurrences"
-spatdir <- "/mnt/data/raw_data/spatial_layers"
-scriptsdir <- "code/"
-folderstruc <- c(downloaddir,
-                 datadir,
-                 mapsdir,
-                 modeldir,
-                 figdir,
-                 envdir,
-                 occdir,
-                 spatdir,
-                 scriptsdir)
 
-#Check for their existence, create if missing
-for(i in 1:length(folderstruc)){
-  if(!dir.exists(folderstruc[i])){
-    # If not, create the folder
-    dir.create(folderstruc[i],recursive = TRUE)
-    cat("Folder created:", folderstruc[i], "\n")
-  } else {
-    cat("Folder already exists:", folderstruc[i], "\n")
-  }
-}
 
-#Download the necessary R packages
-if(!require('renv'))install.packages('renv')
-#Possibly re-start R for renv/activate.R to work.
-package_list <- c("arrow",
-                  "bundle",
-                  "CAST",
-                  "CoordinateCleaner",
-                  "dismo",
-                  "doFuture",
-                  "doParallel",
-                  "downloader",
-                  "foreach",
-                  "future",
-                  "GeoThinneR",
-                  "ks",
-                  "mgcv",
-                  "modEvA",
-                  "ows4R",
-                  "randomForest",
-                  "ranger",
-                  "raster",
-                  "sdm",
-                  "sf",
-                  "sp",
-                  "spatialEco",
-                  "spatstat",
-                  "stacks",
-                  "stats",
-                  "terra",
-                  "tidymodels",
-                  "tidysdm",
-                  "tidyverse",
-                  "utils",
-                  "worrms",
-                  "xgboost")
-#Load all the packages with library()
-lapply(package_list, require, character.only = TRUE)
-library(imis)
 
 #Define user input choices
-study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,args$study_area_file))
+study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,args$study_area_name))
+# write   study_area as RDS file
+saveRDS(study_area, file = file.path(path$study_area_file))
+
 # Print study_area type
 print(paste("Study area type:", class(study_area)))
 
@@ -123,7 +61,6 @@ max_lat <- args$max_lat
 # OUTPUT ------------------------------------------------------------------
 # Save the user inputs as one json file
 user_inputs <- list(
-  study_area = study_area,
   temporal_extent = temporal_extent,
   possible_aphiaids = possible_aphiaids,
   aphiaid = aphiaid,
@@ -138,6 +75,6 @@ user_inputs <- list(
   envdir = envdir,
   occdir = occdir,
   spatdir = spatdir,
-  study_area_file = args$study_area_file
+  study_area_file = path$study_area_file
 )
-jsonlite::write_json(user_inputs, file.path(path$output), pretty = TRUE)
+jsonlite::write_json(user_inputs, file.path(path$setup), pretty = TRUE)

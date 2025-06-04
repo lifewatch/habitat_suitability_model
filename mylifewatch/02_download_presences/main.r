@@ -12,27 +12,31 @@
 cat("\014")                 # Clears the console
 rm(list = ls())             # Remove all variables of the work space
 path = list(
-  input = "/mnt/inputs/01_setup.json",
-  code = "./code"
+  setup = "/mnt/inputs/01_setup.json",
+  code = "./code",
+  study_area_file = "/mnt/inputs/study_area.RDS"
 )
 
 # source("code/01_setup.R")
 lapply(list.files("functions", full.names = TRUE),source)
 sapply(list.files(path$code, full.names = T), source)
-
+lapply(list.files("/wrp/utils", full.names = TRUE, pattern = "\\.R$"), source)
 
 args = args_parse(commandArgs(trailingOnly = TRUE))
 
 # Read the setup file and load the variables
-setup <- jsonlite::read_json(path$input)
-# Load the variables from the setup file
-study_area <- as.data.frame(setup$study_area)
-# print(paste("Study area type:", class(study_area)))
-# print(paste("study_area:", study_area))
+print("--------------------------Inputs--------------------------")
+setup <- jsonlite::read_json(path$setup)
 datadir = setup$datadir
+# Load aphiaid as numeric
 aphiaid = setup$aphiaid
+print(paste("Aphia ID:", aphiaid))
 spatdir = setup$spatdir
-
+study_area_file = path$study_area_file
+print(paste("Study area file:", study_area_file))
+temporal_extent = setup$temporal_extent
+print(paste("Temporal extent:", temporal_extent))
+print("----------------------------------------------------------")
 ##################################################################################
 ##################################################################################
 
@@ -42,12 +46,14 @@ spatdir = setup$spatdir
 #connect_eurobis
 
 # INPUT -------------------------------------------------------------------
+# Load the study area RDS file
+study_area <- readRDS(study_area_file)
 bbox <- sf::st_bbox(study_area)
-# # WORKFLOW ----------------------------------------------------------------
-# #Downloading the occurrence data from EurOBIS
-# mydata_eurobis <- load_presence(aphia_id = aphiaid,
-#                                spatial_extent = bbox,
-#                                temporal_extent = temporal_extent)
+# WORKFLOW ----------------------------------------------------------------
+#Downloading the occurrence data from EurOBIS
+mydata_eurobis <- load_presence(aphia_id = aphiaid,
+                               spatial_extent = bbox,
+                               temporal_extent = temporal_extent)
 #
 # # generate dataset metadata
 # datasetidsoi <- mydata_eurobis %>% distinct(datasetid) %>%
