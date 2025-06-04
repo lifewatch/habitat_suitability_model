@@ -6,29 +6,63 @@
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
     {
-      "name": "stopWords",
-      "label": "Stop words",
-      "description": "Exclude given stop words from being counted",
-      "defaultValue": "",
+      "name": "study_area_file",
+      "label": "study_area_file",
+      "description": "study_area_file",
+      "defaultValue": "ospar_regions_2017_01_002.shp",
+      "type": "String"
+    },
+    {
+      "name": "start_date",
+      "label": "start_date",
+      "defaultValue": "1999-01-01",
+      "type": "String",
+      "description": "Start date"
+    },
+    {
+      "name": "end_date",
+      "label": "end_date",
+      "defaultValue": "2019-12-31",
+      "type": "String",
+      "description": "End date"
+    },
+    {
+      "name": "possible_aphiaids",
+      "label": "possible_aphiaids",
+      "description": "possible_aphiaids",
+      "defaultValue": "137117, 137084, 137094, 137111, 137101, 137087",
       "type": "List"
     },
     {
-      "name": "sortResult",
-      "label": "Sort result",
-      "description": "Sort outputted words alphabetically",
-      "defaultValue": "FALSE",
-      "type": "String"
+      "name": "min_lon",
+      "label": "min_lon",
+      "description": "min_lon",
+      "defaultValue": "1.8",
+      "type": "Float"
+    },
+        {
+      "name": "max_lon",
+      "label": "max_lon",
+      "description": "max_lon",
+      "defaultValue": "2.5",
+      "type": "Float"
+    },
+        {
+      "name": "min_lat",
+      "label": "min_lat",
+      "description": "min_lat",
+      "defaultValue": "51",
+      "type": "Float"
+    },
+        {
+      "name": "max_lat",
+      "label": "max_lat",
+      "description": "max_lat",
+      "defaultValue": "52",
+      "type": "Float"
     }
   ],
-  "inputs": [
-    {
-      "type": "Text",
-      "name": "input-text", 
-      "label": "Document",
-      "path": "/mnt/inputs/document.txt",
-      "description": "Text document we want to perform a word frequency analysis on"
-    }
-  ],
+  "inputs": [],
   "outputs": [
     {
       "type": "Text",
@@ -57,7 +91,7 @@
       "citation": null
     }
   ],
-  "publicationDate": "Thu, 11 July 2023 11:13:00 GMT",
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
   "author": "LifeWatch ERIC",
   "bugs": {
     "email": "help@exampleorg.com",
