@@ -11,6 +11,10 @@
 # SETUP ------------------------------------
 cat("\014")                 # Clears the console
 rm(list = ls())             # Remove all variables of the work space
+library(magrittr) # needs to be run every time you start R and want to use %>%
+library(dplyr)    # alternatively, this also loads %>%
+
+
 path = list(
   setup = "/mnt/inputs/01_setup.json",
   code = "./code",

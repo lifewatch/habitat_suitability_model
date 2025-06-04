@@ -32,7 +32,9 @@ package_list <- c("arrow",
                   "tidyverse",
                   "utils",
                   "worrms",
-                  "xgboost")
+                  "xgboost",
+                  "dplyr",
+                  "lubridate")
 #Load all the packages with library()
 lapply(package_list, require, character.only = TRUE)
 library(imis)

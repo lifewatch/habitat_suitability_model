@@ -1,4 +1,4 @@
-FROM ghcr.io/qcdis/habitat_suitability_model:v0.1.4
+FROM ghcr.io/qcdis/habitat_suitability_model:v0.1.5
 
 # Copy dependencies and install them
 COPY req req
