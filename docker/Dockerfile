@@ -31,8 +31,8 @@ COPY renv.lock ./
 
 # Install renv and restore packages
 RUN R -e "install.packages('renv'); renv::restore(lockfile = 'renv.lock', clean = TRUE)"
-
-COPY functions/ functions/
+RUN mkdir /wrp
+COPY functions/ /wrp/functions
 
 # Default command
 CMD ["R"]
