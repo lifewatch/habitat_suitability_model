@@ -66,10 +66,10 @@
   "outputs": [
     {
       "type": "Text",
-      "name": "output-text", 
-      "path": "/mnt/outputs/result.json",
-      "label": "Result",
-      "description": "JSON file containing the words frequency"
+      "name": "output",
+      "path": "/mnt/outputs/01_setup.json",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
     }
   ],
   "resources": {

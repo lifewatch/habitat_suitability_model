@@ -12,30 +12,25 @@
 
 ##################################################################################
 ##################################################################################
-path = list(
-  output = "/mnt/outputs/01_setup.json",
-  code = "./code"
-)
+
+install.packages("devtools")
+install.packages("renv", repos = "https://rstudio.r-universe.dev")
+devtools::install_github("iobis/imis")
 
 # FUNCTIONS ---------------------------------------------------------------
 lapply(list.files("functions", full.names = TRUE),source)
-sapply(list.files(path$code, full.names = T), source)
 # INPUT -------------------------------------------------------------------
-
-args = args_parse(commandArgs(trailingOnly = TRUE))
-
-
 
 # WORKFLOW ----------------------------------------------------------------
 # Define different folders
-downloaddir <- "/mnt/data/raw_data"
-datadir     <- "/mnt/data/derived_data"
-mapsdir     <- "/mnt/results/geospatial_layers"
-modeldir   <- "/mnt/results/models"
-figdir    <- "/mnt/results/figures_tables"
-envdir <-"/mnt/data/raw_data/environmental_layers"
-occdir <-"/mnt/data/raw_data/occurrences"
-spatdir <- "/mnt/data/raw_data/spatial_layers"
+downloaddir <- "data/raw_data"
+datadir     <- "data/derived_data"
+mapsdir     <- "results/geospatial_layers"
+modeldir   <- "results/models"
+figdir    <- "results/figures_tables"
+envdir <-"data/raw_data/environmental_layers"
+occdir <-"data/raw_data/occurrences"
+spatdir <- "data/raw_data/spatial_layers"
 scriptsdir <- "code/"
 folderstruc <- c(downloaddir,
                  datadir,
@@ -98,46 +93,19 @@ lapply(package_list, require, character.only = TRUE)
 library(imis)
 
 #Define user input choices
-study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,args$study_area_file))
-# Print study_area type
-print(paste("Study area type:", class(study_area)))
-
+study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,"ospar_regions_2017_01_002.shp"))
 bbox <- sf::st_bbox(study_area)
-print(paste("bbox type:", class(bbox)))
-date_start <- as.POSIXct(args$start_date)
-date_end <- as.POSIXct(args$end_date)
+date_start <- as.POSIXct("1999-01-01")
+date_end <- as.POSIXct("2019-12-31")
 temporal_extent <- lubridate::interval(date_start,date_end)
-print(paste("Temporal extent:", temporal_extent))
-# possible_aphiaids <- c(137117, 137084, 137094, 137111, 137101, 137087)
-possible_aphiaids = args$possible_aphiaids
-# Convert possible_aphiaids to numeric if they are not already
-possible_aphiaids <- as.numeric(unlist(strsplit(possible_aphiaids, ",")))
+possible_aphiaids <- c(137117, 137084, 137094, 137111, 137101, 137087)
 aphiaid <- possible_aphiaids[1]
 
 #Choosing the bounding box to assess the monthly trend
-min_lon <- args$min_lon
-max_lon <- args$max_lon
-min_lat <- args$min_lat
-max_lat <- args$max_lat
+min_lon <- 1.8
+max_lon <- 2.5
+min_lat <- 51
+max_lat <- 52
 
 # OUTPUT ------------------------------------------------------------------
-# Save the user inputs as one json file
-user_inputs <- list(
-  study_area = study_area,
-  temporal_extent = temporal_extent,
-  possible_aphiaids = possible_aphiaids,
-  aphiaid = aphiaid,
-  min_lon = min_lon,
-  max_lon = max_lon,
-  min_lat = min_lat,
-  max_lat = max_lat,
-  datadir = datadir,
-  mapsdir = mapsdir,
-  modeldir = modeldir,
-  figdir = figdir,
-  envdir = envdir,
-  occdir = occdir,
-  spatdir = spatdir,
-  study_area_file = args$study_area_file
-)
-jsonlite::write_json(user_inputs, file.path(path$output), pretty = TRUE)
+
