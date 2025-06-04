@@ -1,13 +1,4 @@
-FROM rstudio/r-base:4.5-jammy
-
-# Install remotes
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-    gcc \
-    r-cran-remotes \
-    r-cran-doparallel
-
-
+FROM ghcr.io/qcdis/habitat_suitability_model:v0.1
 
 # Copy dependencies and install them
 COPY req req
