@@ -15,83 +15,97 @@
       "label": "tempsal_filename",
       "description": ""
     },
-                    {
-      "type": "Text",
-      "name": "datasets_selection",
-      "path": "/mnt/inputs/datasets_selection.csv",
-      "label": "datasets_selection",
-      "description": ""
-    },
-                    {
-      "type": "Text",
-      "name": "thinned_m_file",
-      "path": "/mnt/inputs/thinned_m.RDS",
-      "label": "thinned_m_file",
-      "description": ""
-    },
-                    {
-      "type": "Text",
-      "name": "thinned_d_file",
-      "path": "/mnt/inputs/thinned_d.RDS",
-      "label": "thinned_d_file",
-      "description": ""
-    },
-                    {
-      "type": "Text",
-      "name": "target_group",
-      "path": "/mnt/inputs/target_group.RDS",
-      "label": "target_group",
-      "description": ""
-    },
-    {
-      "type": "Text",
-      "name": "input",
-      "path": "/mnt/inputs/01_setup.json",
-      "label": "01_setup",
-      "description": "JSON file containing the setup information"
-    },
-    {
-      "type": "Text",
-      "name": "study_area_file",
-      "path": "/mnt/inputs/study_area.RDS",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
-    },
-    {
-      "type": "Text",
-      "name": "temporal_extent",
-      "path": "/mnt/inputs/temporal_extent.RDS",
-      "label": "temporal_extent",
-      "description": "RDS file containing the temporal_extent"
-    }
-  ],
-  "outputs": [
-    {
+        {
       "type": "Text",
       "name": "pback_month",
-      "path": "/mnt/outputs/pback_month.RDS",
+      "path": "/mnt/inputs/pback_month.RDS",
       "label": "pback_month",
       "description": ""
     },
         {
       "type": "Text",
       "name": "pback_decade",
-      "path": "/mnt/outputs/pback_decade.RDS",
+      "path": "/mnt/inputs/pback_decade.RDS",
       "label": "pback_decade",
       "description": ""
     },
         {
       "type": "Text",
-      "name": "thinned_tg_m",
-      "path": "/mnt/outputs/pback_decade.RDS",
-      "label": "thinned_tg_m",
+      "name": "mean_npp",
+      "path": "/mnt/inputs/mean_npp.nc",
+      "label": "mean_npp",
+      "description": ""
+    },
+        {
+      "type": "Text",
+      "name": "npp_filename",
+      "path": "/mnt/inputs/npp.nc",
+      "label": "npp_filename",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "bathy_sliced",
+      "path": "/mnt/inputs/bathy_sliced",
+      "label": "bathy_sliced",
+      "description": ""
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "env_month",
+      "path": "/mnt/outputs/env_month.RDS",
+      "label": "env_month",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "env_decade",
+      "path": "/mnt/outputs/env_decade.RDS",
+      "label": "env_decade",
+      "description": ""
+    },
+        {
+      "type": "Text",
+      "name": "thetao_avg_m",
+      "path": "/mnt/outputs/thetao_avg_m.nc",
+      "label": "thetao_avg_m",
       "description": ""
     },
             {
       "type": "Text",
-      "name": "thinned_tg_d",
-      "path": "/mnt/outputs/thinned_tg_d.RDS",
-      "label": "thinned_tg_d",
+      "name": "so_avg_m",
+      "path": "/mnt/outputs/so_avg_m.nc",
+      "label": "so_avg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "npp_avg_m",
+      "path": "/mnt/outputs/npp_avg_m.nc",
+      "label": "npp_avg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thetao_avg_d",
+      "path": "/mnt/outputs/thetao_avg_d.nc",
+      "label": "thetao_avg_d",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "so_avg_d",
+      "path": "/mnt/outputs/so_avg_d.nc",
+      "label": "so_avg_d",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "npp_avg_d",
+      "path": "/mnt/outputs/npp_avg_d.nc",
+      "label": "npp_avg_d",
       "description": ""
     }
   ],

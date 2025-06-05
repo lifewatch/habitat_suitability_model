@@ -10,6 +10,7 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
   #Connect to eurobis database
   cat("Connecting to Eurobis...\n")
   eurobis <- connect_eurobis()
+  cat("Connected to Eurobis\n")
   
   #Generate a list of all the distinct aphiaids over the datasets
   cat("Creating list of aphiaids...\n")
@@ -31,7 +32,7 @@ download_tg <- function(aphia_id, list_dasid, spatial_extent, temporal_extent){
                   scientificname==target_group)%>%
     dplyr::select(aphiaid="id")%>%
     dplyr::mutate(aphiaid=as.numeric(aphiaid))
-  
+
   #Download target group points from EurOBIS
   cat("Download Eurobis data...\n")
   eurobis <- connect_eurobis()

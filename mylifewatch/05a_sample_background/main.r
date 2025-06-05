@@ -8,8 +8,6 @@
 # Script Description: Sample the background based on the target-group background
 # methodolody.
 # SETUP ------------------------------------
-cat("\014")                 # Clears the console
-rm(list = ls())             # Remove all variables of the work space
 
 ##################################################################################
 ##################################################################################
