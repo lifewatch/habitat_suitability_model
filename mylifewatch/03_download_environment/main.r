@@ -18,8 +18,8 @@ path = list(
   datasets_all_file = "/mnt/outputs/datasets_all.csv",
   mydata_eurobis_file = "/mnt/outputs/mydata_eurobis.RDS",
   study_area_file = "/mnt/inputs/study_area.RDS",
-  tempsal_output_filename = "tempsal.nc",
-  npp_output_filename = "npp.nc",
+  tempsal_output_filename = "/mnt/outputs/tempsal.nc",
+  npp_output_filename = "/mnt/outputs/npp.nc",
   output_path = "/mnt/outputs/out.json"
 )
 
@@ -63,7 +63,7 @@ ymax<- bbox[[4]]
 
 
 cm <- import("copernicusmarine")
-#cm$login()
+cm$login(username=args$copernicusmarine_username, password=args$copernicusmarine_password)
 cm$subset(
   dataset_id="cmems_mod_glo_phy_my_0.083deg_P1M-m",
   variables=c("so", "thetao"),
@@ -101,7 +101,7 @@ cm$subset(
 # npp.nc
 
 outputs <- list(
-npp_output_filename = npp_output_filename,
-tempsal_output_filename = tempsal_output_filename
+npp_output_filename = path$npp_output_filename,
+tempsal_output_filename = path$tempsal_output_filename
 )
 jsonlite::write_json(outputs, file.path(path$output_path), pretty = TRUE)

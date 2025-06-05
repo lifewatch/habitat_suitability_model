@@ -32,21 +32,21 @@
     {
       "type": "Text",
       "name": "datasets_all",
-      "path": "/mnt/inputs/datasets_all.csv",
+      "path": "/mnt/outputs/datasets_all.csv",
       "label": "datasets_all",
       "description": "csv file containing all datasets used in the analysis"
     },
     {
       "type": "Text",
       "name": "mydata_eurobis",
-      "path": "/mnt/inputs/mydata_eurobis.RDS",
+      "path": "/mnt/outputs/mydata_eurobis.RDS",
       "label": "mydata_eurobis",
       "description": "RDS file containing the occurrences of the species in the study area from Eurobis"
     },
     {
       "type": "Text",
       "name": "study_area",
-      "path": "/mnt/inputs/study_area.RDS",
+      "path": "/mnt/outputs/study_area.RDS",
       "label": "study_area",
       "description": "RDS file containing the study area used in the analysis"
     }
