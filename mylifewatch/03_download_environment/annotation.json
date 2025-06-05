@@ -37,6 +37,13 @@
     }
   ],
   "outputs": [
+    {
+      "type": "Text",
+      "name": "output",
+      "path": "/mnt/outputs/out.json",
+      "label": "output",
+      "description": ""
+    }
   ],
   "resources": {
     "cores": 2,
