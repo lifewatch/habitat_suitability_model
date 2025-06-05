@@ -15,71 +15,37 @@
       "label": "tempsal_filename",
       "description": ""
     },
-        {
-      "type": "Text",
-      "name": "npp_filename",
-      "path": "/mnt/inputs/npp.nc",
-      "label": "npp_filename",
-      "description": ""
-    },
-            {
-      "type": "Text",
-      "name": "datasets_all_file",
-      "path": "/mnt/inputs/datasets_all.csv",
-      "label": "datasets_all_file",
-      "description": ""
-    },
-            {
-      "type": "Text",
-      "name": "mydata_eurobis_file",
-      "path": "/mnt/inputs/mydata_eurobis_file.RDS",
-      "label": "mydata_eurobis_file",
-      "description": ""
-    },
-                {
-      "type": "Text",
-      "name": "study_area_file",
-      "path": "/mnt/inputs/study_area_file.RDS",
-      "label": "study_area_file",
-      "description": ""
-    },
-                {
+                    {
       "type": "Text",
       "name": "datasets_selection",
       "path": "/mnt/inputs/datasets_selection.csv",
       "label": "datasets_selection",
       "description": ""
-    }
-  ],
-  "outputs": [
-    {
-      "type": "Text",
-      "name": "datasets_selection",
-      "path": "/mnt/outputs/datasets_selection.csv",
-      "label": "datasets_selection",
-      "description": ""
     },
-    {
+                    {
       "type": "Text",
       "name": "thinned_m_file",
-      "path": "/mnt/outputs/thinned_m.RDS",
+      "path": "/mnt/inputs/thinned_m.RDS",
       "label": "thinned_m_file",
       "description": ""
     },
-    {
+                    {
       "type": "Text",
       "name": "thinned_d_file",
-      "path": "/mnt/outputs/thinned_d.RDS",
+      "path": "/mnt/inputs/thinned_d.RDS",
       "label": "thinned_d_file",
       "description": ""
     },
-        {
+                    {
       "type": "Text",
-      "name": "cleaned_data_file",
-      "path": "/mnt/outputs/cleaned_data.RDS",
-      "label": "cleaned_data_file",
+      "name": "target_group",
+      "path": "/mnt/inputs/target_group.RDS",
+      "label": "target_group",
       "description": ""
     }
+  ],
+  "outputs": [
+
   ],
   "resources": {
     "cores": 2,
