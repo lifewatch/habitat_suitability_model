@@ -99,9 +99,3 @@ cm$subset(
 # OUTPUT ------------------------------------------------------------------
 # tempsal.nc
 # npp.nc
-
-outputs <- list(
-npp_output_filename = path$npp_output_filename,
-tempsal_output_filename = path$tempsal_output_filename
-)
-jsonlite::write_json(outputs, file.path(path$output_path), pretty = TRUE)

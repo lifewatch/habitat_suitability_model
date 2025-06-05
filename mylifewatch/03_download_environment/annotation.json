@@ -55,9 +55,16 @@
   "outputs": [
     {
       "type": "Text",
-      "name": "output",
-      "path": "/mnt/outputs/out.json",
-      "label": "output",
+      "name": "tempsal_output_filename",
+      "path": "/mnt/outputs/tempsal.nc",
+      "label": "tempsal_output_filename",
+      "description": ""
+    },
+        {
+      "type": "Text",
+      "name": "npp_output_filename",
+      "path": "/mnt/outputs/npp.nc",
+      "label": "npp_output_filename",
       "description": ""
     }
   ],

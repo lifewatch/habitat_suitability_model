@@ -1,40 +1,54 @@
 {
-  "name": "habitat-suitability-model-03_download_environment",
+  "name": "habitat-suitability-model-04_preprocess_presences",
   "label": "occurrences of a species",
-  "description": "Download the environmental variables from CMEMS using the CopernicuMarine toolbox via python.",
+  "description": "Description: Perform data cleaning and thinning steps on the data.",
   "type": "DataAnalysing",
-  "dockerImage": "habitat-suitability-model-03_download_environment",
+  "dockerImage": "habitat-suitability-model-04_preprocess_presences",
   "parameters": [
 
   ],
   "inputs": [
     {
       "type": "Text",
-      "name": "mydata_eurobis",
-      "path": "/mnt/inputs/mydata_eurobis.RDS",
-      "label": "mydata_eurobis",
-      "description": "RDS file containing the occurrences of the species in the study area from Eurobis"
-    },
-        {
-      "type": "Text",
-      "name": "datasets_all",
-      "path": "/mnt/inputs/datasets_all.csv",
-      "label": "datasets_all",
-      "description": "csv file containing all datasets used in the analysis"
-    },
-        {
-      "type": "Text",
-      "name": "input",
-      "path": "/mnt/inputs/out.json",
-      "label": "input",
+      "name": "tempsal_filename",
+      "path": "/mnt/inputs/tempsal.nc",
+      "label": "tempsal_filename",
       "description": ""
     },
         {
       "type": "Text",
+      "name": "npp_filename",
+      "path": "/mnt/inputs/npp.nc",
+      "label": "npp_filename",
+      "description": ""
+    },
+            {
+      "type": "Text",
+      "name": "datasets_all_file",
+      "path": "/mnt/inputs/datasets_all.csv",
+      "label": "datasets_all_file",
+      "description": ""
+    },
+            {
+      "type": "Text",
+      "name": "mydata_eurobis_file",
+      "path": "/mnt/inputs/mydata_eurobis_file.RDS",
+      "label": "mydata_eurobis_file",
+      "description": ""
+    },
+                {
+      "type": "Text",
       "name": "study_area_file",
-      "path": "/mnt/inputs/study_area.RDS",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
+      "path": "/mnt/inputs/study_area_file.RDS",
+      "label": "study_area_file",
+      "description": ""
+    },
+                {
+      "type": "Text",
+      "name": "datasets_selection",
+      "path": "/mnt/inputs/datasets_selection.csv",
+      "label": "datasets_selection",
+      "description": ""
     }
   ],
   "outputs": [

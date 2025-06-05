@@ -14,15 +14,16 @@ rm(list = ls())             # Remove all variables of the work space
 ##################################################################################
 
 path = list(
-  setup = "/mnt/inputs/01_setup.json",
   code = "./code",
-  temporal_extent_file = "/mnt/inputs/temporal_extent.RDS",
   datasets_all_file = "/mnt/inputs/datasets_all.csv",
   mydata_eurobis_file = "/mnt/inputs/mydata_eurobis.RDS",
   study_area_file = "/mnt/inputs/study_area.RDS",
-  tempsal_output_filename = "tempsal.nc",
-  npp_output_filename = "npp.nc",
-  output_path = "/mnt/outputs/out.json"
+  tempsal_filename = "/mnt/inputs/tempsal.nc",
+  npp_filename = "/mnt/inputs/npp.nc",
+  datasets_selection = "/mnt/outputs/datasets_selection.csv",
+  thinned_m_file = "/mnt/outputs/thinned_m.RDS",
+  thinned_d_file = "/mnt/outputs/thinned_d.RDS",
+  cleaned_data_file = "/mnt/outputs/cleaned_data.RDS"
 )
 
 
@@ -39,8 +40,8 @@ args = args_parse(commandArgs(trailingOnly = TRUE))
 # INPUT -------------------------------------------------------------------
 mydata_eurobis <- readRDS(file.path(path$mydata_eurobis_file))
 datasets_all <- read.csv(file.path(path$datasets_all_file))
-tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
-study_area <- readRDS(file.path(path&study_area_file))
+tempsal <- terra::rast(file.path(path$tempsal_filename))
+study_area <- readRDS(file.path(path$study_area_file))
 # WORKFLOW ----------------------------------------------------------------
 # Filter out datasets based on a keyword
 word_filter <- c("stranding", "museum")
@@ -87,8 +88,8 @@ thinned_d <- thinned_d[[1]]%>%dplyr::select(
 )
 
 # OUTPUT ------------------------------------------------------------------
-write.csv(datasets_selection ,file=file.path(datadir,"datasets_selection.csv"),row.names = F, append=FALSE)
-saveRDS(cleaned_data, file.path(datadir, "cleaned_data.RDS"))
-saveRDS(thinned_m, file.path(datadir, "thinned_m.RDS"))
-saveRDS(thinned_d, file.path(datadir, "thinned_d.RDS"))
+write.csv(datasets_selection,file=file.path(path$datasets_selection),row.names = F, append=FALSE)
+saveRDS(cleaned_data, file.path(path$cleaned_data_file))
+saveRDS(thinned_m, file.path(path$thinned_m_file))
+saveRDS(thinned_d, file.path(path$thinned_d_file))
 
