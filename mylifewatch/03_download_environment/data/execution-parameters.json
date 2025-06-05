@@ -1,0 +1,26 @@
+{
+  "parameters": [
+    {
+      "name": "date_start",
+      "defaultValue": "1999-01-01",
+      "value": "1999-01-01"
+    },
+    {
+      "name": "date_end",
+      "defaultValue": "2019-12-31",
+      "value": "2019-12-31"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "envdir",
+      "defaultValue": "/mnt/outputs/",
+      "value": "/mnt/outputs/"
+    },
+    {
+      "name": "study_area_file",
+      "defaultValue": "/mnt/inputs/study_area.RDS",
+      "value": "/mnt/inputs/study_area.RDS"
+    }
+  ]
+}

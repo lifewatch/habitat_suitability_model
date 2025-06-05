@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libjq-dev \
     libmagick++-dev \
     curl \
+    python3-venv \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

@@ -1,0 +1,72 @@
+{
+  "name": "habitat-suitability-model-03_download_environment",
+  "label": "occurrences of a species",
+  "description": "Download the environmental variables from CMEMS using the CopernicuMarine toolbox via python.",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-03_download_environment",
+  "parameters": [
+    {
+      "type": "String",
+      "name": "date_start",
+      "defaultValue": "1999-01-01",
+      "label": "date_start",
+      "description": "date_start"
+    },
+    {
+      "type": "String",
+      "name": "date_end",
+      "defaultValue": "2019-12-31",
+      "label": "date_end",
+      "description": "date_end"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "envdir",
+      "path": "/mnt/outputs/",
+      "label": "envdir",
+      "description": "output_directory"
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    }
+  ],
+  "outputs": [
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "PSF",
+      "version": "3.11.3",
+      "author": "John Doe",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

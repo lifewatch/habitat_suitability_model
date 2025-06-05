@@ -19,7 +19,7 @@ path = list(
   setup = "/mnt/inputs/01_setup.json",
   code = "./code",
   study_area_file = "/mnt/inputs/study_area.RDS",
-  temporal_extent_file = "/mnt/inputs/temporal_extent.RDS"
+  temporal_extent_file = "/mnt/inputs/temporal_extent.RDS",
   datasets_all_file = "/mnt/outputs/datasets_all.csv",
   mydata_eurobis_file = "/mnt/outputs/mydata_eurobis.RDS",
   study_area_file_output = "/mnt/outputs/study_area.RDS"
@@ -35,7 +35,6 @@ args = args_parse(commandArgs(trailingOnly = TRUE))
 # Read the setup file and load the variables
 print("--------------------------Inputs--------------------------")
 setup <- jsonlite::read_json(path$setup)
-datadir = setup$datadir
 # Load aphiaid as int32
 aphiaid = as.integer(setup$aphiaid)
 print(paste("Aphia ID:", aphiaid))
@@ -85,6 +84,6 @@ names(all_info)[1]<-"datasetid"
 # OUTPUT -----------------------------------------------------------------
 
 #Save output
-write.csv(all_info,file=file.path(datadir,path$datasets_all_file),row.names = F, append=FALSE)
-saveRDS(mydata_eurobis, file = file.path(datadir, path$mydata_eurobis_file))
-saveRDS(study_area, file = file.path(datadir, path$study_area_file_output))
+write.csv(all_info,file=file.path(path$datasets_all_file),row.names = F, append=FALSE)
+saveRDS(mydata_eurobis, file = file.path(path$mydata_eurobis_file))
+saveRDS(study_area, file = file.path(path$study_area_file_output))
