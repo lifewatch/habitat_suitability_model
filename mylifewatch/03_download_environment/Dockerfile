@@ -1,6 +1,6 @@
 FROM docker.io/library/base-my
 
-RUN apt-get install python3 python3-venv python3-pip -y
+RUN apt-get update && apt-get update && apt-get install python3 python3-venv python3-pip -y
 
 RUN which python3
 
