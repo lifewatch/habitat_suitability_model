@@ -73,6 +73,13 @@
     },
     {
       "type": "Text",
+      "name": "temporal_extent",
+      "path": "/mnt/outputs/temporal_extent.RDS",
+      "label": "temporal_extent",
+      "description": "temporal_extent"
+    },
+    {
+      "type": "Text",
       "name": "study_area_file",
       "path": "/mnt/outputs/study_area.RDS",
       "label": "study_area",

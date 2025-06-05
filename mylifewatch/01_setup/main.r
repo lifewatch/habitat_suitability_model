@@ -15,6 +15,7 @@
 path = list(
   setup = "/mnt/outputs/01_setup.json",
   study_area_file = "/mnt/outputs/study_area.RDS",
+  temporal_extent_file = "/mnt/outputs/temporal_extent.RDS",
   code = "./code"
 )
 
@@ -45,7 +46,7 @@ print(paste("bbox type:", class(bbox)))
 date_start <- as.POSIXct(args$start_date)
 date_end <- as.POSIXct(args$end_date)
 temporal_extent <- lubridate::interval(date_start,date_end)
-print(paste("Temporal extent:", temporal_extent))
+saveRDS(temporal_extent, file = file.path(path$temporal_extent_file))
 # possible_aphiaids <- c(137117, 137084, 137094, 137111, 137101, 137087)
 possible_aphiaids = args$possible_aphiaids
 # Convert possible_aphiaids to numeric if they are not already
@@ -59,9 +60,11 @@ min_lat <- args$min_lat
 max_lat <- args$max_lat
 
 # OUTPUT ------------------------------------------------------------------
+# Extract and format temporal_extent for JSON
+
+
 # Save the user inputs as one json file
 user_inputs <- list(
-  temporal_extent = temporal_extent,
   possible_aphiaids = possible_aphiaids,
   aphiaid = aphiaid,
   min_lon = min_lon,
