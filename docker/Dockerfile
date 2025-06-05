@@ -1,7 +1,7 @@
 FROM rocker/r-ver:4.2.2
 
 # System dependencies for building R packages
-RUN apt-get update && apt-get upgrade && apt-get install -y \
+RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libssl-dev \
     libxml2-dev \
