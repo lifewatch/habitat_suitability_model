@@ -45,41 +45,28 @@
     },
     {
       "type": "Text",
+      "name": "input",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
+    },
+    {
+      "type": "Text",
       "name": "study_area_file",
       "path": "/mnt/inputs/study_area.RDS",
       "label": "study_area",
       "description": "RDS file containing the study area"
+    },
+    {
+      "type": "Text",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.RDS",
+      "label": "temporal_extent",
+      "description": "RDS file containing the temporal_extent"
     }
   ],
   "outputs": [
-    {
-      "type": "Text",
-      "name": "pback_month",
-      "path": "/mnt/outputs/pback_month.RDS",
-      "label": "pback_month",
-      "description": ""
-    },
-    {
-      "type": "Text",
-      "name": "pback_decade",
-      "path": "/mnt/outputs/pback_decade.RDS",
-      "label": "pback_decade",
-      "description": ""
-    },
-        {
-      "type": "Text",
-      "name": "thinned_tg_m",
-      "path": "/mnt/outputs/thinned_tg_m.RDS",
-      "label": "thinned_tg_m",
-      "description": ""
-    },
-        {
-      "type": "Text",
-      "name": "thinned_tg_d",
-      "path": "/mnt/outputs/thinned_tg_d.RDS",
-      "label": "thinned_tg_d",
-      "description": ""
-    }
+
   ],
   "resources": {
     "cores": 2,
