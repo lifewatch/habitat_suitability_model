@@ -40,10 +40,13 @@ date_start <- as_datetime(args$date_start)
 date_end <- as_datetime(args$date_end)
 # WORKFLOW ----------------------------------------------------------------
 library(reticulate) #reticulate package allows for python usage in R
-virtualenv_create("mbo-proj",force=FALSE) #create a virtual environment to install packages in
-py_install("copernicusmarine",envname = "mbo-proj") #the copernicusmarine package allows CMEMS downloads
-virtualenv_list() #Check the list of available environments
-use_virtualenv("mbo-proj") #Load the environment
+reticulate::virtualenv_starter(all = TRUE)
+reticulate:::can_be_virtualenv_starter("/usr/bin/python3.10")
+
+# virtualenv_create("mbo-proj",force=FALSE) #create a virtual environment to install packages in
+# py_install("copernicusmarine",envname = "mbo-proj") #the copernicusmarine package allows CMEMS downloads
+# virtualenv_list() #Check the list of available environments
+# use_virtualenv("mbo-proj") #Load the environment
 #
 # # More information on the reticulate package on: https://rstudio.github.io/cheatsheets/reticulate.pdf
 # #

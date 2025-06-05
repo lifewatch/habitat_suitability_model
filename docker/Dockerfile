@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y \
     libmagick++-dev \
     curl \
     python3-venv \
+    python3-pip \
+    python3 \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

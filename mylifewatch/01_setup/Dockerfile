@@ -1,4 +1,4 @@
-FROM docker.io/library/base
+FROM docker.io/library/base-my
 
 # Copy dependencies and install them
 COPY req req
