@@ -42,6 +42,27 @@
       "path": "/mnt/inputs/target_group.RDS",
       "label": "target_group",
       "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "input",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    },
+    {
+      "type": "Text",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.RDS",
+      "label": "temporal_extent",
+      "description": "RDS file containing the temporal_extent"
     }
   ],
   "outputs": [

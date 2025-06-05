@@ -15,13 +15,17 @@ rm(list = ls())             # Remove all variables of the work space
 ##################################################################################
 path = list(
   code = "./code",
+  setup = "/mnt/inputs/01_setup.json",
   tempsal_filename = "/mnt/inputs/tempsal.nc",
   datasets_selection = "/mnt/inputs/datasets_selection.csv",
   thinned_m_file = "/mnt/inputs/thinned_m.RDS",
   thinned_d_file = "/mnt/inputs/thinned_d.RDS",
   target_group = "/mnt/outputs/target_group.RDS",
+  study_area_file = "/mnt/inputs/study_area.RDS",
+  temporal_extent = "/mnt/inputs/temporal_extent.RDS"
 )
-
+setup <- jsonlite::read_json(path$setup)
+aphiaid = as.integer(setup$aphiaid)
 
 lapply(list.files("functions", full.names = TRUE),source)
 sapply(list.files(path$code, full.names = T), source)
@@ -39,12 +43,18 @@ datasets_selection <- read.csv(file.path(path$datasets_selection))
 tempsal <- terra::rast(file.path(path$tempsal_filename))
 thinned_m <- readRDS(file.path(path$thinned_m_file))
 thinned_d <- readRDS(file.path(path$thinned_d_file))
+study_area <- readRDS(path$study_area_file)
+bbox <- sf::st_bbox(study_area)
+temporal_extent <- readRDS(path$temporal_extent)
 # WORKFLOW ----------------------------------------------------------------
 
 # Define the list of datasets that passed through the filtering
 list_dasid <- datasets_selection$datasetid
 
 # For a given species and lists of datasets, download the full target-group occurrences
+print(aphiaid)
+print(list_dasid)
+print(bbox)
 target_group <- download_tg(aphia_id = aphiaid,
                             list_dasid= list_dasid,
                             spatial_extent = bbox,
