@@ -1,9 +1,9 @@
 {
-  "name": "habitat-suitability-model-04_preprocess_presences",
+  "name": "habitat-suitability-model-05b_sample_background",
   "label": "occurrences of a species",
-  "description": "Description: Perform data cleaning and thinning steps on the data.",
+  "description": "Sample the background based on the target-group background",
   "type": "DataAnalysing",
-  "dockerImage": "habitat-suitability-model-04_preprocess_presences",
+  "dockerImage": "habitat-suitability-model-05b_sample_background",
   "parameters": [
 
   ],

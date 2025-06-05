@@ -17,6 +17,7 @@ library(terra)
 path = list(
   code = "./code",
   tempsal_filename = "/mnt/inputs/tempsal.nc",
+  study_area_file = "/mnt/inputs/study_area.RDS",
   pback_month = "/mnt/inputs/pback_month.RDS",
   pback_decade = "/mnt/inputs/pback_decade.RDS",
   mean_npp = "/mnt/inputs/mean_npp.nc",
@@ -39,6 +40,11 @@ path = list(
 #resample_tempres
 
 # INPUT ------------------------------------------------------------------
+lapply(list.files("functions", full.names = TRUE),source)
+sapply(list.files(path$code, full.names = T), source)
+lapply(list.files("/wrp/utils", full.names = TRUE, pattern = "\\.R$"), source)
+
+args = args_parse(commandArgs(trailingOnly = TRUE))
 
 # load(file.path(datadir,"pback_month.RData"))
 pback_month <- readRDS(file.path(path$pback_month))
@@ -105,6 +111,8 @@ if(!file.exists(file.path(path$bathy))){
   ifelse(!dir.exists(file.path(path$bathy_sliced)), dir.create(file.path(path$bathy_sliced)), FALSE)
   #xmin etc are described in 3_1
   stepsize <- 0.8
+  study_area <- readRDS(file.path(path$study_area_file))
+  bbox <-sf::st_bbox(study_area)
   number_of_slices <- ceiling((bbox[[3]]-bbox[[1]])/stepsize)
   for(i in 1:number_of_slices){
     beginslice <- bbox[[1]] + (i-1)*stepsize

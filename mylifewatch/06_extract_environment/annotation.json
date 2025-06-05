@@ -1,25 +1,25 @@
 {
-  "name": "habitat-suitability-model-04_preprocess_presences",
+  "name": "habitat-suitability-model-06_extract_environment",
   "label": "occurrences of a species",
-  "description": "Description: Perform data cleaning and thinning steps on the data.",
+  "description": "Script to couple the CMEMS and EMODnet environmental data to the presence-background points",
   "type": "DataAnalysing",
-  "dockerImage": "habitat-suitability-model-04_preprocess_presences",
+  "dockerImage": "habitat-suitability-model-06_extract_environment",
   "parameters": [
 
   ],
   "inputs": [
     {
       "type": "Text",
-      "name": "tempsal_filename",
-      "path": "/mnt/inputs/tempsal.nc",
-      "label": "tempsal_filename",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
       "description": ""
     },
         {
       "type": "Text",
-      "name": "pback_month",
-      "path": "/mnt/inputs/pback_month.RDS",
-      "label": "pback_month",
+      "name": "cleaned_data",
+      "path": "/mnt/inputs/cleaned_data.RDS",
+      "label": "cleaned_data",
       "description": ""
     },
         {
@@ -49,6 +49,13 @@
       "path": "/mnt/inputs/bathy_sliced",
       "label": "bathy_sliced",
       "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
     }
   ],
   "outputs": [
