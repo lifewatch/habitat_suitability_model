@@ -40,21 +40,21 @@
       "defaultValue": "1.8",
       "type": "Float"
     },
-        {
+    {
       "name": "max_lon",
       "label": "max_lon",
       "description": "max_lon",
       "defaultValue": "2.5",
       "type": "Float"
     },
-        {
+    {
       "name": "min_lat",
       "label": "min_lat",
       "description": "min_lat",
       "defaultValue": "51",
       "type": "Float"
     },
-        {
+    {
       "name": "max_lat",
       "label": "max_lat",
       "description": "max_lat",
@@ -85,7 +85,6 @@
       "label": "study_area",
       "description": "RDS file containing the study area"
     }
-
   ],
   "resources": {
     "cores": 2,
@@ -94,7 +93,10 @@
     "gpuMemory": 1024,
     "estimatedTime": 4
   },
-  "tags": [ "tag 1", "tag 2" ],
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
   "license": "GPL v3",
   "version": "0.0.1",
   "dependencies": [

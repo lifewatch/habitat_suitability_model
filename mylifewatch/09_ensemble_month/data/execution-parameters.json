@@ -1,0 +1,13 @@
+{
+  "parameters": [
+    {
+      "name": "samplesize",
+      "label": "samplesize",
+      "description": "Size of the sample to be used for training the model.",
+      "defaultValue": "100",
+      "type": "String"
+    }
+  ],
+  "inputs": [
+  ]
+}

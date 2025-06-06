@@ -5,7 +5,6 @@
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-06_extract_environment",
   "parameters": [
-
   ],
   "inputs": [
     {
@@ -15,28 +14,28 @@
       "label": "01_setup",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "cleaned_data",
       "path": "/mnt/inputs/cleaned_data.RDS",
       "label": "cleaned_data",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "pback_decade",
       "path": "/mnt/inputs/pback_decade.RDS",
       "label": "pback_decade",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "mean_npp",
       "path": "/mnt/inputs/mean_npp.nc",
       "label": "mean_npp",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "npp_filename",
       "path": "/mnt/inputs/npp.nc",
@@ -73,14 +72,14 @@
       "label": "env_decade",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "thetao_avg_m",
       "path": "/mnt/outputs/thetao_avg_m.nc",
       "label": "thetao_avg_m",
       "description": ""
     },
-            {
+    {
       "type": "Text",
       "name": "so_avg_m",
       "path": "/mnt/outputs/so_avg_m.nc",

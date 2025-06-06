@@ -5,7 +5,6 @@
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-04_preprocess_presences",
   "parameters": [
-
   ],
   "inputs": [
     {
@@ -15,35 +14,35 @@
       "label": "tempsal_filename",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "npp_filename",
       "path": "/mnt/inputs/npp.nc",
       "label": "npp_filename",
       "description": ""
     },
-            {
+    {
       "type": "Text",
       "name": "datasets_all_file",
       "path": "/mnt/inputs/datasets_all.csv",
       "label": "datasets_all_file",
       "description": ""
     },
-            {
+    {
       "type": "Text",
       "name": "mydata_eurobis_file",
       "path": "/mnt/inputs/mydata_eurobis_file.RDS",
       "label": "mydata_eurobis_file",
       "description": ""
     },
-                {
+    {
       "type": "Text",
       "name": "study_area_file",
       "path": "/mnt/inputs/study_area_file.RDS",
       "label": "study_area_file",
       "description": ""
     },
-                {
+    {
       "type": "Text",
       "name": "datasets_selection",
       "path": "/mnt/inputs/datasets_selection.csv",
@@ -73,7 +72,7 @@
       "label": "thinned_d_file",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "cleaned_data_file",
       "path": "/mnt/outputs/cleaned_data.RDS",

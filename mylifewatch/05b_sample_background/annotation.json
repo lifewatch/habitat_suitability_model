@@ -5,7 +5,6 @@
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-05b_sample_background",
   "parameters": [
-
   ],
   "inputs": [
     {
@@ -15,28 +14,28 @@
       "label": "tempsal_filename",
       "description": ""
     },
-                    {
+    {
       "type": "Text",
       "name": "datasets_selection",
       "path": "/mnt/inputs/datasets_selection.csv",
       "label": "datasets_selection",
       "description": ""
     },
-                    {
+    {
       "type": "Text",
       "name": "thinned_m_file",
       "path": "/mnt/inputs/thinned_m.RDS",
       "label": "thinned_m_file",
       "description": ""
     },
-                    {
+    {
       "type": "Text",
       "name": "thinned_d_file",
       "path": "/mnt/inputs/thinned_d.RDS",
       "label": "thinned_d_file",
       "description": ""
     },
-                    {
+    {
       "type": "Text",
       "name": "target_group",
       "path": "/mnt/inputs/target_group.RDS",
@@ -73,21 +72,21 @@
       "label": "pback_month",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "pback_decade",
       "path": "/mnt/outputs/pback_decade.RDS",
       "label": "pback_decade",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "thinned_tg_m",
       "path": "/mnt/outputs/pback_decade.RDS",
       "label": "thinned_tg_m",
       "description": ""
     },
-            {
+    {
       "type": "Text",
       "name": "thinned_tg_d",
       "path": "/mnt/outputs/thinned_tg_d.RDS",

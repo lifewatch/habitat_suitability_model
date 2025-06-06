@@ -5,7 +5,6 @@
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-07_pa-exploration",
   "parameters": [
-
   ],
   "inputs": [
     {
@@ -15,7 +14,7 @@
       "label": "01_setup",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "cleaned_data",
       "path": "/mnt/inputs/cleaned_data.RDS",

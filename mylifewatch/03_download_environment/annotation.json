@@ -19,22 +19,22 @@
       "label": "date_end",
       "description": "date_end"
     },
-      {
+    {
       "name": "copernicusmarine_username",
       "label": "copernicusmarine_username",
       "description": "Username for Copernicus Marine Environment Monitoring Service",
       "type": "String",
       "defaultValue": "",
       "secret": true
-  },
-  {
+    },
+    {
       "name": "copernicusmarine_password",
       "label": "copernicusmarine_password",
       "description": "Password for Copernicus Marine Environment Monitoring Service",
       "type": "String",
       "defaultValue": "",
       "secret": true
-  }
+    }
   ],
   "inputs": [
     {
@@ -60,7 +60,7 @@
       "label": "tempsal_output_filename",
       "description": ""
     },
-        {
+    {
       "type": "Text",
       "name": "npp_output_filename",
       "path": "/mnt/outputs/npp.nc",
