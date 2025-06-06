@@ -22,7 +22,7 @@ path = list(
   so_avg_d = "/mnt/inputs/so_avg_d.nc",
   npp_avg_d = "/mnt/inputs/npp_avg_d.nc",
   bio_oracle = "/mnt/outputs/bio_oracle",
-  nc <- "/mnt/outputs/nc"
+  nc = "/mnt/outputs/nc/"
 )
 
 ##################################################################################
@@ -35,6 +35,9 @@ lapply(list.files("/wrp/utils", full.names = TRUE, pattern = "\\.R$"), source)
 
 args = args_parse(commandArgs(trailingOnly = TRUE))
 
+if (!dir.exists(path$nc)) {
+  dir.create(path$nc, recursive = TRUE)
+}
 
 # FUNCTIONS ---------------------------------------------------------------
 #Make a custom function that can be used with the terra::predict function
@@ -71,16 +74,7 @@ monthly_prediction <- lapply(monthly_predictors, \(x) terra::predict(object = x,
 monthly_raster <- terra::rast(monthly_prediction)
 monthly_raster_norm <- normalize_raster(monthly_raster)
 
-
-if (!dir.exists(path$nc)) {
-  dir.create(path$nc, recursive = TRUE)
-}
-
 monthly_file_name = file.path(path$nc,paste0("HSM_",aphiaid,"_ensemble_","monthly_","v0_1",".nc"))
-# Append to path list
-# Append to path list the output directory
-path <- append(path, list(monthly_file_name))
-
 
 names(monthly_raster_norm)<- lubridate::month(1:12,label=TRUE)
 terra::time(monthly_raster_norm) <- as.POSIXct(seq(ymd("1999-01-01"), by = "month",length.out=12))
