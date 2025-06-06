@@ -5,13 +5,6 @@
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-08_ensemble_decade",
   "parameters": [
-    {
-      "name": "samplesize",
-      "label": "samplesize",
-      "description": "Size of the sample to be used for training the model.",
-      "defaultValue": "1000",
-      "type": "String"
-    }
   ],
   "inputs": [
     {

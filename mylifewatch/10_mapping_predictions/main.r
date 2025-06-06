@@ -20,7 +20,7 @@ path = list(
   bathy = "/mnt/inputs/bathy.nc",
   thetao_avg_d = "/mnt/inputs/thetao_avg_d.nc",
   so_avg_d = "/mnt/inputs/so_avg_d.nc",
-  npp_avg_d = "/mnt/inputs/npp_avg_d.nc"
+  npp_avg_d = "/mnt/inputs/npp_avg_d.nc",
   bio_oracle = "/mnt/outputs/bio_oracle",
   nc <- "/mnt/outputs/nc"
 )
