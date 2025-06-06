@@ -13,6 +13,8 @@ rm(list = ls())             # Remove all variables of the work space
 
 path = list(
   code = "./code",
+  study_area_file = "/mnt/inputs/study_area.RDS",
+  setup = "/mnt/inputs/01_setup.json",
   stack_fit = "/mnt/inputs/modelling_decade/stack_fit.RDS",
   thetao_avg_m = "/mnt/inputs/thetao_avg_m.nc",
   so_avg_m = "/mnt/inputs/so_avg_m.nc",
@@ -22,7 +24,7 @@ path = list(
   so_avg_d = "/mnt/inputs/so_avg_d.nc",
   npp_avg_d = "/mnt/inputs/npp_avg_d.nc",
   bio_oracle = "/mnt/outputs/bio_oracle",
-  nc = "/mnt/outputs/nc/"
+  nc = "/mnt/outputs/nc"
 )
 
 ##################################################################################
@@ -39,6 +41,8 @@ if (!dir.exists(path$nc)) {
   dir.create(path$nc, recursive = TRUE)
 }
 
+setup <- jsonlite::read_json(path$setup)
+aphiaid = as.integer(setup$aphiaid)
 # FUNCTIONS ---------------------------------------------------------------
 #Make a custom function that can be used with the terra::predict function
 predprob <- function(...) predict(...,type="prob")$.pred_1
@@ -78,32 +82,43 @@ monthly_file_name = file.path(path$nc,paste0("HSM_",aphiaid,"_ensemble_","monthl
 
 names(monthly_raster_norm)<- lubridate::month(1:12,label=TRUE)
 terra::time(monthly_raster_norm) <- as.POSIXct(seq(ymd("1999-01-01"), by = "month",length.out=12))
+cat("Writing monthly habitat suitability to netcdf file...\n")
 terra::writeCDF(x = monthly_raster_norm,
-                filename = file.path(path$monthly_file_name),
+                filename = monthly_file_name,
                 varname = "HS",
                 longname = "Normalized habitat suitability monthly mean (1999-2023)",
                 overwrite = TRUE)
 
+cat("Monthly habitat suitability written to netcdf file.\n")
 # DECADAL PREDICTIONS PRESENT ---------------------------------------------
 decad_predictors <- c()
 for(i in 1:length(thetao_avg_d)){
+  cat(paste0("Processing decade ", i, " of ", length(thetao_avg_d), "\n"))
   decad_predictors[[i]] <- c(thetao_avg_d[[i]],so_avg_d[[i]],npp_avg_d[[i]],bathy)
   mask <- !is.na(decad_predictors[[i]])
   decad_predictors[[i]] <- terra::mask(decad_predictors[[i]], mask)
   names(decad_predictors[[i]]) <- c("thetao","so","npp","bathy")
+  cat(paste0("Decade ", i, " processed.\n"))
 }
+cat("Making decadal predictions...\n")
 pres_decad_prediction <- lapply(decad_predictors, \(x) terra::predict(object = x,
                                                                         model = model_decade,
                                                                         fun = predprob,
                                                                         na.rm = TRUE))
+cat("Decadal predictions made.\n")
 pres_decad_prediction_norm <- lapply(pres_decad_prediction, \(x) normalize_raster(x))
+cat("Normalizing decadal predictions...\n")
 pres_decad_raster_norm <- terra::rast(pres_decad_prediction_norm)
-
+cat("Decadal predictions normalized.\n")
 # DECADAL PREDICTIONS FUTURE ----------------------------------------------
 #devtools::install_github("bio-oracle/biooracler")
 library(biooracler)
-if(!dir.exists(file.path(path$bio_oracle))){
-  dir.create(file.path(path$bio_oracle))
+study_area <- readRDS(path$study_area_file)
+bbox <-sf::st_bbox(study_area)
+if(!dir.exists(path$bio_oracle)){
+  cat("Bio_oracle folder does not exist, creating...\n")
+  dir.create(path$bio_oracle, recursive = TRUE)
+  cat("Bio_oracle folder created.\n")
   interest_layers <- biooracler::list_layers()%>%
     dplyr::select(dataset_id)%>%
     filter(
@@ -114,6 +129,7 @@ if(!dir.exists(file.path(path$bio_oracle))){
     arrange(dataset_id)%>%
     mutate(variables = paste0(str_extract(dataset_id, "^[^_]+"),"_mean"))
 
+
   constraints <- list("longitude" = c(bbox[[1]],bbox[[3]]),"latitude" = c(bbox[[2]],bbox[[4]]))
 
   pwalk(interest_layers, \(dataset_id,variables) terra::writeRaster(terra::resample(terra::classify(biooracler::download_layers(dataset_id = dataset_id,
@@ -122,11 +138,9 @@ if(!dir.exists(file.path(path$bio_oracle))){
                                                          fmt = "raster"),cbind(NaN,NA)),thetao_avg_d[[1]]), #resample so that they have same extent and resolution as CMEMS layers
         filename=file.path(path$bio_oracle,paste0(gsub("phyc","npp",dataset_id) #makes it easier as npp is used as a name for the rest of the workflow
                                                       ,".tif")),overwrite=TRUE)
-
-        path <- append(path, list(filename))
   )
 }  else {
-  cat("Bio_oracle folder already exists")
+  cat("Bio_oracle folder already exists\n")
 }
 future_scenarios <- c("ssp119","ssp126","ssp245","ssp370","ssp460","ssp585")
 future_path <- file.path(path$bio_oracle)

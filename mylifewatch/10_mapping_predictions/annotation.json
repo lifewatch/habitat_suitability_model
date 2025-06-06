@@ -7,6 +7,20 @@
   "parameters": [
   ],
   "inputs": [
+        {
+      "type": "Text",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    },
     {
       "type": "Text",
       "name": "stack_fit",
