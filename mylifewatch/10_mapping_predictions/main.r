@@ -7,7 +7,7 @@
 # Script Name: ~/habitat_suitability_model/code/10_mapping_predictions.R
 # Script Description: Using the final decadal and monthly model, make predictions.
 # SETUP ------------------------------------
-cat("\014")                 # Clears the console
+cat("- \014")                 # Clears the console
 rm(list = ls())             # Remove all variables of the work space
 
 
@@ -82,14 +82,14 @@ monthly_file_name = file.path(path$nc,paste0("HSM_",aphiaid,"_ensemble_","monthl
 
 names(monthly_raster_norm)<- lubridate::month(1:12,label=TRUE)
 terra::time(monthly_raster_norm) <- as.POSIXct(seq(ymd("1999-01-01"), by = "month",length.out=12))
-cat("Writing monthly habitat suitability to netcdf file...\n")
+cat("- Writing monthly habitat suitability to netcdf file...\n")
 terra::writeCDF(x = monthly_raster_norm,
                 filename = monthly_file_name,
                 varname = "HS",
                 longname = "Normalized habitat suitability monthly mean (1999-2023)",
                 overwrite = TRUE)
 
-cat("Monthly habitat suitability written to netcdf file.\n")
+cat("- Monthly habitat suitability written to netcdf file.\n")
 # DECADAL PREDICTIONS PRESENT ---------------------------------------------
 decad_predictors <- c()
 for(i in 1:length(thetao_avg_d)){
@@ -100,25 +100,25 @@ for(i in 1:length(thetao_avg_d)){
   names(decad_predictors[[i]]) <- c("thetao","so","npp","bathy")
   cat(paste0("Decade ", i, " processed.\n"))
 }
-cat("Making decadal predictions...\n")
+cat("- Making decadal predictions...\n")
 pres_decad_prediction <- lapply(decad_predictors, \(x) terra::predict(object = x,
                                                                         model = model_decade,
                                                                         fun = predprob,
                                                                         na.rm = TRUE))
-cat("Decadal predictions made.\n")
+cat("- Decadal predictions made.\n")
 pres_decad_prediction_norm <- lapply(pres_decad_prediction, \(x) normalize_raster(x))
-cat("Normalizing decadal predictions...\n")
+cat("- Normalizing decadal predictions...\n")
 pres_decad_raster_norm <- terra::rast(pres_decad_prediction_norm)
-cat("Decadal predictions normalized.\n")
+cat("- Decadal predictions normalized.\n")
 # DECADAL PREDICTIONS FUTURE ----------------------------------------------
 #devtools::install_github("bio-oracle/biooracler")
 library(biooracler)
 study_area <- readRDS(path$study_area_file)
 bbox <-sf::st_bbox(study_area)
 if(!dir.exists(path$bio_oracle)){
-  cat("Bio_oracle folder does not exist, creating...\n")
+  cat("- Bio_oracle folder does not exist, creating...\n")
   dir.create(path$bio_oracle, recursive = TRUE)
-  cat("Bio_oracle folder created.\n")
+  cat("- Bio_oracle folder created.\n")
   interest_layers <- biooracler::list_layers()%>%
     dplyr::select(dataset_id)%>%
     filter(
@@ -140,7 +140,7 @@ if(!dir.exists(path$bio_oracle)){
                                                       ,".tif")),overwrite=TRUE)
   )
 }  else {
-  cat("Bio_oracle folder already exists\n")
+  cat("- Bio_oracle folder already exists\n")
 }
 future_scenarios <- c("ssp119","ssp126","ssp245","ssp370","ssp460","ssp585")
 future_path <- file.path(path$bio_oracle)
