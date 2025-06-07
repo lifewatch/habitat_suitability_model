@@ -7,7 +7,7 @@
   "parameters": [
   ],
   "inputs": [
-        {
+    {
       "type": "Text",
       "name": "01_setup",
       "path": "/mnt/inputs/01_setup.json",
