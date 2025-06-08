@@ -14,6 +14,7 @@ rm(list = ls())             # Remove all variables of the work space
 path = list(
   code = "./code",
   setup = "/mnt/inputs/01_setup.json",
+  study_area_file = "/mnt/inputs/study_area.RDS",
   nc = "/mnt/inputs/nc",
   monthly_bbox = "/mnt/outputs/monthly_bbox.png"
 )
@@ -43,6 +44,14 @@ suitability <- xr$open_dataset(file.path(path$nc, paste0("HSM_",aphiaid,"_ensemb
 # Extract the HS variable
 hs <- suitability$HS
 
+study_area <- readRDS(path$study_area_file)
+bbox <- sf::st_bbox(study_area)
+
+# Define bounding box coordinates, e.g., from setup or manually
+min_lon <- setup$bbox$min_lon
+max_lon <- setup$bbox$max_lon
+min_lat <- setup$bbox$min_lat
+max_lat <- setup$bbox$max_lat
 
 
 # Subset the data
