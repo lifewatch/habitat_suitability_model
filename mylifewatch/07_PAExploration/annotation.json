@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-07_pa-exploration",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model - 07 PA Exploration",
   "description": "Make plots to assess the input data of the model",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-07_pa-exploration",

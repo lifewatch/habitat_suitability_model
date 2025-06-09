@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-04_preprocess_presences",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model - 04 Preprocess Presences",
   "description": "Description: Perform data cleaning and thinning steps on the data.",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-04_preprocess_presences",

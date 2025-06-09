@@ -1,9 +1,9 @@
 {
-  "name": "habitat-suitability-model-08_ensemble_decade",
-  "label": "occurrences of a species",
+  "name": "habitat-suitability-model-11_static_plot",
+  "label": "Habitat Suitability Model - 11 Static Plot",
   "description": "Training the decadal model.",
   "type": "DataAnalysing",
-  "dockerImage": "habitat-suitability-model-08_ensemble_decade",
+  "dockerImage": "habitat-suitability-model-11_static_plot",
   "parameters": [
   ],
   "inputs": [
