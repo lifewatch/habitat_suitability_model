@@ -2,7 +2,7 @@
   "name": "habitat-suitability-model-02_download_presences",
   "label": "occurrences of a species",
   "description": "In this script, the study area is defined and the occurrences\n# of a species of choice inside this area are downloaded together with an overview \n# of the datasets.",
-  "type": "DataAnalysing",
+  "type": "DataCollection",
   "dockerImage": "habitat-suitability-model-02_download_presences",
   "parameters": [],
   "inputs": [

@@ -2,7 +2,7 @@
   "name": "habitat-suitability-model-03_download_environment",
   "label": "occurrences of a species",
   "description": "Download the environmental variables from CMEMS using the CopernicuMarine toolbox via python.",
-  "type": "DataAnalysing",
+  "type": "DataCollection",
   "dockerImage": "habitat-suitability-model-03_download_environment",
   "parameters": [
     {
