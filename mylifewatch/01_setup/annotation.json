@@ -2,7 +2,7 @@
   "name": "habitat-suitability-model-01-setup",
   "label": "habitat-suitability model 01 setup",
   "description": "A script to make the general folder structure and load the necessary packages",
-  "type": "DataAnalysing",
+  "type": "DataCollection",
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
     {
@@ -94,8 +94,7 @@
     "estimatedTime": 4
   },
   "tags": [
-    "tag 1",
-    "tag 2"
+"Habitat Suitability Model" , "MARCO-BOLO"
   ],
   "license": "GPL v3",
   "version": "0.0.1",
