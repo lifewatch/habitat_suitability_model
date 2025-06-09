@@ -63,8 +63,8 @@
   "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
   "author": "LifeWatch ERIC",
   "bugs": {
-    "email": "help@exampleorg.com",
-    "url": "https://www.tickets.exampleorg.com"
+      "email": "julio.paneque@lifewatch.eu",
+      "url": "https://helpdesk.lifewatch.eu/"
   },
   "citation": null,
   "testPath": "translateUnitTest.sh",
