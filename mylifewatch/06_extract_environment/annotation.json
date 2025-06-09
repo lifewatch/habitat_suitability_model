@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-06_extract_environment",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model - Extract Environment",
   "description": "Script to couple the CMEMS and EMODnet environmental data to the presence-background points",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-06_extract_environment",

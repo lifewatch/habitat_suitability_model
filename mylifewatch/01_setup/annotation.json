@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-01-setup",
-  "label": "habitat-suitability model 01 setup",
+  "label": "Habitat Suitability model 01 setup",
   "description": "A script to make the general folder structure and load the necessary packages",
   "type": "DataCollection",
   "dockerImage": "habitat-suitability-model-01-setup",

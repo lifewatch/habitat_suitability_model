@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-02_download_presences",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model - 02 Download Presences",
   "description": "In this script, the study area is defined and the occurrences\n# of a species of choice inside this area are downloaded together with an overview \n# of the datasets.",
   "type": "DataCollection",
   "dockerImage": "habitat-suitability-model-02_download_presences",

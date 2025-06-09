@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-05a_sample_background",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model -05a Sample Background",
   "description": "Sample the background based on the target-group background",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-05a_sample_background",

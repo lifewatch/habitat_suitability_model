@@ -1,6 +1,6 @@
 {
   "name": "habitat-suitability-model-08_ensemble_decade",
-  "label": "occurrences of a species",
+  "label": "Habitat Suitability Model 08 - Ensemble Decade",
   "description": "Training the decadal model.",
   "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-08_ensemble_decade",
