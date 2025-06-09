@@ -28,7 +28,7 @@
 #' )
 #' @export
 #Function to make rsample folds based on KNNDM
-knndm_fold <- function(train_data, prediction_layers, n_folds = 5){
+knndm_fold <- function(train_data, prediction_layers, n_folds = 5, samplesize){
   
   # We need an indication of the predictive space
   #For this we calculate the mean of the layers we want to predict on
@@ -47,7 +47,7 @@ knndm_fold <- function(train_data, prediction_layers, n_folds = 5){
     maxp = 0.6,
     clustering = "hierarchical",
     linkf = "ward.D2",
-    samplesize = 2000,
+    samplesize = samplesize,
     sampling = "Fibonacci",
     useMD = FALSE)
   

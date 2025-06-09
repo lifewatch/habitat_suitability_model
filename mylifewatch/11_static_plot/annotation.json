@@ -1,0 +1,71 @@
+{
+  "name": "habitat-suitability-model-11_static_plot",
+  "label": "Habitat Suitability Model - 11 Static Plot",
+  "description": "Training the decadal model.",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-11_static_plot",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "nc",
+      "path": "/mnt/inputs/nc/",
+      "label": "nc",
+      "description": ""
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "bio_oracle",
+      "path": "/mnt/outputs/bio_oracle/",
+      "label": "bio_oracle",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "nc",
+      "path": "/mnt/outputs/nc/",
+      "label": "nc",
+      "description": ""
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 8048,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+"Habitat Suitability Model" , "MARCO-BOLO"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+      "email": "johannes.nowe@vliz.be",
+      "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

@@ -8,3 +8,23 @@ The scripts of the different workflow steps can be found in the code/ folder. Th
 
 ## License
 Contact johannes.nowe@vliz.be for more information.
+
+
+## Mylifewatch 
+
+To crated mylifewatch warps you need to run the wrapper library scripts. 
+In the folder mylifewatch you can find the scripts to create the mylifewatch warps.
+For example to create the mylifewatch warp 01_setup.R go to folder mylifewatch/01_setup and run the warper script:
+
+Here we assume that the mylifewatch-wrapper-development-kit is in ~/workspace/mylifewatch-wrapper-development-kit
+
+```bash
+cd mylifewatch/01_setup
+~/workspace/mylifewatch-wrapper-development-kit/bin/build-image 
+```
+
+Next to test the warp you can run the following command:
+
+```bash
+~/workspace/mylifewatch-wrapper-development-kit/bin/execute
+```

@@ -13,6 +13,9 @@
 ##################################################################################
 ##################################################################################
 
+install.packages("devtools")
+install.packages("renv", repos = "https://rstudio.r-universe.dev")
+devtools::install_github("iobis/imis")
 
 # FUNCTIONS ---------------------------------------------------------------
 lapply(list.files("functions", full.names = TRUE),source)

@@ -23,7 +23,7 @@
 load_presence <- function(aphia_id, spatial_extent=c(-90,-90,90,90), temporal_extent=lubridate::interval("1993-01-01","2019-12-31")){
   # Make a connection with the data_lake
   eurobis <- connect_eurobis()
-  
+
   mydata_eurobis <- eurobis %>%
     filter(aphiaidaccepted==aphia_id,
            longitude > spatial_extent[1], longitude < spatial_extent[3],
