@@ -1,8 +1,8 @@
 {
   "name": "habitat-suitability-model-01-setup",
-  "label": "R word frequency",
+  "label": "habitat-suitability model 01 setup",
   "description": "A script to make the general folder structure and load the necessary packages",
-  "type": "DataAnalysing",
+  "type": "structure",
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
     {
@@ -65,11 +65,11 @@
   "inputs": [],
   "outputs": [
     {
-      "type": "Text",
+      "type": "zip",
       "name": "output",
-      "path": "/mnt/outputs/01_setup.json",
-      "label": "01_setup",
-      "description": "JSON file containing the setup information"
+      "path": "/mnt/outputs/output.zip",
+      "label": "output zip",
+      "description": "zip file containing the setup information, temporal_extent and study_area_file"
     },
     {
       "type": "Text",
@@ -104,12 +104,12 @@
       "name": "r",
       "license": "PSF",
       "version": "3.11.3",
-      "author": "John Doe",
+      "author": "Nowé Jo-Hannes" ,
       "citation": null
     }
   ],
   "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
-  "author": "LifeWatch ERIC",
+  "author": "Nowé Jo-Hannes" ,
   "bugs": {
       "email": "julio.paneque@lifewatch.eu",
       "url": "https://helpdesk.lifewatch.eu/"
