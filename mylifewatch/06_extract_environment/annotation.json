@@ -1,0 +1,149 @@
+{
+  "name": "habitat-suitability-model-06_extract_environment",
+  "label": "occurrences of a species",
+  "description": "Script to couple the CMEMS and EMODnet environmental data to the presence-background points",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-06_extract_environment",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "cleaned_data",
+      "path": "/mnt/inputs/cleaned_data.RDS",
+      "label": "cleaned_data",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "pback_decade",
+      "path": "/mnt/inputs/pback_decade.RDS",
+      "label": "pback_decade",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "mean_npp",
+      "path": "/mnt/inputs/mean_npp.nc",
+      "label": "mean_npp",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "npp_filename",
+      "path": "/mnt/inputs/npp.nc",
+      "label": "npp_filename",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "bathy_sliced",
+      "path": "/mnt/inputs/bathy_sliced",
+      "label": "bathy_sliced",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "env_month",
+      "path": "/mnt/outputs/env_month.RDS",
+      "label": "env_month",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "env_decade",
+      "path": "/mnt/outputs/env_decade.RDS",
+      "label": "env_decade",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thetao_avg_m",
+      "path": "/mnt/outputs/thetao_avg_m.nc",
+      "label": "thetao_avg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "so_avg_m",
+      "path": "/mnt/outputs/so_avg_m.nc",
+      "label": "so_avg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "npp_avg_m",
+      "path": "/mnt/outputs/npp_avg_m.nc",
+      "label": "npp_avg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thetao_avg_d",
+      "path": "/mnt/outputs/thetao_avg_d.nc",
+      "label": "thetao_avg_d",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "so_avg_d",
+      "path": "/mnt/outputs/so_avg_d.nc",
+      "label": "so_avg_d",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "npp_avg_d",
+      "path": "/mnt/outputs/npp_avg_d.nc",
+      "label": "npp_avg_d",
+      "description": ""
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2"
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

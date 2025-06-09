@@ -1,0 +1,114 @@
+{
+  "name": "habitat-suitability-model-08_ensemble_decade",
+  "label": "occurrences of a species",
+  "description": "Training the decadal model.",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-08_ensemble_decade",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "env_decade",
+      "path": "/mnt/inputs/env_decade.RDS",
+      "label": "env_decade",
+      "description": ""
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "ranger",
+      "path": "/mnt/outputs/modelling_decade/ranger.RDS",
+      "label": "ranger",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "randforest",
+      "path": "/mnt/outputs/modelling_decade/randforest.RDS",
+      "label": "randforest",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "gam",
+      "path": "/mnt/outputs/modelling_decade/gam.RDS",
+      "label": "gam",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "mars",
+      "path": "/mnt/outputs/modelling_decade/mars.RDS",
+      "label": "mars",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "maxent",
+      "path": "/mnt/outputs/modelling_decade/maxent.RDS",
+      "label": "maxent",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "xgb",
+      "path": "/mnt/outputs/modelling_decade/xgb.RDS",
+      "label": "xgb",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "stack_data",
+      "path": "/mnt/outputs/modelling_decade/stack_data.RDS",
+      "label": "stack_data",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "stack_mod",
+      "path": "/mnt/outputs/modelling_decade/stack_mod.RDS",
+      "label": "stack_mod",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "stack_fit",
+      "path": "/mnt/outputs/modelling_decade/stack_fit.RDS",
+      "label": "stack_fit",
+      "description": ""
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2"
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

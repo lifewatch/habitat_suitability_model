@@ -1,0 +1,65 @@
+{
+  "name": "habitat-suitability-model-07_pa-exploration",
+  "label": "occurrences of a species",
+  "description": "Make plots to assess the input data of the model",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-07_pa-exploration",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "cleaned_data",
+      "path": "/mnt/inputs/cleaned_data.RDS",
+      "label": "cleaned_data",
+      "description": ""
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "png",
+      "path": "/mnt/outputs/png",
+      "label": "png",
+      "description": ""
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2"
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

@@ -22,7 +22,7 @@ source("code/01_setup.R")
 #connect_eurobis
 
 # INPUT -------------------------------------------------------------------
-
+bbox <- sf::st_bbox(study_area)
 # WORKFLOW ----------------------------------------------------------------
 #Downloading the occurrence data from EurOBIS
 mydata_eurobis <- load_presence(aphia_id = aphiaid, 

@@ -1,0 +1,120 @@
+{
+  "name": "habitat-suitability-model-01-setup",
+  "label": "R word frequency",
+  "description": "A script to make the general folder structure and load the necessary packages",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-01-setup",
+  "parameters": [
+    {
+      "name": "study_area_name",
+      "label": "study_area_name",
+      "description": "study_area_name",
+      "defaultValue": "ospar_regions_2017_01_002.shp",
+      "type": "String"
+    },
+    {
+      "name": "start_date",
+      "label": "start_date",
+      "defaultValue": "1999-01-01",
+      "type": "String",
+      "description": "Start date"
+    },
+    {
+      "name": "end_date",
+      "label": "end_date",
+      "defaultValue": "2019-12-31",
+      "type": "String",
+      "description": "End date"
+    },
+    {
+      "name": "possible_aphiaids",
+      "label": "possible_aphiaids",
+      "description": "possible_aphiaids",
+      "defaultValue": "137117, 137084, 137094, 137111, 137101, 137087",
+      "type": "List"
+    },
+    {
+      "name": "min_lon",
+      "label": "min_lon",
+      "description": "min_lon",
+      "defaultValue": "1.8",
+      "type": "Float"
+    },
+    {
+      "name": "max_lon",
+      "label": "max_lon",
+      "description": "max_lon",
+      "defaultValue": "2.5",
+      "type": "Float"
+    },
+    {
+      "name": "min_lat",
+      "label": "min_lat",
+      "description": "min_lat",
+      "defaultValue": "51",
+      "type": "Float"
+    },
+    {
+      "name": "max_lat",
+      "label": "max_lat",
+      "description": "max_lat",
+      "defaultValue": "52",
+      "type": "Float"
+    }
+  ],
+  "inputs": [],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "output",
+      "path": "/mnt/outputs/01_setup.json",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
+    },
+    {
+      "type": "Text",
+      "name": "temporal_extent",
+      "path": "/mnt/outputs/temporal_extent.RDS",
+      "label": "temporal_extent",
+      "description": "temporal_extent"
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/outputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

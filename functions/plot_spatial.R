@@ -12,7 +12,7 @@
 #' plot_spatial(study_area, presence_data = cleaned_data, timescale = "decade")
 #'
 #' @export
-plot_spatial <- function(study_area, presence_data, timescale) {
+plot_spatial <- function(study_area, presence_data, timescale, bbox) {
   p1 <- ggplot(data = study_area) +
     geom_sf() +
     theme_minimal() +

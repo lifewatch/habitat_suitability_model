@@ -1,0 +1,128 @@
+{
+  "name": "habitat-suitability-model-05b_sample_background",
+  "label": "occurrences of a species",
+  "description": "Sample the background based on the target-group background",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-05b_sample_background",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Text",
+      "name": "tempsal_filename",
+      "path": "/mnt/inputs/tempsal.nc",
+      "label": "tempsal_filename",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "datasets_selection",
+      "path": "/mnt/inputs/datasets_selection.csv",
+      "label": "datasets_selection",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thinned_m_file",
+      "path": "/mnt/inputs/thinned_m.RDS",
+      "label": "thinned_m_file",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thinned_d_file",
+      "path": "/mnt/inputs/thinned_d.RDS",
+      "label": "thinned_d_file",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "target_group",
+      "path": "/mnt/inputs/target_group.RDS",
+      "label": "target_group",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "input",
+      "path": "/mnt/inputs/01_setup.json",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
+    },
+    {
+      "type": "Text",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.RDS",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    },
+    {
+      "type": "Text",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.RDS",
+      "label": "temporal_extent",
+      "description": "RDS file containing the temporal_extent"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Text",
+      "name": "pback_month",
+      "path": "/mnt/outputs/pback_month.RDS",
+      "label": "pback_month",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "pback_decade",
+      "path": "/mnt/outputs/pback_decade.RDS",
+      "label": "pback_decade",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thinned_tg_m",
+      "path": "/mnt/outputs/pback_decade.RDS",
+      "label": "thinned_tg_m",
+      "description": ""
+    },
+    {
+      "type": "Text",
+      "name": "thinned_tg_d",
+      "path": "/mnt/outputs/thinned_tg_d.RDS",
+      "label": "thinned_tg_d",
+      "description": ""
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2"
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "LifeWatch ERIC",
+  "bugs": {
+    "email": "help@exampleorg.com",
+    "url": "https://www.tickets.exampleorg.com"
+  },
+  "citation": null,
+  "testPath": "translateUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}
