@@ -102,9 +102,9 @@
   "dependencies": [
     {
       "name": "r",
-      "license": "PSF",
-      "version": "3.11.3",
-      "author": "John Doe",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
       "citation": null
     }
   ],
