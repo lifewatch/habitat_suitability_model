@@ -2,7 +2,7 @@
   "name": "habitat-suitability-model-01-setup",
   "label": "habitat-suitability model 01 setup",
   "description": "A script to make the general folder structure and load the necessary packages",
-  "type": "structure",
+  "type": "DataAnalysing",
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
     {
@@ -111,7 +111,7 @@
   "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
   "author": "Nowé Jo-Hannes" ,
   "bugs": {
-      "email": "julio.paneque@lifewatch.eu",
+      "email": "johannes.nowe@vliz.be",
       "url": "https://helpdesk.lifewatch.eu/"
   },
   "citation": null,

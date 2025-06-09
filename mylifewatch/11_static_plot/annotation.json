@@ -54,16 +54,16 @@
   "dependencies": [
     {
       "name": "r",
-      "license": "PSF",
-      "version": "3.11.3",
-      "author": "John Doe",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
       "citation": null
     }
   ],
   "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
   "author": "LifeWatch ERIC",
   "bugs": {
-      "email": "julio.paneque@lifewatch.eu",
+      "email": "johannes.nowe@vliz.be",
       "url": "https://helpdesk.lifewatch.eu/"
   },
   "citation": null,
