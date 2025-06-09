@@ -109,6 +109,6 @@
     "url": "https://www.tickets.exampleorg.com"
   },
   "citation": null,
-  "testPath": "translateUnitTest.sh",
+  "testPath": "emptyUnitTest.sh",
   "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
 }
