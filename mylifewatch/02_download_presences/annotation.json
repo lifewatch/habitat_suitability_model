@@ -8,24 +8,24 @@
   "inputs": [
     {
       "type": "Zip",
-      "name": "input",
+      "name": "01_setup",
       "path": "/mnt/inputs/01_setup.zip",
-      "label": "01_setup",
-      "description": "JSON file containing the setup information"
+      "label": "01_setup output",
+      "description": "zip file containing the setup information"
     },
     {
       "type": "Zip",
-      "name": "study_area_file",
-      "path": "/mnt/inputs/study_area.zip",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
+      "name": "study_area",
+      "path": "/mnt/outputs/study_area.zip",
+      "label": "study area file",
+      "description": "zip file containing the study area"
     },
     {
       "type": "Zip",
       "name": "temporal_extent",
       "path": "/mnt/inputs/temporal_extent.zip",
-      "label": "temporal_extent",
-      "description": "RDS file containing the temporal_extent"
+      "label": "temporal extent",
+      "description": "temporal extent from 01_setup"
     }
   ],
   "outputs": [
@@ -33,22 +33,22 @@
       "type": "Zip",
       "name": "datasets_all",
       "path": "/mnt/outputs/datasets_all.zip",
-      "label": "datasets_all",
-      "description": "csv file containing all datasets used in the analysis"
+      "label": "datasets all",
+      "description": "zip file containing all datasets used in the analysis"
     },
     {
       "type": "Zip",
       "name": "mydata_eurobis",
       "path": "/mnt/outputs/mydata_eurobis.zip",
-      "label": "mydata_eurobis",
-      "description": "RDS file containing the occurrences of the species in the study area from Eurobis"
+      "label": "mydata eurobis",
+      "description": "zip file containing the occurrences of the species in the study area from Eurobis"
     },
     {
       "type": "Zip",
       "name": "study_area",
       "path": "/mnt/outputs/study_area.zip",
       "label": "study_area",
-      "description": "RDS file containing the study area used in the analysis"
+      "description": "zip file containing the study area used in the analysis"
     }
   ],
   "resources": {

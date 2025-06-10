@@ -59,24 +59,24 @@
   "outputs": [
     {
       "type": "zip",
-      "name": "output",
+      "name": "01_setup",
       "path": "/mnt/outputs/01_setup.zip",
-      "label": "output zip",
-      "description": "zip file containing the setup information, temporal_extent and study_area_file"
+      "label": "01_setup output",
+      "description": "zip file containing the setup information"
     },
     {
       "type": "Zip",
       "name": "temporal_extent",
       "path": "/mnt/outputs/temporal_extent.zip",
-      "label": "temporal_extent",
-      "description": "temporal_extent"
+      "label": "temporal extent file",
+      "description": "temporal extent from 01_setup"
     },
     {
       "type": "Zip",
-      "name": "study_area_file",
+      "name": "study_area",
       "path": "/mnt/outputs/study_area.zip",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
+      "label": "study area file",
+      "description": "zip file containing the study area"
     }
   ],
   "resources": {

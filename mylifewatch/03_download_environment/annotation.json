@@ -39,26 +39,26 @@
   "inputs": [
     {
       "type": "Zip",
-      "name": "study_area_file",
+      "name": "study_area",
       "path": "/mnt/inputs/study_area.zip",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
+      "label": "study area file",
+      "description": "zip file containing the study area"
     }
   ],
   "outputs": [
     {
       "type": "Zip",
-      "name": "tempsal_output_filename",
+      "name": "tempsal",
       "path": "/mnt/outputs/tempsal.zip",
-      "label": "tempsal_output_filename",
-      "description": ""
+      "label": "tempsal output",
+      "description": "output from 03 download environment"
     },
     {
       "type": "Zip",
-      "name": "npp_output_filename",
+      "name": "npp",
       "path": "/mnt/outputs/npp.zip",
-      "label": "npp_output_filename",
-      "description": ""
+      "label": "npp output",
+      "description": "npp output from 03 download environment"
     }
   ],
   "resources": {

@@ -9,24 +9,24 @@
   "inputs": [
     {
       "type": "Zip",
-      "name": "tempsal_filename",
+      "name": "tempsal",
       "path": "/mnt/inputs/tempsal.zip",
-      "label": "tempsal_filename",
-      "description": ""
+      "label": "tempsal output",
+      "description": "output from 03 download environment"
     },
     {
       "type": "Zip",
-      "name": "npp_filename",
+      "name": "npp",
       "path": "/mnt/inputs/npp.zip",
-      "label": "npp_filename",
-      "description": ""
+      "label": "npp output",
+      "description": "npp output from 03 download environment"
     },
     {
       "type": "Zip",
-      "name": "datasets_all_file",
+      "name": "datasets_all",
       "path": "/mnt/inputs/datasets_all.zip",
-      "label": "datasets_all_file",
-      "description": ""
+      "label": "datasets all",
+      "description": "zip file containing all datasets used in the analysis"
     },
     {
       "type": "Zip",
@@ -42,12 +42,12 @@
       "label": "study_area",
       "description": ""
     },
-    {
+        {
       "type": "Zip",
       "name": "datasets_selection",
       "path": "/mnt/inputs/datasets_selection.zip",
-      "label": "datasets_selection",
-      "description": ""
+      "label": "datasets selection",
+      "description": "datasets selection output from 04 preprocess presences"
     }
   ],
   "outputs": [
@@ -55,29 +55,29 @@
       "type": "Zip",
       "name": "datasets_selection",
       "path": "/mnt/outputs/datasets_selection.zip",
-      "label": "datasets_selection",
-      "description": ""
+      "label": "datasets selection",
+      "description": "datasets selection output from 04 preprocess presences"
     },
     {
       "type": "Zip",
       "name": "thinned_m",
       "path": "/mnt/outputs/thinned_m.zip",
       "label": "thinned_m",
-      "description": ""
+      "description": "thinned_m output from 04 preprocess presences"
     },
     {
       "type": "Zip",
-      "name": "thinned_d_file",
+      "name": "thinned_d",
       "path": "/mnt/outputs/thinned_d.zip",
-      "label": "thinned_d_file",
-      "description": ""
+      "label": "thinned d",
+      "description": "thinned_d output from 04 preprocess presences"
     },
     {
       "type": "Zip",
       "name": "cleaned_data",
       "path": "/mnt/outputs/cleaned_data.zip",
-      "label": "cleaned_data",
-      "description": ""
+      "label": "cleaned data",
+      "description": "cleaned data output from 04 preprocess presences"
     }
   ],
   "resources": {
@@ -88,7 +88,8 @@
     "estimatedTime": 4
   },
   "tags": [
-"Habitat Suitability Model" , "MARCO-BOLO"
+    "Habitat Suitability Model",
+    "MARCO-BOLO"
   ],
   "license": "GPL v3",
   "version": "0.0.1",
@@ -102,10 +103,10 @@
     }
   ],
   "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
-  "author": "Nowé Jo-Hannes" ,
+  "author": "Nowé Jo-Hannes",
   "bugs": {
-      "email": "johannes.nowe@vliz.be",
-      "url": "https://helpdesk.lifewatch.eu/"
+    "email": "johannes.nowe@vliz.be",
+    "url": "https://helpdesk.lifewatch.eu/"
   },
   "citation": null,
   "testPath": "emptyUnitTest.sh",

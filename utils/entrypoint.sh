@@ -13,6 +13,8 @@ Rscript --vanilla main.r "$@"
 cd /mnt/outputs
 for f in *; do
   [ -f "$f" ] && echo "Zipping $f" && zip "${f%.*}.zip" "$f"
+  # If we have a folder zip it
+  [ -d "$f" ] && echo "Zipping $f" && zip -r "${f%.*}.zip" "$f"
 done
 
 cd /wrp
