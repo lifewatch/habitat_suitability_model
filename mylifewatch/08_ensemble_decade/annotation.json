@@ -8,7 +8,7 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "env_decade",
       "path": "/mnt/inputs/env_decade.RDS",
       "label": "env_decade",
@@ -17,63 +17,63 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "ranger",
       "path": "/mnt/outputs/modelling_decade/ranger.RDS",
       "label": "ranger",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "randforest",
       "path": "/mnt/outputs/modelling_decade/randforest.RDS",
       "label": "randforest",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "gam",
       "path": "/mnt/outputs/modelling_decade/gam.RDS",
       "label": "gam",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "mars",
       "path": "/mnt/outputs/modelling_decade/mars.RDS",
       "label": "mars",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "maxent",
       "path": "/mnt/outputs/modelling_decade/maxent.RDS",
       "label": "maxent",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "xgb",
       "path": "/mnt/outputs/modelling_decade/xgb.RDS",
       "label": "xgb",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_data",
       "path": "/mnt/outputs/modelling_decade/stack_data.RDS",
       "label": "stack_data",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_mod",
       "path": "/mnt/outputs/modelling_decade/stack_mod.RDS",
       "label": "stack_mod",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_fit",
       "path": "/mnt/outputs/modelling_decade/stack_fit.RDS",
       "label": "stack_fit",

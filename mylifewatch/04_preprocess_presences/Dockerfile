@@ -1,7 +1,5 @@
 FROM docker.io/library/base-my
 
-RUN which python3
-
 # Copy dependencies and install them
 COPY req req
 RUN Rscript req/exe.R
@@ -13,4 +11,4 @@ WORKDIR wrp
 ADD code code
 ADD main.r .
 
-
+# ENTRYPOINT ["Rscript", "--vanilla", "main.r"]

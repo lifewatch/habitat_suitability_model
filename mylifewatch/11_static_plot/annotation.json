@@ -8,14 +8,14 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "01_setup",
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "nc",
       "path": "/mnt/inputs/nc/",
       "label": "nc",
@@ -24,14 +24,14 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "bio_oracle",
       "path": "/mnt/outputs/bio_oracle/",
       "label": "bio_oracle",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "nc",
       "path": "/mnt/outputs/nc/",
       "label": "nc",

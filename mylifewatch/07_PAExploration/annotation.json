@@ -8,14 +8,14 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "01_setup",
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "cleaned_data",
       "path": "/mnt/inputs/cleaned_data.RDS",
       "label": "cleaned_data",
@@ -24,7 +24,7 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "png",
       "path": "/mnt/outputs/png",
       "label": "png",

@@ -8,56 +8,56 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "tempsal_filename",
       "path": "/mnt/inputs/tempsal.nc",
       "label": "tempsal_filename",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "datasets_selection",
       "path": "/mnt/inputs/datasets_selection.csv",
       "label": "datasets_selection",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_m_file",
       "path": "/mnt/inputs/thinned_m.RDS",
       "label": "thinned_m_file",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_d_file",
       "path": "/mnt/inputs/thinned_d.RDS",
       "label": "thinned_d_file",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "target_group",
       "path": "/mnt/inputs/target_group.RDS",
       "label": "target_group",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "input",
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": "JSON file containing the setup information"
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "study_area_file",
       "path": "/mnt/inputs/study_area.RDS",
       "label": "study_area",
       "description": "RDS file containing the study area"
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "temporal_extent",
       "path": "/mnt/inputs/temporal_extent.RDS",
       "label": "temporal_extent",
@@ -66,28 +66,28 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "pback_month",
       "path": "/mnt/outputs/pback_month.RDS",
       "label": "pback_month",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "pback_decade",
       "path": "/mnt/outputs/pback_decade.RDS",
       "label": "pback_decade",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_tg_m",
       "path": "/mnt/outputs/pback_decade.RDS",
       "label": "thinned_tg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_tg_d",
       "path": "/mnt/outputs/thinned_tg_d.RDS",
       "label": "thinned_tg_d",

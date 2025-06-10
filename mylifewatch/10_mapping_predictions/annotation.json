@@ -8,77 +8,77 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "01_setup",
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "study_area_file",
       "path": "/mnt/inputs/study_area.RDS",
       "label": "study_area",
       "description": "RDS file containing the study area"
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_fit",
       "path": "/mnt/inputs/stack_fit.RDS",
       "label": "stack_fit",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thetao_avg_m",
       "path": "/mnt/inputs/thetao_avg_m.nc",
       "label": "thetao_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_m",
       "path": "/mnt/inputs/so_avg_m.nc",
       "label": "so_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_avg_m",
       "path": "/mnt/inputs/npp_avg_m.nc",
       "label": "npp_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "bathy",
       "path": "/mnt/inputs/bathy.nc",
       "label": "bathy",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thetao_avg_d",
       "path": "/mnt/inputs/thetao_avg_d.nc",
       "label": "thetao_avg_d",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_d",
       "path": "/mnt/inputs/so_avg_d.nc",
       "label": "so_avg_d",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_d",
       "path": "/mnt/inputs/so_avg_d.nc",
       "label": "so_avg_d",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_avg_d",
       "path": "/mnt/inputs/npp_avg_d.nc",
       "label": "npp_avg_d",
@@ -87,14 +87,14 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "bio_oracle",
       "path": "/mnt/outputs/bio_oracle/",
       "label": "bio_oracle",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "nc",
       "path": "/mnt/outputs/nc/",
       "label": "nc",

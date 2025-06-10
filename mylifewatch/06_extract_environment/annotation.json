@@ -8,49 +8,49 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "01_setup",
       "path": "/mnt/inputs/01_setup.json",
       "label": "01_setup",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "cleaned_data",
       "path": "/mnt/inputs/cleaned_data.RDS",
       "label": "cleaned_data",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "pback_decade",
       "path": "/mnt/inputs/pback_decade.RDS",
       "label": "pback_decade",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "mean_npp",
       "path": "/mnt/inputs/mean_npp.nc",
       "label": "mean_npp",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_filename",
       "path": "/mnt/inputs/npp.nc",
       "label": "npp_filename",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "bathy_sliced",
       "path": "/mnt/inputs/bathy_sliced",
       "label": "bathy_sliced",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "study_area_file",
       "path": "/mnt/inputs/study_area.RDS",
       "label": "study_area",
@@ -59,56 +59,56 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "env_month",
       "path": "/mnt/outputs/env_month.RDS",
       "label": "env_month",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "env_decade",
       "path": "/mnt/outputs/env_decade.RDS",
       "label": "env_decade",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thetao_avg_m",
       "path": "/mnt/outputs/thetao_avg_m.nc",
       "label": "thetao_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_m",
       "path": "/mnt/outputs/so_avg_m.nc",
       "label": "so_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_avg_m",
       "path": "/mnt/outputs/npp_avg_m.nc",
       "label": "npp_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thetao_avg_d",
       "path": "/mnt/outputs/thetao_avg_d.nc",
       "label": "thetao_avg_d",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_d",
       "path": "/mnt/outputs/so_avg_d.nc",
       "label": "so_avg_d",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_avg_d",
       "path": "/mnt/outputs/npp_avg_d.nc",
       "label": "npp_avg_d",

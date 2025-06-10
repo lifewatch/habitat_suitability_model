@@ -7,20 +7,48 @@
   "parameters": [],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "input",
-      "path": "/mnt/inputs/input.zip",
-      "label": "input",
-      "description": "zip file containing the setup information, temporal_extent and study_area_file"
+      "path": "/mnt/inputs/01_setup.zip",
+      "label": "01_setup",
+      "description": "JSON file containing the setup information"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area_file",
+      "path": "/mnt/inputs/study_area.zip",
+      "label": "study_area",
+      "description": "RDS file containing the study area"
+    },
+    {
+      "type": "Zip",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.zip",
+      "label": "temporal_extent",
+      "description": "RDS file containing the temporal_extent"
     }
   ],
   "outputs": [
     {
-      "type": "zip",
-      "name": "output",
-      "path": "/mnt/outputs/output.zip",
-      "label": "output zip",
-      "description": "zip file containing the RDS files with the occurrences of the species in the study area, the overview of datasets and the study area"
+      "type": "Zip",
+      "name": "datasets_all",
+      "path": "/mnt/outputs/datasets_all.zip",
+      "label": "datasets_all",
+      "description": "csv file containing all datasets used in the analysis"
+    },
+    {
+      "type": "Zip",
+      "name": "mydata_eurobis",
+      "path": "/mnt/outputs/mydata_eurobis.zip",
+      "label": "mydata_eurobis",
+      "description": "RDS file containing the occurrences of the species in the study area from Eurobis"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area",
+      "path": "/mnt/outputs/study_area.zip",
+      "label": "study_area",
+      "description": "RDS file containing the study area used in the analysis"
     }
   ],
   "resources": {

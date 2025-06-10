@@ -15,35 +15,35 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "env_month",
       "path": "/mnt/inputs/env_month.RDS",
       "label": "env_month",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thetao_avg_m",
       "path": "/mnt/inputs/thetao_avg_m.nc",
       "label": "thetao_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "so_avg_m",
       "path": "/mnt/inputs/so_avg_m.nc",
       "label": "so_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "npp_avg_m",
       "path": "/mnt/inputs/npp_avg_m.nc",
       "label": "npp_avg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "bathy",
       "path": "/mnt/inputs/bathy.nc",
       "label": "bathy",
@@ -52,63 +52,63 @@
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "ranger",
       "path": "/mnt/outputs/modelling_monthly/ranger.RDS",
       "label": "ranger",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "randforest",
       "path": "/mnt/outputs/modelling_monthly/randforest.RDS",
       "label": "randforest",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "gam",
       "path": "/mnt/outputs/modelling_monthly/gam.RDS",
       "label": "gam",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "mars",
       "path": "/mnt/outputs/modelling_monthly/mars.RDS",
       "label": "mars",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "maxent",
       "path": "/mnt/outputs/modelling_monthly/maxent.RDS",
       "label": "maxent",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "xgb",
       "path": "/mnt/outputs/modelling_monthly/xgb.RDS",
       "label": "xgb",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_data",
       "path": "/mnt/outputs/modelling_monthly/stack_data.RDS",
       "label": "stack_data",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_mod",
       "path": "/mnt/outputs/modelling_monthly/stack_mod.RDS",
       "label": "stack_mod",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "stack_fit",
       "path": "/mnt/outputs/modelling_monthly/stack_fit.RDS",
       "label": "stack_fit",

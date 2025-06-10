@@ -8,74 +8,88 @@
   ],
   "inputs": [
     {
-      "type": "Text",
+      "type": "zip",
+      "name": "output",
+      "path": "/mnt/inputs/01_setup.zip",
+      "label": "output zip",
+      "description": ""
+    },
+    {
+      "type": "Zip",
       "name": "tempsal_filename",
-      "path": "/mnt/inputs/tempsal.nc",
+      "path": "/mnt/inputs/tempsal.zip",
       "label": "tempsal_filename",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.zip",
+      "label": "temporal_extent",
+      "description": "temporal_extent"
+    },
+    {
+      "type": "Zip",
       "name": "datasets_selection",
-      "path": "/mnt/inputs/datasets_selection.csv",
+      "path": "/mnt/inputs/datasets_selection.zip",
       "label": "datasets_selection",
       "description": ""
     },
     {
-      "type": "Text",
-      "name": "thinned_m_file",
-      "path": "/mnt/inputs/thinned_m.RDS",
-      "label": "thinned_m_file",
+      "type": "Zip",
+      "name": "thinned_m",
+      "path": "/mnt/inputs/thinned_m.zip",
+      "label": "thinned_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_d_file",
-      "path": "/mnt/inputs/thinned_d.RDS",
+      "path": "/mnt/inputs/thinned_d.zip",
       "label": "thinned_d_file",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "target_group",
-      "path": "/mnt/inputs/target_group.RDS",
+      "path": "/mnt/inputs/target_group.zip",
       "label": "target_group",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "study_area_file",
-      "path": "/mnt/inputs/study_area.RDS",
+      "path": "/mnt/inputs/study_area.zip",
       "label": "study_area",
       "description": "RDS file containing the study area"
     }
   ],
   "outputs": [
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "pback_month",
-      "path": "/mnt/outputs/pback_month.RDS",
+      "path": "/mnt/outputs/pback_month.zip",
       "label": "pback_month",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "pback_decade",
-      "path": "/mnt/outputs/pback_decade.RDS",
+      "path": "/mnt/outputs/pback_decade.zip",
       "label": "pback_decade",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_tg_m",
-      "path": "/mnt/outputs/thinned_tg_m.RDS",
+      "path": "/mnt/outputs/thinned_tg_m.zip",
       "label": "thinned_tg_m",
       "description": ""
     },
     {
-      "type": "Text",
+      "type": "Zip",
       "name": "thinned_tg_d",
-      "path": "/mnt/outputs/thinned_tg_d.RDS",
+      "path": "/mnt/outputs/thinned_tg_d.zip",
       "label": "thinned_tg_d",
       "description": ""
     }
