@@ -39,7 +39,9 @@ lapply(list.files("/wrp/utils", full.names = TRUE, pattern = "\\.R$"), source)
 # INPUT -------------------------------------------------------------------
 
 args = args_parse(commandArgs(trailingOnly = TRUE))
-
+if (length(args) == 0) {
+    stop("No arguments provided. Please provide the necessary arguments.")
+}
 
 
 # WORKFLOW ----------------------------------------------------------------

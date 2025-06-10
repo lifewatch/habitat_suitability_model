@@ -1,18 +1,25 @@
 #! /bin/bash
 
-# Helper function
-throwError() { echo "ERROR: $@" 1>&2; exit 1; }
-
-# Unzip input files
-if [ -d /mnt/inputs/inputs.zip ]; then
-    unzip -q /mnt/inputs/input.zip -d /mnt/inputs/
+# Unzip input files if input.zip exists
+if [ -f /mnt/inputs/input.zip ]; then
+  cd /mnt/inputs
+  unzip -o input.zip
 fi
 
-Rscript --vanilla main.r
+cd /wrp
 
-# Zip file in the output folder if it exists
+# Call main.r script with input arguments
+Rscript --vanilla main.r "$@"
+
+# Zip file in the output folder if it exists and if not empty
 if [ -d /mnt/outputs ]; then
   cd /mnt/outputs
-  zip -r /output.zip ./*
-  mv /output.zip /mnt/outputs/output.zip
+  if [ "$(ls -A .)" ]; then
+    zip -r output.zip .
+    echo "Output zipped to output.zip"
+  else
+    echo "No files to zip in /mnt/outputs"
+  fi
+else
+  echo "/mnt/outputs directory does not exist."
 fi

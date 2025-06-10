@@ -41,4 +41,6 @@ COPY utils/ /wrp/utils
 
 RUN chmod -R +x /wrp/utils/entrypoint.sh
 # Default command
-ENTRYPOINT ["/bin/bash", "/wrp/utils/entrypoint.sh"]
+
+ENTRYPOINT ["/wrp/utils/entrypoint.sh"]
+

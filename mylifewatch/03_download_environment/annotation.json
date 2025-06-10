@@ -39,33 +39,19 @@
   "inputs": [
     {
       "type": "Text",
-      "name": "envdir",
-      "path": "/mnt/outputs/",
-      "label": "envdir",
-      "description": "output_directory"
-    },
-    {
-      "type": "Text",
-      "name": "study_area_file",
-      "path": "/mnt/inputs/study_area.RDS",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
+      "name": "input",
+      "path": "/mnt/inputs/input.zip",
+      "label": "input",
+      "description": "zip file containing the setup information, temporal_extent and study_area_file"
     }
   ],
   "outputs": [
     {
-      "type": "Text",
-      "name": "tempsal_output_filename",
-      "path": "/mnt/outputs/tempsal.nc",
-      "label": "tempsal_output_filename",
-      "description": ""
-    },
-    {
-      "type": "Text",
-      "name": "npp_output_filename",
-      "path": "/mnt/outputs/npp.nc",
-      "label": "npp_output_filename",
-      "description": ""
+      "type": "zip",
+      "name": "output",
+      "path": "/mnt/outputs/output.zip",
+      "label": "output zip",
+      "description": "zip file containing the RDS files with the occurrences of the species in the study area, the overview of datasets and the study area"
     }
   ],
   "resources": {
