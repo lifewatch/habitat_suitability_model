@@ -4,7 +4,7 @@
 throwError() { echo "ERROR: $@" 1>&2; exit 1; }
 
 # Unzip input files
-if [ -f /mnt/inputs/input.zip ]; then
+if [ -d /mnt/inputs/inputs.zip ]; then
     unzip -q /mnt/inputs/input.zip -d /mnt/inputs/
 fi
 

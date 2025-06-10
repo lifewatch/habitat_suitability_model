@@ -6,13 +6,6 @@
   "dockerImage": "habitat-suitability-model-01-setup",
   "parameters": [
     {
-      "name": "study_area_name",
-      "label": "study_area_name",
-      "description": "study_area_name",
-      "defaultValue": "ospar_regions_2017_01_002.shp",
-      "type": "String"
-    },
-    {
       "name": "start_date",
       "label": "start_date",
       "defaultValue": "1999-01-01",
@@ -70,20 +63,6 @@
       "path": "/mnt/outputs/output.zip",
       "label": "output zip",
       "description": "zip file containing the setup information, temporal_extent and study_area_file"
-    },
-    {
-      "type": "Text",
-      "name": "temporal_extent",
-      "path": "/mnt/outputs/temporal_extent.RDS",
-      "label": "temporal_extent",
-      "description": "temporal_extent"
-    },
-    {
-      "type": "Text",
-      "name": "study_area_file",
-      "path": "/mnt/outputs/study_area.RDS",
-      "label": "study_area",
-      "description": "RDS file containing the study area"
     }
   ],
   "resources": {
