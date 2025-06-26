@@ -1,0 +1,128 @@
+{
+  "name": "habitat-suitability-model-05b_sample_background",
+  "label": "Habitat Suitability Model - 05b Sample Background",
+  "description": "Sample the background based on the target-group background",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-05b_sample_background",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Zip",
+      "name": "tempsal",
+      "path": "/mnt/inputs/tempsal.zip",
+      "label": "tempsal",
+      "description": ""
+    },
+    {
+      "type": "Zip",
+      "name": "datasets_selection",
+      "path": "/mnt/inputs/datasets_selection.zip",
+      "label": "datasets selection",
+      "description": "datasets selection output from 04 preprocess presences"
+    },
+    {
+      "type": "Zip",
+      "name": "thinned_m",
+      "path": "/mnt/inputs/thinned_m.zip",
+      "label": "thinned_m",
+      "description": "thinned_m output from 04 preprocess presences"
+    },
+    {
+      "type": "Zip",
+      "name": "thinned_d",
+      "path": "/mnt/inputs/thinned_d.zip",
+      "label": "thinned d",
+      "description": "thinned_d output from 04 preprocess presences"
+    },
+    {
+      "type": "Zip",
+      "name": "target_group",
+      "path": "/mnt/inputs/target_group.zip",
+      "label": "target_group",
+      "description": ""
+    },
+    {
+      "type": "Zip",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.zip",
+      "label": "01_setup output",
+      "description": "zip file containing the setup information"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area",
+      "path": "/mnt/inputs/study_area.zip",
+      "label": "study_area",
+      "description": "zip file containing the study area"
+    },
+    {
+      "type": "Zip",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.zip",
+      "label": "temporal extent",
+      "description": "temporal extent from 01_setup"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Zip",
+      "name": "pback_month",
+      "path": "/mnt/outputs/pback_month.zip",
+      "label": "pback month",
+      "description": "pback month output from 05b sample background"
+    },
+    {
+      "type": "Zip",
+      "name": "pback_decade",
+      "path": "/mnt/outputs/pback_decade.zip",
+      "label": "pback decade",
+      "description": "pback decade output from 05b sample background"
+    },
+    {
+      "type": "Zip",
+      "name": "thinned_tg_m",
+      "path": "/mnt/outputs/thinned_tg_m.zip",
+      "label": "thinned tg m",
+      "description": "thinned tg m output from 05b sample background"
+    },
+    {
+      "type": "Zip",
+      "name": "thinned_tg_d",
+      "path": "/mnt/outputs/thinned_tg_d.zip",
+      "label": "thinned tg d",
+      "description": "thinned tg d output from 05b sample background"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "Habitat Suitability Model",
+    "MARCO-BOLO"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "Nowé Jo-Hannes",
+  "bugs": {
+    "email": "johannes.nowe@vliz.be",
+    "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

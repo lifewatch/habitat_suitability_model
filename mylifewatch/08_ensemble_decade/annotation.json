@@ -1,0 +1,58 @@
+{
+  "name": "habitat-suitability-model-08_ensemble_decade",
+  "label": "Habitat Suitability Model 08 - Ensemble Decade",
+  "description": "Training the decadal model.",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-08_ensemble_decade",
+  "parameters": [
+  ],
+  "inputs": [
+    {
+      "type": "Zip",
+      "name": "env_decade",
+      "path": "/mnt/inputs/env_decade.zip",
+      "label": "env decade",
+      "description": "env decade output from 06 extract environment"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Zip",
+      "name": "modelling_decade",
+      "path": "/mnt/outputs/modelling_decade.zip",
+      "label": "modelling decade",
+      "description": "modelling decade output from 08 ensemble decade"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "Habitat Suitability Model",
+    "MARCO-BOLO"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "Nowé Jo-Hannes",
+  "bugs": {
+    "email": "johannes.nowe@vliz.be",
+    "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

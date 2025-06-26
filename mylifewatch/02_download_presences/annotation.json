@@ -1,0 +1,84 @@
+{
+  "name": "habitat-suitability-model-02_download_presences",
+  "label": "Habitat Suitability Model - 02 Download Presences",
+  "description": "In this script, the study area is defined and the occurrences\n# of a species of choice inside this area are downloaded together with an overview \n# of the datasets.",
+  "type": "DataCollection",
+  "dockerImage": "habitat-suitability-model-02_download_presences",
+  "parameters": [],
+  "inputs": [
+    {
+      "type": "Zip",
+      "name": "01_setup",
+      "path": "/mnt/inputs/01_setup.zip",
+      "label": "01_setup output",
+      "description": "zip file containing the setup information"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area",
+      "path": "/mnt/outputs/study_area.zip",
+      "label": "study area file",
+      "description": "zip file containing the study area"
+    },
+    {
+      "type": "Zip",
+      "name": "temporal_extent",
+      "path": "/mnt/inputs/temporal_extent.zip",
+      "label": "temporal extent",
+      "description": "temporal extent from 01_setup"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Zip",
+      "name": "datasets_all",
+      "path": "/mnt/outputs/datasets_all.zip",
+      "label": "datasets all",
+      "description": "zip file containing all datasets used in the analysis"
+    },
+    {
+      "type": "Zip",
+      "name": "mydata_eurobis",
+      "path": "/mnt/outputs/mydata_eurobis.zip",
+      "label": "mydata eurobis",
+      "description": "zip file containing the occurrences of the species in the study area from Eurobis"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area",
+      "path": "/mnt/outputs/study_area.zip",
+      "label": "study_area",
+      "description": "zip file containing the study area used in the analysis"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+"Habitat Suitability Model" , "MARCO-BOLO"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "Nowé Jo-Hannes" ,
+  "bugs": {
+      "email": "johannes.nowe@vliz.be",
+      "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

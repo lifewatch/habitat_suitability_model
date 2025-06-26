@@ -1,0 +1,93 @@
+{
+  "name": "habitat-suitability-model-09_ensemble_month",
+  "label": "Habitat Suitability Model - 09 Ensemble Monthly",
+  "description": "Training the decadal model.",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-09_ensemble_month",
+  "parameters": [
+    {
+      "name": "samplesize",
+      "label": "samplesize",
+      "description": "Size of the sample to be used for training the model.",
+      "defaultValue": "1000",
+      "type": "String"
+    }
+  ],
+  "inputs": [
+    {
+      "type": "Zip",
+      "name": "env_month",
+      "path": "/mnt/inputs/env_month.zip",
+      "label": "env month",
+      "description": "env month output from 06 extract environment"
+    },
+    {
+      "type": "Zip",
+      "name": "thetao_avg_m",
+      "path": "/mnt/inputs/thetao_avg_m.zip",
+      "label": "thetao avg m",
+      "description": "thetao average monthly output from 06 extract environment"
+    },
+    {
+      "type": "Zip",
+      "name": "so_avg_m",
+      "path": "/mnt/inputs/so_avg_m.zip",
+      "label": "so avg m",
+      "description": "so average monthly output from 06 extract environment"
+    },
+    {
+      "type": "Zip",
+      "name": "npp_avg_m",
+      "path": "/mnt/inputs/npp_avg_m.zip",
+      "label": "npp_avg_m",
+      "description": "npp average monthly output from 06 extract environment"
+    },
+    {
+      "type": "Zip",
+      "name": "bathy",
+      "path": "/mnt/inputs/bathy.zip",
+      "label": "bathy",
+      "description": "bathy output from 06 extract environment"
+    }
+  ],
+  "outputs": [
+    {
+      "type": "Zip",
+      "name": "modelling_monthly",
+      "path": "/mnt/outputs/modelling_monthly.zip",
+      "label": "modelling monthly",
+      "description": "modelling monthly output from 09 ensemble"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 8048,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "Habitat Suitability Model",
+    "MARCO-BOLO"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "Nowé Jo-Hannes",
+  "bugs": {
+    "email": "johannes.nowe@vliz.be",
+    "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

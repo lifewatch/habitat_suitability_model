@@ -1,0 +1,113 @@
+{
+  "name": "habitat-suitability-model-01-setup",
+  "label": "habitat-suitability model 01 setup",
+  "description": "A script to make the general folder structure and load the necessary packages",
+  "type": "DataAnalysing",
+  "dockerImage": "habitat-suitability-model-01-setup",
+  "parameters": [
+    {
+      "name": "start_date",
+      "label": "start_date",
+      "defaultValue": "1999-01-01",
+      "type": "String",
+      "description": "Start date"
+    },
+    {
+      "name": "end_date",
+      "label": "end_date",
+      "defaultValue": "2019-12-31",
+      "type": "String",
+      "description": "End date"
+    },
+    {
+      "name": "possible_aphiaids",
+      "label": "possible_aphiaids",
+      "description": "possible_aphiaids",
+      "defaultValue": "137117, 137084, 137094, 137111, 137101, 137087",
+      "type": "List"
+    },
+    {
+      "name": "min_lon",
+      "label": "min_lon",
+      "description": "min_lon",
+      "defaultValue": "1.8",
+      "type": "Float"
+    },
+    {
+      "name": "max_lon",
+      "label": "max_lon",
+      "description": "max_lon",
+      "defaultValue": "2.5",
+      "type": "Float"
+    },
+    {
+      "name": "min_lat",
+      "label": "min_lat",
+      "description": "min_lat",
+      "defaultValue": "51",
+      "type": "Float"
+    },
+    {
+      "name": "max_lat",
+      "label": "max_lat",
+      "description": "max_lat",
+      "defaultValue": "52",
+      "type": "Float"
+    }
+  ],
+  "inputs": [],
+  "outputs": [
+    {
+      "type": "zip",
+      "name": "01_setup",
+      "path": "/mnt/outputs/01_setup.zip",
+      "label": "01_setup output",
+      "description": "zip file containing the setup information"
+    },
+    {
+      "type": "Zip",
+      "name": "temporal_extent",
+      "path": "/mnt/outputs/temporal_extent.zip",
+      "label": "temporal extent file",
+      "description": "temporal extent from 01_setup"
+    },
+    {
+      "type": "Zip",
+      "name": "study_area",
+      "path": "/mnt/outputs/study_area.zip",
+      "label": "study area file",
+      "description": "zip file containing the study area"
+    }
+  ],
+  "resources": {
+    "cores": 2,
+    "memory": 512,
+    "gpuNeeded": false,
+    "gpuMemory": 1024,
+    "estimatedTime": 4
+  },
+  "tags": [
+    "tag 1",
+    "tag 2"
+  ],
+  "license": "GPL v3",
+  "version": "0.0.1",
+  "dependencies": [
+    {
+      "name": "r",
+      "license": "GPL v3",
+      "version": "4.2.2",
+      "author": "null",
+      "citation": null
+    }
+  ],
+  "publicationDate": "Thu, 04 June 2025 11:13:00 GMT",
+  "author": "Nowé Jo-Hannes" ,
+  "bugs": {
+      "email": "johannes.nowe@vliz.be",
+      "url": "https://helpdesk.lifewatch.eu/"
+  },
+  "citation": null,
+  "testPath": "emptyUnitTest.sh",
+  "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

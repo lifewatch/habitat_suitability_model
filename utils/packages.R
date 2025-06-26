@@ -1,0 +1,40 @@
+#Download the necessary R packages
+if(!require('renv'))install.packages('renv')
+#Possibly re-start R for renv/activate.R to work.
+package_list <- c("arrow",
+                  "bundle",
+                  "CAST",
+                  "CoordinateCleaner",
+                  "dismo",
+                  "doFuture",
+                  "doParallel",
+                  "downloader",
+                  "foreach",
+                  "future",
+                  "GeoThinneR",
+                  "ks",
+                  "mgcv",
+                  "modEvA",
+                  "ows4R",
+                  "randomForest",
+                  "ranger",
+                  "raster",
+                  "sdm",
+                  "sf",
+                  "sp",
+                  "spatialEco",
+                  "spatstat",
+                  "stacks",
+                  "stats",
+                  "terra",
+                  "tidymodels",
+                  "tidysdm",
+                  "tidyverse",
+                  "utils",
+                  "worrms",
+                  "xgboost",
+                  "dplyr",
+                  "lubridate")
+#Load all the packages with library()
+lapply(package_list, require, character.only = TRUE)
+library(imis)
