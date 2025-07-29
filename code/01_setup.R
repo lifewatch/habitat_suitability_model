@@ -90,12 +90,19 @@ lapply(package_list, require, character.only = TRUE)
 library(imis)
 
 #Define user input choices
-study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,"ospar_regions_2017_01_002.shp"))
+
+#Study area
+study_area <- load_ospar(c("II","III", 'IV'), filepath = file.path(spatdir,"ospar_regions_2017_01_002.shp"))
 bbox <- sf::st_bbox(study_area)
-date_start <- as.POSIXct("1999-01-01")
+
+date_start <- as.POSIXct("2000-01-01")
 date_end <- as.POSIXct("2019-12-31")
 temporal_extent <- lubridate::interval(date_start,date_end)
-possible_aphiaids <- c(137117, 137084, 137094, 137111, 137101, 137087)
+possible_aphiaids <- c(137117, #Phocoena phocoena
+                       137084, #Phoca vitulina
+                       137094, #Delphinus delphis
+                       137111) #Tursiops truncatus
+                       
 aphiaid <- possible_aphiaids[1]
 
 #Choosing the bounding box to assess the monthly trend
