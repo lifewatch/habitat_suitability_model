@@ -91,7 +91,7 @@ for( i in 1:nrow(outer_month)){
   prediction_layers <- terra::sds(thetao_avg_m, so_avg_m, npp_avg_m, bathy)
   names(prediction_layers) <- c("thetao", "so", "npp", "bathy")
   
-  #prediction_layers need same order as train_data
+  #prediction_layers need same order as train_data otherwise knndm function throws an error
   prediction_layers <- prediction_layers[names(train_data_m)[-1]] #train data with only environmental columns
   
   monthly_folds <- knndm_fold(train_data_m, prediction_layers = prediction_layers, n_folds = 4)

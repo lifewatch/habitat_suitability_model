@@ -26,5 +26,6 @@ load_ospar <- function(regions=c("I","II","III","IV","V"), filepath){
   ospar_regions <- st_read(filepath)
   #Subsetting to regions of interest
   study_area <- ospar_regions[ospar_regions$Region %in% regions,]
+  study_area <- sf::st_union(study_area)
   return(study_area)
 }

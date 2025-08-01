@@ -79,7 +79,6 @@ library(downloader)
 library(raster)
 library(sp)
 library(mapdata)
-library(maptools)
 library(ncdf4)
 library(tiff)
 
@@ -87,7 +86,7 @@ if(!file.exists(file.path(envdir,"bathy.nc"))){
   
   ifelse(!dir.exists(file.path(envdir, "bathy_sliced")), dir.create(file.path(envdir, "bathy_sliced")), FALSE)
   #xmin etc are described in 3_1
-  stepsize <- 0.8
+  stepsize <- 0.4
   number_of_slices <- ceiling((bbox[[3]]-bbox[[1]])/stepsize)
   for(i in 1:number_of_slices){
     beginslice <- bbox[[1]] + (i-1)*stepsize
@@ -140,11 +139,11 @@ npp_avg_d <- decade_averages[[3]]
 # Extraction of values related to occurrence points -----------------------
 
 env_month <- couple_env(data = pback_month,
-                        thetao_rast = thetao_avg_m,
-                        npp_rast = npp_avg_m,
-                        so_rast = so_avg_m,
+                        thetao_rast = thetao,
+                        npp_rast = mean_npp,
+                        so_rast = so,
                         bathy_rast = bathy,
-                        timescale = "month")
+                        timescale = "month_year")
 
 env_decade <- couple_env(data = pback_decade,
                          thetao_rast = thetao_avg_d,

@@ -25,41 +25,10 @@ datasets_selection <- read.csv(file.path(datadir, "datasets_selection.csv"))
 tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
 thinned_m <- readRDS(file.path(datadir, "thinned_m.RDS"))
 thinned_d <- readRDS(file.path(datadir, "thinned_d.RDS"))
-target_group <- readRDS(file.path(datadir, "target_group.RDS"))
+thinned_tg_m <- readRDS(file.path(datadir, "thinned_tg_m.RDS"))
+thinned_tg_d <- readRDS(file.path(datadir, "thinned_tg_d.RDS"))
 # WORKFLOW ----------------------------------------------------------------
 
-# Thinning to one occurrence per pixel
-thinned_tg_m <- thin_points(
-  data = target_group,
-  method = "grid",
-  group_col = "month",
-  raster_obj = tempsal[[1]],
-  trials = 5,
-  seed = 1234
-)
-thinned_tg_m <- thinned_tg_m[[1]]%>%dplyr::select(
-  longitude = long,
-  latitude = lat,
-  occurrence_status,
-  month,
-  decade
-)
-
-thinned_tg_d <- thin_points(
-  data = target_group,
-  method = "grid",
-  group_col = "decade",
-  raster_obj = tempsal[[1]],
-  trials = 5,
-  seed = 1234
-)
-thinned_tg_d <- thinned_tg_d[[1]]%>%dplyr::select(
-  longitude = long,
-  latitude = lat,
-  occurrence_status,
-  month,
-  decade
-)
 
 # Given a specific subsetting (e.g. monthly) of the presence data, sample a background for every subset
 spatial_extent_proj <- st_transform(study_area, crs=25832)
@@ -75,18 +44,18 @@ tgb_decade <- sample_background(target_group_data = thinned_tg_d,
                   presence_data = thinned_d)
 
 tgb_month <- sample_background(target_group_data = thinned_tg_m,
-                               grouping = "month",
+                               grouping = "year_month",
                                resample_layer = tempsal[[1]],
                                window = win,
                                n_multiplier = 5,
                                presence_data = thinned_m)
+
 # OUTPUT -----------------------------------------------------------------
-pback_month <- rbind(thinned_m%>%dplyr::select(-decade), tgb_month) #presence-background data monthly
+pback_month <- rbind(thinned_m%>%dplyr::select(-c(decade, month)), tgb_month) #presence-background data monthly
 saveRDS(pback_month, file = file.path(datadir, "pback_month.RDS"))
-pback_decade <- rbind(thinned_d%>%dplyr::select(-month), tgb_decade)
+pback_decade <- rbind(thinned_d%>%dplyr::select(-c(month, year_month)), tgb_decade)
 saveRDS(pback_decade, file = file.path(datadir,"pback_decade.RDS"))
-saveRDS(thinned_tg_m, file=file.path(datadir,"thinned_tg_m.RDS"))
-saveRDS(thinned_tg_d, file=file.path(datadir,"thinned_tg_d.RDS"))
+
 
 
 

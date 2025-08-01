@@ -19,16 +19,11 @@ source("code/01_setup.R")
 # FUNCTIONS ---------------------------------------------------------------
 
 # INPUT -------------------------------------------------------------------
-study_area <- readRDS(file.path(datadir,"study_area.RDS"))
-date_start <- as_datetime("1999-01-01")
-date_end <- as_datetime("2019-12-31")
 # WORKFLOW ----------------------------------------------------------------
 library(reticulate) #reticulate package allows for python usage in R 
-virtualenv_create("mbo-proj",force=FALSE) #create a virtual environment to install packages in
-py_install("copernicusmarine",envname = "mbo-proj") #the copernicusmarine package allows CMEMS downloads
-virtualenv_list() #Check the list of available environments
-use_virtualenv("mbo-proj") #Load the environment
-
+virtualenv_create("marcobolo", force = FALSE) #create a virtual environment to install packages in
+py_install("copernicusmarine",envname = "marcobolo", ignore_installed = FALSE) 
+use_virtualenv("marcobolo") #Load the environment
 # More information on the reticulate package on: https://rstudio.github.io/cheatsheets/reticulate.pdf
 # 
 # Overview of the functions can be found at: https://help.marine.copernicus.eu/en/collections/9080063-copernicus-marine-toolbox
@@ -36,14 +31,16 @@ use_virtualenv("mbo-proj") #Load the environment
 # How to configure the credentials can be found at: https://help.marine.copernicus.eu/en/articles/8185007-copernicus-marine-toolbox-credentials-configuration
 # Works in the terminal. Needs to be done only once. 
 
-bbox <-sf::st_bbox(study_area)
 xmin <- bbox[[1]]
 xmax <- bbox[[3]]
 ymin <- bbox[[2]]
 ymax<- bbox[[4]]
-
-
+ 
 cm <- import("copernicusmarine")
+start <- as.POSIXct(date_start, format = "%Y-%m-%d %Z")%>%
+  format("%Y-%m-%dT%H:%M:%S")
+end <- as.POSIXct(date_end, format = "%Y-%m-%d %Z")%>%
+  format("%Y-%m-%dT%H:%M:%S")
 #cm$login()
 cm$subset(
   dataset_id="cmems_mod_glo_phy_my_0.083deg_P1M-m",
@@ -52,8 +49,8 @@ cm$subset(
   maximum_longitude=xmax,
   minimum_latitude=ymin,
   maximum_latitude=ymax,
-  start_datetime=date_start,
-  end_datetime=date_end,
+  start_datetime=start,
+  end_datetime=end,
   minimum_depth=0.49402499198913574,
   maximum_depth=0.49402499198913574,
   output_directory= envdir,
@@ -67,8 +64,8 @@ cm$subset(
   maximum_longitude=xmax,
   minimum_latitude=ymin,
   maximum_latitude=ymax,
-  start_datetime=date_start,
-  end_datetime=date_end,
+  start_datetime=start,
+  end_datetime=end,
   minimum_depth=0.5057600140571594,
   maximum_depth=0.5057600140571594,
   output_directory= envdir,
