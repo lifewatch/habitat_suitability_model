@@ -34,8 +34,7 @@ load_presence <- function(aphia_id, spatial_extent=c(-90,-90,90,90), temporal_ex
                   latitude,
                   longitude,
                   time=observationdate,
-                  scientific_name = scientificname_accepted,
-                  occurrence_id=occurrenceid) %>%
+                  scientific_name = scientificname_accepted) %>%
     collect()
   return(mydata_eurobis)
 }

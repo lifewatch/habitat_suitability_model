@@ -16,23 +16,21 @@ source("code/01_setup.R")
 
 
 # FUNCTIONS ---------------------------------------------------------------
-#filter_dataset
 #clean_presence
 # INPUT -------------------------------------------------------------------
-mydata_eurobis <- readRDS(file.path(datadir, "mydata_eurobis.RDS"))
-datasets_all <- read.csv(file.path(datadir,"datasets_all.csv"))
+#presence_points is either the output of wrapper1 or a csv file given by the user with
+#columns: longitude, latitude, time, species_name
+if(is.null(user_data)){
+presence_points <- readr::read_csv(file.path(datadir, "presence_points.csv"))
+} else { presence_points <- user_data}
 tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
-study_area <- readRDS(file.path(datadir, "study_area.RDS"))
+
 # WORKFLOW ----------------------------------------------------------------
-# Filter out datasets based on a keyword
-word_filter <- c("stranding", "museum")
-datasets_selection <- filter_dataset(datasets_all,method="filter",filter_words = word_filter)
 
 # Clean the presence data
 cleaned_data <- clean_presence(
-  data = mydata_eurobis,
-  study_area = study_area,
-  dataset_selection = datasets_selection
+  data = presence_points,
+  study_area = study_area
 )
 
 cleaned_data
@@ -40,17 +38,20 @@ cleaned_data
 thinned_m <- thin_points(
   data = cleaned_data,
   method = "grid",
-  group_col = "month",
+  group_col = "year_month",
   raster_obj = tempsal,
   trials = 5,
+  lon_col = "longitude",
+  lat_col = "latitude",
   seed = 1234
 )
-thinned_m <- thinned_m[[1]]%>%dplyr::select(
-  longitude = long,
-  latitude = lat,
+thinned_m <- thinned_m$original_data[thinned_m$retained[[1]],]%>%dplyr::select(
+  longitude,
+  latitude,
   occurrence_status,
   month,
-  decade
+  decade,
+  year_month
 )
 thinned_d <- thin_points(
   data = cleaned_data,
@@ -58,18 +59,21 @@ thinned_d <- thin_points(
   group_col = "decade",
   raster_obj = tempsal,
   trials = 5,
+  lon_col = "longitude",
+  lat_col = "latitude",
   seed = 1234
 )
-thinned_d <- thinned_d[[1]]%>%dplyr::select(
-  longitude = long,
-  latitude = lat,
+thinned_d <- thinned_d$original_data[thinned_d$retained[[1]],]%>%dplyr::select(
+  longitude,
+  latitude,
   occurrence_status,
   month,
-  decade
+  decade,
+  year_month
 )
 
 # OUTPUT ------------------------------------------------------------------
-write.csv(datasets_selection ,file=file.path(datadir,"datasets_selection.csv"),row.names = F, append=FALSE)
+
 saveRDS(cleaned_data, file.path(datadir, "cleaned_data.RDS"))
 saveRDS(thinned_m, file.path(datadir, "thinned_m.RDS"))
 saveRDS(thinned_d, file.path(datadir, "thinned_d.RDS"))

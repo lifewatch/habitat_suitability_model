@@ -6,8 +6,8 @@ tidymodels_prep <- function(data_pback, folds = NULL){
     as_tibble()
   
   #Ensemble control, so that in the end we can combine our individual models with stacks
-  ctrl_grid <- control_grid(save_pred = TRUE, save_workflow = TRUE, parallel_over = "everything")
-  ctrl_res <- control_resamples(save_pred = TRUE, save_workflow = TRUE, parallel_over = "everything")
+  ctrl_grid <- control_grid(save_pred = TRUE, save_workflow = TRUE, parallel_over = "resamples")
+  ctrl_res <- control_resamples(save_pred = TRUE, save_workflow = TRUE, parallel_over = "resamples")
   
   #Create a recipe, data we want to predict on needs to be the same as data this recipe was build on
   recipe <- recipe(occurrence_status ~., data=training_data)%>%

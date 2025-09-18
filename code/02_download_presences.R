@@ -24,29 +24,37 @@ source("code/01_setup.R")
 # INPUT -------------------------------------------------------------------
 
 # WORKFLOW ----------------------------------------------------------------
-#Downloading the occurrence data from EurOBIS
-mydata_eurobis <- load_presence(aphia_id = aphiaid, 
-                               spatial_extent = bbox,
-                               temporal_extent = temporal_extent)
-
-# generate dataset metadata
-datasetidsoi <- mydata_eurobis %>% distinct(datasetid) %>% 
-  mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
-# retrieve data by dataset
-all_info <- data.frame()
-
-for (i in datasetidsoi$datasetid){
-  dataset_info <- fdr2(i)
-  all_info <- rbind(all_info, dataset_info)
+if(is.null(user_data)){
+  #Downloading the occurrence data from EurOBIS
+  presence_points <- load_presence(aphia_id = aphiaid, 
+                                   spatial_extent = bbox,
+                                   temporal_extent = temporal_extent)
+  
+  # generate dataset metadata
+  datasetidsoi <- presence_points %>% distinct(datasetid) %>% 
+    mutate(datasetid = as.numeric(str_extract(datasetid, "\\d+")))
+  # retrieve data by dataset
+  all_info <- data.frame()
+  
+  for (i in datasetidsoi$datasetid){
+    dataset_info <- fdr2(i)
+    all_info <- rbind(all_info, dataset_info)
+  }
+  
+  names(all_info)[1]<-"datasetid"
+  
+  # Filter out datasets based on a keyword
+  word_filter <- c("stranding", "museum")
+  datasets_selection <- filter_dataset(all_info,method="filter",filter_words = word_filter)
+  
+  presence_points <- presence_points%>%
+    filter(datasetid %in% datasets_selection$datasetid) %>%
+    dplyr::select(!c(datasetid))
+  
+  # OUTPUT -----------------------------------------------------------------
+  
+  #Save output
+  write.csv(all_info,file=file.path(datadir,"datasets_all.csv"),row.names = F, append=FALSE)
+  write.csv(datasets_selection ,file=file.path(datadir,"datasets_selection.csv"),row.names = FALSE, append=FALSE)
+  write.csv(presence_points, file = file.path(datadir, "presence_points.csv"), row.names = FALSE, append = FALSE)
 }
-
-names(all_info)[1]<-"datasetid"
-
-
-
-# OUTPUT -----------------------------------------------------------------
-
-#Save output
-write.csv(all_info,file=file.path(datadir,"datasets_all.csv"),row.names = F, append=FALSE)
-saveRDS(mydata_eurobis, file = file.path(datadir, "mydata_eurobis.RDS"))
-saveRDS(study_area, file = file.path(datadir, "study_area.RDS"))

@@ -23,7 +23,7 @@
 #' )
 #'
 #' @export
-clean_presence <- function(data, study_area, dataset_selection) {
+clean_presence <- function(data, study_area) {
   # Step 1: Remove duplicates
   data <- cc_dupl(
     data, 
@@ -37,15 +37,12 @@ clean_presence <- function(data, study_area, dataset_selection) {
   data <- sf::st_as_sf(data,coords=c("longitude","latitude"),crs="EPSG:4326") %>%
     filter(!is.na(time)) %>%
     st_filter(y = study_area) %>%
-    filter(datasetid %in% dataset_selection$datasetid) %>%
-    dplyr::distinct(occurrence_id, .keep_all = TRUE) %>%
     arrange(time) %>%
     dplyr::mutate(
       longitude = sf::st_coordinates(.)[, 1],
       latitude = sf::st_coordinates(.)[, 2],
       occurrence_status = 1
     ) %>%
-    dplyr::select(!c(datasetid, occurrence_id)) %>%
     sf::st_drop_geometry()
   
   
@@ -56,8 +53,12 @@ clean_presence <- function(data, study_area, dataset_selection) {
       month = month(time),
       decade = year(time) - year(time) %% 10
     ) %>%
+    mutate(year_month = paste(year(time),month,sep="-")%>%ym()%>%format("%Y-%m"))%>%
     mutate(decade = factor(decade, levels = unique(decade))) %>%
+    mutate(year_month = factor(year_month, levels = seq(date_start, date_end, by = "month")%>%format("%Y-%m"), ordered = TRUE))%>%
     dplyr::select(!c(scientific_name, time))
   
   return(data)
+  
 }
+

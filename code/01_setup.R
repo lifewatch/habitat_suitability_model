@@ -52,21 +52,27 @@ for(i in 1:length(folderstruc)){
 
 #Download the necessary R packages
 if(!require('renv'))install.packages('renv')
+# install.packages("vlizBE/imis")
+ # pkgs_installed <- installed.packages(lib.loc = renv::paths$library())[, "Package"]
+ # renv::install(setdiff(unique(renv::dependencies()$Package), pkgs_installed))
+# devtools::install_github("bio-oracle/biooracler")
+
 #Possibly re-start R for renv/activate.R to work.
 package_list <- c("arrow",
+                  "biooracler",
                   "bundle",
                   "CAST",
+                  "cmocean",
                   "CoordinateCleaner",
                   "dismo",
                   "doFuture",
                   "doParallel",
                   "downloader",
+                  "earth",
                   "foreach",
                   "future",
                   "GeoThinneR",
-                  "ks",
                   "mgcv",
-                  "modEvA",
                   "ows4R",
                   "randomForest",
                   "ranger",
@@ -90,19 +96,29 @@ lapply(package_list, require, character.only = TRUE)
 library(imis)
 
 #Define user input choices
-study_area <- load_ospar(c("II","III"), filepath = file.path(spatdir,"ospar_regions_2017_01_002.shp"))
+
+#Study area
+if(!exists("study_area")){ #If no user study_area shapefile was given, ospar regions II, III and IV are chosen
+study_area <- load_ospar(c("II","III", 'IV'), filepath = file.path(spatdir,"ospar_regions_2017_01_002.shp"))
+}
 bbox <- sf::st_bbox(study_area)
-date_start <- as.POSIXct("1999-01-01")
+
+date_start <- as.POSIXct("2000-01-01")
 date_end <- as.POSIXct("2019-12-31")
 temporal_extent <- lubridate::interval(date_start,date_end)
-possible_aphiaids <- c(137117, 137084, 137094, 137111, 137101, 137087)
-aphiaid <- possible_aphiaids[1]
+possible_aphiaids <- c(137117, #Phocoena phocoena
+                       137084, #Phoca vitulina
+                       137094, #Delphinus delphis
+                       137111) #Tursiops truncatus
+                       
+aphiaid <- possible_aphiaids[1] #Choice of species
 
-#Choosing the bounding box to assess the monthly trend
-min_lon <- 1.8
-max_lon <- 2.5
-min_lat <- 51
-max_lat <- 52
+# User data presences instead of EurOBIS data
+user_data <- NULL
+user_data_path <- NULL #Change this with the path to your user data .csv file
+if(!is.null(user_data_path)){
+  user_data <- read.csv(user_data_path)
+}
 
 # OUTPUT ------------------------------------------------------------------
 

@@ -23,7 +23,6 @@ source("code/01_setup.R")
 
 # INPUT ------------------------------------------------------------------
 
-load(file.path(datadir,"pback_month.RData"))
 pback_month <- readRDS(file.path(datadir, "pback_month.RDS"))
 pback_decade <- readRDS(file.path(datadir, "pback_decade.RDS"))
 # WORKFLOW ----------------------------------------------------------------
@@ -79,15 +78,14 @@ library(downloader)
 library(raster)
 library(sp)
 library(mapdata)
-library(maptools)
 library(ncdf4)
 library(tiff)
 
-if(!file.exists(file.path(envdir,"bathy.nc"))){
+if(!file.exists(file.path(envdir,"bathy.tif"))){
   
   ifelse(!dir.exists(file.path(envdir, "bathy_sliced")), dir.create(file.path(envdir, "bathy_sliced")), FALSE)
   #xmin etc are described in 3_1
-  stepsize <- 0.8
+  stepsize <- 0.4
   number_of_slices <- ceiling((bbox[[3]]-bbox[[1]])/stepsize)
   for(i in 1:number_of_slices){
     beginslice <- bbox[[1]] + (i-1)*stepsize
@@ -111,16 +109,15 @@ if(!file.exists(file.path(envdir,"bathy.nc"))){
   #Merge the spatrastercollection
   bathy <- merge(bathy_coll)
   bathy[bathy>0] <- NA
+  bathy <- terra::resample(bathy, tempsal[[1]])
   names(bathy) <-"bathy"
   varnames(bathy) <- "bathy"
-  bathy <- resample(bathy, tempsal[[1]])
-  writeCDF(bathy,file.path(envdir,"bathy.nc"))
+  writeRaster(bathy,file.path(envdir,"bathy.tif"), overwrite=TRUE)
 } else{
   cat("Bathymetry layer already exists")
-  bathy <- terra::rast(file.path(envdir,"bathy.nc"))
+  bathy <- terra::rast(file.path(envdir,"bathy.tif"))
   bathy <- resample(bathy,tempsal[[1]])
 }
-
 
 # Average layers per month ------------------------------------------------
 
@@ -130,21 +127,20 @@ so_avg_m <- monthly_averages[[2]]
 npp_avg_m <- monthly_averages[[3]]
 
 
-# Average layers per decade -----------------------------------------------
+# Load decadal layers -----------------------------------------------
 
-decade_averages <- resample_tempres(spatrasters = list(thetao, so, mean_npp), average_over = "decadely")
-thetao_avg_d <- decade_averages[[1]] 
-so_avg_d <- decade_averages[[2]]
-npp_avg_d <- decade_averages[[3]]
+thetao_avg_d <- terra::rast(file.path(envdir, "bio_oracle", "thetao_baseline_2000_2019_depthsurf.tif"))
+so_avg_d <- terra::rast(file.path(envdir, "bio_oracle", "so_baseline_2000_2019_depthsurf.tif"))
+npp_avg_d <- terra::rast(file.path(envdir, "bio_oracle", "npp_baseline_2000_2020_depthsurf.tif"))
 
 # Extraction of values related to occurrence points -----------------------
 
 env_month <- couple_env(data = pback_month,
-                        thetao_rast = thetao_avg_m,
-                        npp_rast = npp_avg_m,
-                        so_rast = so_avg_m,
+                        thetao_rast = thetao,
+                        npp_rast = mean_npp,
+                        so_rast = so,
                         bathy_rast = bathy,
-                        timescale = "month")
+                        timescale = "month_year")
 
 env_decade <- couple_env(data = pback_decade,
                          thetao_rast = thetao_avg_d,
@@ -157,9 +153,9 @@ env_decade <- couple_env(data = pback_decade,
 
 saveRDS(env_month,file=file.path(datadir,"env_month.RDS"))
 saveRDS(env_decade,file=file.path(datadir,"env_decade.RDS"))
-terra::writeCDF(thetao_avg_m,file.path(datadir,"thetao_avg_m.nc"), overwrite=TRUE)
-terra::writeCDF(so_avg_m, file = file.path(datadir, "so_avg_m.nc"), overwrite = TRUE)
-terra::writeCDF(npp_avg_m, file = file.path(datadir, "npp_avg_m.nc"), overwrite = TRUE)
-terra::writeCDF(thetao_avg_d,file.path(datadir,"thetao_avg_d.nc"), overwrite=TRUE)
-terra::writeCDF(so_avg_d, file = file.path(datadir, "so_avg_d.nc"), overwrite = TRUE)
-terra::writeCDF(npp_avg_d, file = file.path(datadir, "npp_avg_d.nc"), overwrite = TRUE)
+terra::writeRaster(thetao_avg_m, file.path(datadir, "thetao_avg_m.tif"), overwrite=TRUE)
+terra::writeRaster(so_avg_m, file = file.path(datadir, "so_avg_m.tif"), overwrite = TRUE)
+terra::writeRaster(npp_avg_m, file = file.path(datadir, "npp_avg_m.tif"), overwrite = TRUE)
+terra::writeRaster(thetao_avg_d,file.path(datadir,"thetao_avg_d.tif"), overwrite=TRUE)
+terra::writeRaster(so_avg_d, file = file.path(datadir, "so_avg_d.tif"), overwrite = TRUE)
+terra::writeRaster(npp_avg_d, file = file.path(datadir, "npp_avg_d.tif"), overwrite = TRUE)
