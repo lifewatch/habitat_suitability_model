@@ -59,13 +59,16 @@ if(!require('renv'))install.packages('renv')
 
 #Possibly re-start R for renv/activate.R to work.
 package_list <- c("arrow",
+                  "biooracler",
                   "bundle",
                   "CAST",
+                  "cmocean",
                   "CoordinateCleaner",
                   "dismo",
                   "doFuture",
                   "doParallel",
                   "downloader",
+                  "earth",
                   "foreach",
                   "future",
                   "GeoThinneR",

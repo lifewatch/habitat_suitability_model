@@ -35,22 +35,27 @@ source("code/07_PAExploration.R")
 
 
 ```{r}
-source("code/08_ensemble_decade.R")
+source("code/08_decade_evaluation.R")
 ```
 
 ```{r}
-source("code/09_ensemble_month.R")
+source("code/08_decade_training.R")
 ```
 
 ```{r}
-source("code/10_mapping_predictions.R")
+source("code/08_month_training.R")
 ```
 
 ```{r}
-source("code/11_static_plot.R")
+source("code/08_month_evaluation.R")
 ```
 
-Now run the "code/12_report.Rmd" file to knit the report.
+```{r}
+source("code/09_mapping_predictions.R")
+```
+
+
+Now run the "code/10_report.Rmd" file to knit the report.
 
 
 

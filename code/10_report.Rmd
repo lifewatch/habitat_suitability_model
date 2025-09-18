@@ -1,0 +1,108 @@
+---
+title: "MARCO-BOLO Workflow report"
+author: "Jo-Hannes Nowé"
+output: 
+html_document:
+  toc=TRUE
+---
+
+
+
+```{r, echo=FALSE, include=FALSE}
+source("code/01_setup.R")
+```
+
+
+```{r, echo = FALSE}
+monthly_predictions <- terra::rast(file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","monthly",".nc")))
+names(monthly_predictions) <- lubridate::month(1:12, label = TRUE)
+decade_present <- terra::rast(file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","decade_present",".nc")))
+names(decade_present) <- c(2000,2010)
+scenarios <- c(585,460,370,245,126,119)
+```
+
+# Predicted monthly habitat suitability
+
+```{r, fig.width = 16, fig.height = 12, echo = FALSE}
+
+library("cmocean")
+algae <- cmocean("algae")
+pal <- algae(15)
+#Plot the raster
+mean_raster_df <- as.data.frame(monthly_predictions, 
+                                  xy = TRUE) %>%
+  tidyr::pivot_longer(cols = "Jan":"Dec",
+                      names_to = "month",
+                      values_to = "suitability")%>%
+  dplyr::mutate(
+      # Order months Jan–Dec
+      month = factor(
+        month,
+        levels = month.abb,   
+        ordered = TRUE))
+p <- ggplot() +
+  geom_raster(data = mean_raster_df, aes(x = x, y = y, fill = suitability))+
+  geom_sf(data = study_area, fill = NA)+
+  scale_fill_gradientn(colours = pal, na.value = "transparent",
+                       limits = c(0, 1),
+                       breaks = seq(0,1, by = 0.1))+
+  labs(title = paste("Raster with monthly relative habitat suitability",aphiaid))+
+  facet_wrap("month",ncol = 4)
+print(p)
+```
+
+# Predicted present decadal habitat suitability
+
+```{r, fig.width = 16, fig.height = 12, echo = FALSE}
+#Plot the raster
+mean_raster_df <- as.data.frame(decade_present, 
+                                  xy = TRUE) %>%
+  tidyr::pivot_longer(cols = c("2000","2010"),
+                      names_to = "decade",
+                      values_to = "suitability")%>%
+  dplyr::mutate(
+      # Order months Jan–Dec
+      decade = factor(
+        decade,
+        levels = c(2000,2010),
+        ordered = TRUE))
+p <- ggplot() +
+  geom_raster(data = mean_raster_df, aes(x = x, y = y, fill = suitability))+
+  geom_sf(data = study_area, fill = NA)+
+  scale_fill_gradientn(colours = pal, na.value = "transparent",
+                       limits = c(0, 1),
+                       breaks = seq(0,1, by = 0.1))+
+  labs(title = paste("Raster with decadal relative habitat suitability",aphiaid))+
+  facet_wrap("decade",ncol = 4)
+print(p)
+```
+# Predicted future decadal habitat suitability
+
+```{r, fig.width = 16, fig.height = 12, echo = FALSE}
+for(scenario in scenarios){
+  ssp <- terra::rast(file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","decade_future_ssp",scenario,".nc")))
+  names(ssp) <- seq(from = 2020, to = 2090,by = 10)
+  mean_raster_df <- as.data.frame(ssp, #put an upper limit on values for plotting purposes
+                                  xy = TRUE) %>%
+  tidyr::pivot_longer(cols = as.character(seq(from = 2020, to = 2090,by = 10)),
+                      names_to = "decade",
+                      values_to = "suitability")%>%
+  dplyr::mutate(
+      # Order months Jan–Dec
+      decade = factor(
+        decade,
+        levels =seq(from = 2020, to = 2090,by = 10),
+        ordered = TRUE))
+p <- ggplot() +
+  geom_raster(data = mean_raster_df, aes(x = x, y = y, fill = suitability))+
+  geom_sf(data = study_area, fill = NA)+
+  scale_fill_gradientn(colours = pal, na.value = "transparent",
+                       limits = c(0, 1),
+                       breaks = seq(0,1, by = 0.1))+
+  labs(title = paste("Raster with future decadal relative habitat suitability",aphiaid),
+  subtitle = paste0("SSP", scenario," 2020-2090"))+
+  facet_wrap("decade",ncol = 4)
+print(p)
+}
+```
+

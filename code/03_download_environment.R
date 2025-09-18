@@ -72,7 +72,23 @@ cm$subset(
   output_filename="npp.nc",
   overwrite = TRUE)
 
-
+#Download decadal bio-oracle layers
+interest_layers <- biooracler::list_layers()%>%
+  dplyr::select(dataset_id)%>%
+  filter(
+    str_detect(dataset_id, "so|thetao|phyc") &
+      str_detect(dataset_id, "depthsurf") &
+      str_detect(dataset_id, "baseline")
+  )%>%
+  arrange(dataset_id)%>%
+  mutate(variables = paste0(str_extract(dataset_id, "^[^_]+"),"_mean"))
+constraints <- list("longitude" = c(bbox[[1]],bbox[[3]]),"latitude" = c(bbox[[2]],bbox[[4]]))
+pwalk(interest_layers, \(dataset_id,variables) terra::writeRaster(terra::resample(terra::classify(biooracler::download_layers(dataset_id = dataset_id,
+                                                                                                                              variables = variables,
+                                                                                                                              constraints = constraints,
+                                                                                                                              fmt = "raster"),cbind(NaN,NA)),tempsal[[1]]), #resample so that they have same extent and resolution as CMEMS layers
+                                                                  filename=file.path(envdir,"bio_oracle",paste0(gsub("phyc","npp",dataset_id) #makes it easier as npp is used as a name for the rest of the workflow
+                                                                                                                ,".tif")),overwrite=TRUE))
 
 # OUTPUT ------------------------------------------------------------------
 #tempsal.nc
