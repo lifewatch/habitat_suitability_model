@@ -15,7 +15,9 @@ source("code/01_setup.R")
 ##################################################################################
 
 # WORKFLOW
-
+ifelse(!dir.exists(file.path(datadir,
+                             "modelling_decade")), dir.create(file.path(datadir,
+                                                                       "modelling_decade")), FALSE)
 env_decade <- readRDS(file.path(datadir,
                                paste0("env_decade.RDS"))) 
 train_model(occurrences = env_decade,

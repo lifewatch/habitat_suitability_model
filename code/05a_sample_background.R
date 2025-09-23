@@ -32,8 +32,7 @@ if(is.null(user_data)){
   list_dasid <- datasets_selection$datasetid
   
   # For a given species and lists of datasets, download the full target-group occurrences
-  target_group <- download_tg(aphia_id = aphiaid, 
-                              list_dasid= list_dasid, 
+  target_group <- download_tg(list_dasid= list_dasid, 
                               spatial_extent = bbox, 
                               temporal_extent = temporal_extent)
   
@@ -48,37 +47,23 @@ if(is.null(user_data)){
     group_col = "year_month",
     raster_obj = tempsal[[1]],
     trials = 5,
-    lon_col = "longitude",
+    long_col = "longitude",
     lat_col = "latitude",
     seed = 1234
   )
-  thinned_tg_m <- thinned_tg_m$original_data[thinned_tg_m$retained[[1]],]%>%dplyr::select(
-    longitude,
-    latitude,
-    occurrence_status,
-    month,
-    decade,
-    year_month
-  )
+  thinned_tg_m <- thinned_tg_m[[1]]
   
   thinned_tg_d <- thin_points(
     data = target_group,
     method = "grid",
     group_col = "decade",
-    lon_col = "longitude",
+    long_col = "longitude",
     lat_col = "latitude",
     raster_obj = tempsal[[1]],
     trials = 5,
     seed = 1234
   )
-  thinned_tg_d <- thinned_tg_d$original_data[thinned_tg_d$retained[[1]],]%>%dplyr::select(
-    longitude,
-    latitude,
-    occurrence_status,
-    month,
-    decade,
-    year_month
-  )
+  thinned_tg_d <- thinned_tg_d[[1]]
 } else { #In the case of user data, we don't collect the target group as this is based on the 
   thinned_tg_m <- thinned_m
   thinned_tg_d <- thinned_d

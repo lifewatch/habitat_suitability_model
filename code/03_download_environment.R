@@ -72,6 +72,8 @@ cm$subset(
   output_filename="npp.nc",
   overwrite = TRUE)
 
+tempsal <- terra::rast(file.path(envdir,"tempsal.nc"))
+ifelse(!dir.exists(file.path(envdir,"bio_oracle")), dir.create(file.path(envdir,"bio_oracle")), FALSE)
 #Download decadal bio-oracle layers
 interest_layers <- biooracler::list_layers()%>%
   dplyr::select(dataset_id)%>%

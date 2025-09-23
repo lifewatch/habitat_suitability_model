@@ -41,36 +41,23 @@ thinned_m <- thin_points(
   group_col = "year_month",
   raster_obj = tempsal,
   trials = 5,
-  lon_col = "longitude",
+  long_col = "longitude",
   lat_col = "latitude",
   seed = 1234
 )
-thinned_m <- thinned_m$original_data[thinned_m$retained[[1]],]%>%dplyr::select(
-  longitude,
-  latitude,
-  occurrence_status,
-  month,
-  decade,
-  year_month
-)
+thinned_m <- thinned_m[[1]]
+
 thinned_d <- thin_points(
   data = cleaned_data,
   method = "grid",
   group_col = "decade",
   raster_obj = tempsal,
   trials = 5,
-  lon_col = "longitude",
+  long_col = "longitude",
   lat_col = "latitude",
   seed = 1234
 )
-thinned_d <- thinned_d$original_data[thinned_d$retained[[1]],]%>%dplyr::select(
-  longitude,
-  latitude,
-  occurrence_status,
-  month,
-  decade,
-  year_month
-)
+thinned_d <- thinned_d[[1]]
 
 # OUTPUT ------------------------------------------------------------------
 
