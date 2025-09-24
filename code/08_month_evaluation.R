@@ -21,4 +21,4 @@ env_month <- readRDS(file.path(datadir,
 evaluate_model(occurrences = env_month,
                time = "month",
                file_path_general = file.path(datadir,
-                                             "modelling_monthly"))
+                                             "modelling_month"))
