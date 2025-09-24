@@ -22,14 +22,14 @@ predmem <- function(...) predict(..., type="prob", members= TRUE)%>%dplyr::selec
 
 # INPUT -------------------------------------------------------------------
 model_decade <- open_bundle(file.path(datadir, "modelling_decade","final","fitted_stack.RDS"))
-model_month <- open_bundle(file.path(datadir, "modelling_monthly","final", "fitted_stack.RDS"))
-thetao_avg_m <- terra::rast(file.path(datadir, "thetao_avg_m.nc"))
-so_avg_m <- terra::rast(file.path(datadir, "so_avg_m.nc"))
-npp_avg_m <- terra::rast(file.path(datadir, "npp_avg_m.nc"))
-bathy <- terra::rast(file.path(envdir, "bathy.nc"))
-thetao_avg_d <- terra::rast(file.path(datadir, "thetao_avg_d.nc"))
-so_avg_d <- terra::rast(file.path(datadir, "so_avg_d.nc"))
-npp_avg_d <- terra::rast(file.path(datadir, "npp_avg_d.nc"))
+model_month <- open_bundle(file.path(datadir, "modelling_month","final", "fitted_stack.RDS"))
+thetao_avg_m <- terra::rast(file.path(datadir, "thetao_avg_m.tif"))
+so_avg_m <- terra::rast(file.path(datadir, "so_avg_m.tif"))
+npp_avg_m <- terra::rast(file.path(datadir, "npp_avg_m.tif"))
+bathy <- terra::rast(file.path(envdir, "bathy.tif"))
+thetao_avg_d <- terra::rast(file.path(datadir, "thetao_avg_d.tif"))
+so_avg_d <- terra::rast(file.path(datadir, "so_avg_d.tif"))
+npp_avg_d <- terra::rast(file.path(datadir, "npp_avg_d.tif"))
 # WORKFLOW ----------------------------------------------------------------
 
 # MONTHLY PREDICTIONS -----------------------------------------------------
@@ -77,8 +77,7 @@ pres_decad_raster_norm <- terra::mask(terra::rast(pres_decad_prediction_norm), v
 # DECADAL PREDICTIONS FUTURE ----------------------------------------------
 #devtools::install_github("bio-oracle/biooracler")
 library(biooracler)
-if(!dir.exists(file.path(envdir,"bio_oracle"))){
-  dir.create(file.path(envdir, "bio_oracle"))
+if(!file.exists(file.path(envdir,"bio_oracle","thetao_ssp585_2020_2100_depthsurf.tif"))){
   interest_layers <- biooracler::list_layers()%>%
     dplyr::select(dataset_id)%>%
     filter(
@@ -100,7 +99,7 @@ if(!dir.exists(file.path(envdir,"bio_oracle"))){
 
   )
 }  else {
-  cat("Bio_oracle folder already exists")
+  cat("Bio_oracle ssp rasters already exists")
 }
 future_scenarios <- c("ssp119","ssp126","ssp245","ssp370","ssp460","ssp585")
 future_path <- file.path(envdir,"bio_oracle")
