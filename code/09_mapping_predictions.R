@@ -129,7 +129,7 @@ for(s in future_scenarios){
 # WRITING TO netcdf ---------------------------------------------------------
 
 
-terra::time(pres_decad_raster_norm) <- as.POSIXct(seq(ymd("1990-01-01"), by = "10 year",length.out=nlyr(pres_decad_raster_norm)))
+terra::time(pres_decad_raster_norm) <- as.POSIXct(seq(ymd("2000-01-01"), by = "10 year",length.out=nlyr(pres_decad_raster_norm)))
 terra::writeCDF(x = pres_decad_raster_norm,
                 filename = file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","decade_present",".nc")),
                 varname = "HS",
