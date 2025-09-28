@@ -111,7 +111,6 @@ if(!file.exists(file.path(envdir,"bathy.tif"))){
   bathy[bathy>0] <- NA
   bathy <- terra::resample(bathy, tempsal[[1]])
   names(bathy) <-"bathy"
-  varnames(bathy) <- "bathy"
   writeRaster(bathy,file.path(envdir,"bathy.tif"), overwrite=TRUE)
 } else{
   cat("Bathymetry layer already exists")
