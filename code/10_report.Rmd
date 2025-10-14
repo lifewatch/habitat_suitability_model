@@ -1,7 +1,7 @@
 ---
 title: "MARCO-BOLO Workflow report"
 author: "Jo-Hannes Nowé"
-output: 
+output:
 html_document:
   toc=TRUE
 ---
@@ -9,7 +9,8 @@ html_document:
 
 
 ```{r, echo=FALSE, include=FALSE}
-source("code/01_setup.R")
+# source("code/01_setup.R")
+source("../load_common_packages.R")
 ```
 
 
@@ -29,7 +30,7 @@ library("cmocean")
 algae <- cmocean("algae")
 pal <- algae(15)
 #Plot the raster
-mean_raster_df <- as.data.frame(monthly_predictions, 
+mean_raster_df <- as.data.frame(monthly_predictions,
                                   xy = TRUE) %>%
   tidyr::pivot_longer(cols = "Jan":"Dec",
                       names_to = "month",
@@ -38,7 +39,7 @@ mean_raster_df <- as.data.frame(monthly_predictions,
       # Order months Jan–Dec
       month = factor(
         month,
-        levels = month.abb,   
+        levels = month.abb,
         ordered = TRUE))
 p <- ggplot() +
   geom_raster(data = mean_raster_df, aes(x = x, y = y, fill = suitability))+
@@ -55,7 +56,7 @@ print(p)
 
 ```{r, fig.width = 16, fig.height = 12, echo = FALSE}
 #Plot the raster
-mean_raster_df <- as.data.frame(decade_present, 
+mean_raster_df <- as.data.frame(decade_present,
                                   xy = TRUE) %>%
   tidyr::pivot_longer(cols = c("2000","2010"),
                       names_to = "decade",

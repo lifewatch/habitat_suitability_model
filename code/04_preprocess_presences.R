@@ -7,30 +7,44 @@
 # Script Name: ~/habitat_suitability_model/code/04_preprocess_presences.R
 # Script Description: Perform data cleaning and thinning steps on the data.
 # SETUP ------------------------------------
-cat("\014")                 # Clears the console
-rm(list = ls())             # Remove all variables of the work space
-source("code/01_setup.R")
-
-##################################################################################
-##################################################################################
 
 
-# FUNCTIONS ---------------------------------------------------------------
-#clean_presence
-# INPUT -------------------------------------------------------------------
+source("load_common_packages.R")
+source("functions/clean_presence.R")
+
+
+# INPUT VARIABLES
+#===============================================================
+# datadir
+# envdir
+# study_area
+# temporal_extent
+
+# INPUT FILES
+#===============================================================
+# data/derived_data/presence_points.csv
+# data/raw_data/environmental_layers/tempsal.nc
+
 #presence_points is either the output of wrapper1 or a csv file given by the user with
 #columns: longitude, latitude, time, species_name
-if(is.null(user_data)){
+
+# OUTPUT FILES
+#===============================================================
+# data/derived_data/cleaned_data.RDS
+# data/derived_data/thinned_m.RDS
+# data/derived_data/thinned_d.RDS
+
 presence_points <- readr::read_csv(file.path(datadir, "presence_points.csv"))
-} else { presence_points <- user_data}
 tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
+
 
 # WORKFLOW ----------------------------------------------------------------
 
 # Clean the presence data
 cleaned_data <- clean_presence(
   data = presence_points,
-  study_area = study_area
+  study_area = study_area,
+  temporal_extent = temporal_extent
 )
 
 cleaned_data

@@ -6,10 +6,12 @@
 # Date: 2025-04-01
 # Script Name: ~/habitat_suitability_model/code/10_mapping_predictions.R
 # Script Description: Using the final decadal and monthly model, make predictions.
-# SETUP ------------------------------------
-cat("\014")                 # Clears the console
-rm(list = ls())             # Remove all variables of the work space
-source("code/01_setup.R")
+
+
+source("load_common_packages.R")
+
+
+
 
 ##################################################################################
 ##################################################################################
@@ -87,9 +89,9 @@ if(!file.exists(file.path(envdir,"bio_oracle","thetao_ssp585_2020_2100_depthsurf
     )%>%
     arrange(dataset_id)%>%
     mutate(variables = paste0(str_extract(dataset_id, "^[^_]+"),"_mean"))
-  
+
   constraints <- list("longitude" = c(bbox[[1]],bbox[[3]]),"latitude" = c(bbox[[2]],bbox[[4]]))
-  
+
   pwalk(interest_layers, \(dataset_id,variables) terra::writeRaster(terra::resample(terra::classify(biooracler::download_layers(dataset_id = dataset_id,
                                                          variables = variables,
                                                          constraints = constraints,

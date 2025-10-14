@@ -6,17 +6,31 @@
 # Date: 2025-03-28
 # Script Name: ~/habitat_suitability_model/code/07_PAExploration.R
 # Script Description: Make plots to assess the input data of the model
-# SETUP ------------------------------------
-cat("\014")                 # Clears the console
-rm(list = ls())             # Remove all variables of the work space
-source("code/01_setup.R")
-
-##################################################################################
-##################################################################################
 
 
-# FUNCTIONS ---------------------------------------------------------------
-#plot_spatial
+source("load_common_packages.R")
+source("functions/plot_spatial.R")
+
+
+# INPUT VARIABLES
+#===============================================================
+
+# datadir = data/derived_data
+# figdir = results/figures_tables
+# aphiaid
+# study_area
+
+# INPUT FILES
+#===============================================================
+# data/derived_data/cleaned_data.RDS
+
+# OUTPUT FILES
+#===============================================================
+
+# results/figures_tables/spatial_decade{aphiaid}.png
+# results/figures_tables/temporal_decade{aphiaid}.png
+# results/figures_tables/spatial_month{aphiaid}.png
+# results/figures_tables/temporal_month{aphiaid}.png
 
 
 # INPUT -------------------------------------------------------------------
@@ -25,7 +39,7 @@ cleaned_data <- readRDS(file.path(datadir, "cleaned_data.RDS"))
 # WORKFLOW ----------------------------------------------------------------
 spatial_decade <- plot_spatial(study_area, presence_data = cleaned_data, timescale= "decade")
 
-temporal_decade <- ggplot(data = cleaned_data, aes(x = decade)) + 
+temporal_decade <- ggplot(data = cleaned_data, aes(x = decade)) +
   stat_count()+
   theme(plot.title = element_text(size=14), axis.title= element_text(size = 12),
         text = element_text(size = 12))+
@@ -33,7 +47,7 @@ temporal_decade <- ggplot(data = cleaned_data, aes(x = decade)) +
 
 spatial_month <- plot_spatial(study_area, presence_data = cleaned_data, timescale= "month")
 
-temporal_month <- ggplot(data = cleaned_data, aes(x = as.factor(month))) + 
+temporal_month <- ggplot(data = cleaned_data, aes(x = as.factor(month))) +
   stat_count()+
   theme(plot.title = element_text(size=14), axis.title= element_text(size = 12),
         text = element_text(size = 12))+

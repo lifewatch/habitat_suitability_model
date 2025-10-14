@@ -40,6 +40,15 @@ folderstruc <- c(downloaddir,
                  scriptsdir)
 
 #Check for their existence, create if missing
+for (folder in folderstruc) {
+  if (!dir.exists(folder)) {
+    dir.create(folder, recursive = TRUE)
+    cat("Folder created:", folder, "\n")
+  } else {
+    cat("Folder already exists:", folder, "\n")
+  }
+}
+
 for(i in 1:length(folderstruc)){
   if(!dir.exists(folderstruc[i])){
     # If not, create the folder
@@ -110,7 +119,7 @@ possible_aphiaids <- c(137117, #Phocoena phocoena
                        137084, #Phoca vitulina
                        137094, #Delphinus delphis
                        137111) #Tursiops truncatus
-                       
+
 aphiaid <- possible_aphiaids[1] #Choice of species
 
 # User data presences instead of EurOBIS data

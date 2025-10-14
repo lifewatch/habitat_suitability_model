@@ -7,21 +7,36 @@
 # Script Name: ~/habitat_suitability_model/code/05_sample_background.R
 # Script Description: Sample the background based on the target-group background
 # methodolody.
-# SETUP ------------------------------------
-cat("\014")                 # Clears the console
-rm(list = ls())             # Remove all variables of the work space
-source("code/01_setup.R")
 
-##################################################################################
-##################################################################################
+source("load_common_packages.R")
+source("functions/connect_eurobis.R")
+source("functions/download_tg.R")
+source("functions/normalize_raster.R")
+source("functions/sample_background.R")
 
-# FUNCTIONS ---------------------------------------------------------------
-#download_tg
-#sample_background
-#connect_eurobis
 
-# INPUT -------------------------------------------------------------------
-datasets_selection <- read.csv(file.path(datadir, "datasets_selection.csv"))
+# INPUT VARIABLES
+#===============================================================
+# **envdir**
+# **datadir**
+# study_area
+
+
+# INPUT FILES
+#===============================================================
+# data/raw_data/environmental_layers/tempsal.nc
+# data/derived_data/thinned_m.RDS
+# data/derived_data/thinned_d.RDS
+# data/derived_data/thinned_tg_m.RDS
+# data/derived_data/thinned_tg_d.RDS
+
+# OUTPUT FILES
+#===============================================================
+# data/derived_data/pback_month.RDS
+# data/derived_data/pback_decade.RDS
+
+
+# datasets_selection <- read.csv(file.path(datadir, "datasets_selection.csv"))
 tempsal <- terra::rast(file.path(envdir, "tempsal.nc"))
 thinned_m <- readRDS(file.path(datadir, "thinned_m.RDS"))
 thinned_d <- readRDS(file.path(datadir, "thinned_d.RDS"))
@@ -36,7 +51,7 @@ spatial_extent_proj <- st_transform(study_area, crs=25832)
 #We need to reproject out object to a projected CRS, such as UTM, suitable for the analysis in meters.
 #https://epsg.io/25832
 win <- as.owin(spatial_extent_proj)
-tgb_decade <- sample_background(target_group_data = thinned_tg_d, 
+tgb_decade <- sample_background(target_group_data = thinned_tg_d,
                   grouping = "decade",
                   resample_layer = tempsal[[1]],
                   window = win,

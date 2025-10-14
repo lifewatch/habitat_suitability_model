@@ -1,0 +1,104 @@
+{
+    "name": "HabitatSuitabilityModel",
+    "label": "VLIZ Habitat Suitability Model",
+    "type": "DataCollection",
+    "description": "This workflow can be used to better understand overall monthly trends of Aphia species and assess the evolution of habitat suitability under different climate scenarios.",
+    "dockerImage": "vliz-habitat-suitability-model",
+    "version": "1.0.0",
+    "parameters": [
+        {
+            "type": "String",
+            "name": "aphia_id",
+            "label": "AphiaID",
+            "description": "Species ID in the World Register of Marine Species' Aphia Database",
+            "defaultValue": "137117",
+            "optionList": [
+                {
+                    "value": "137117",
+                    "label": "Phocoena phocoena"
+                },
+                {
+                    "value": "137084",
+                    "label": "Phoca vitulina"
+                },
+                {
+                    "value": "137094",
+                    "label": "Delphinus delphis"
+                },
+                {
+                    "value": "137111",
+                    "label": "Tursiops truncatus"
+                }
+            ]
+        },
+        {
+            "type": "Timestamp",
+            "name": "start_date",
+            "label": "Start date",
+            "defaultValue": "2000-01-01",
+            "description": "Start date of the period of interest"
+        },
+        {
+            "type": "Timestamp",
+            "name": "end_date",
+            "label": "End date",
+            "defaultValue": "2019-12-31",
+            "description": "End date of the period of interest"
+        },
+        {
+            "type": "String",
+            "name": "copernicus_marine_username",
+            "label": "CopernicusMarine username",
+            "defaultValue": "",
+            "description": "Username for Copernicus Marine Environment Monitoring Service",
+            "secret": true
+        },
+        {
+            "type": "String",
+            "name": "copernicus_marine_password",
+            "label": "CopernicusMarine password",
+            "defaultValue": "",
+            "description": "Password for Copernicus Marine Environment Monitoring Service",
+            "secret": true
+        }
+    ],
+    "inputs": [],
+    "outputs": [
+        {
+            "type": "Zip",
+            "name": "hsm_results.zip",
+            "path": "/mnt/outputs/hsm_results.zip",
+            "label": "Results",
+            "description": "Results from the execution of the model"
+        }
+        {
+            "type": "Zip",
+            "name": "hsm_data.zip",
+            "path": "/mnt/outputs/hsm_data.zip",
+            "label": "Data",
+            "description": "Data generated during the execution"
+        }
+    ],
+    "resources": {
+        "cores": 24,
+        "memory": 65536,
+        "gpuNeeded": false,
+        "gpuMemory": 0,
+        "estimatedTime": 259200
+    },
+    "tags": [
+        "Habitat Suitability Model",
+        "MARCO-BOLO"
+    ],
+    "license": "GPL-2.0",
+    "dependencies": [],
+    "publicationDate": "Thu, October 14 2025 15:00:00 GMT",
+    "author": "Nowé Jo-Hannes",
+    "bugs": {
+        "email": "josel.fernandez@lifewatch.eu",
+        "url": "https://helpdesk.lifewatch.eu/"
+    },
+    "citation": null,
+    "testPath": "emptyUnitTest.sh",
+    "metaDataCatalogueUrl": "https://metadatacatalogue.lifewatch.eu/srv/eng/catalog.search#/metadata/<>"
+}

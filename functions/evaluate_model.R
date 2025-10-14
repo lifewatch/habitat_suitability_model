@@ -1,7 +1,7 @@
 evaluate_model <- function(occurrences,
                            time = "month",
                            file_path_general){
-  
+
   ifelse(!dir.exists(file_path_general), dir.create(file_path_general), FALSE)
   # Creating folds and preparing data
   n_folds <- 5
@@ -25,7 +25,7 @@ evaluate_model <- function(occurrences,
                        strata = "strat")
   occurrences <- occurrences%>%
     dplyr::select(-strat)
-  
+
   indices <- list()
   ## For each of the folds train the model and assess the performance
   for(i in 1:nrow(cv_folds)){
@@ -33,7 +33,7 @@ evaluate_model <- function(occurrences,
                     assessment = as.integer(setdiff(1:nrow(occurrences),cv_folds$splits[[i]]$in_id))) #test data
     train_set <- occurrences[indices$analysis,]
     test_set <- occurrences[indices$assessment,]
-    
+
     ### Run train_model
     train_model(occurrences = train_set,
                 time = "month",
@@ -43,13 +43,13 @@ evaluate_model <- function(occurrences,
     stack_model(file_path = file.path(file_path_general,
                                       paste0("fold",i)))
     ### Run performance_metrics on the test set
-    
+
     performance <- performance_metrics(model_fit = open_bundle(file.path(file_path_general,
                                                                          paste0("fold",i),
-                                                                         "fitted_stack.RDS")), 
+                                                                         "fitted_stack.RDS")),
                                        predict_data = test_set,
                                        response_variable = "occurrence_status")
-    saveRDS(performance, 
+    saveRDS(performance,
             file.path(file_path_general,
                       paste0("fold",i),
                       "performance.RDS"))

@@ -23,14 +23,14 @@
 #' )
 #'
 #' @export
-clean_presence <- function(data, study_area) {
+clean_presence <- function(data, study_area, temporal_extent) {
   # Step 1: Remove duplicates
   data <- cc_dupl(
-    data, 
-    lon = "longitude", 
-    lat = "latitude", 
-    value = "clean", 
-    species = "scientific_name", 
+    data,
+    lon = "longitude",
+    lat = "latitude",
+    value = "clean",
+    species = "scientific_name",
     additions = "time"
   )
   # Step 2: Select columns of interest and apply initial filters
@@ -44,9 +44,9 @@ clean_presence <- function(data, study_area) {
       occurrence_status = 1
     ) %>%
     sf::st_drop_geometry()
-  
-  
-  
+
+
+
   # Step 3: Add month and decadal information
   data <- data %>%
     mutate(
@@ -55,10 +55,10 @@ clean_presence <- function(data, study_area) {
     ) %>%
     mutate(year_month = paste(year(time),month,sep="-")%>%ym()%>%format("%Y-%m"))%>%
     mutate(decade = factor(decade, levels = unique(decade))) %>%
-    mutate(year_month = factor(year_month, levels = seq(date_start, date_end, by = "month")%>%format("%Y-%m"), ordered = TRUE))%>%
+    mutate(year_month = factor(year_month, levels = seq(lubridate::int_start(temporal_extent), lubridate::int_end(temporal_extent), by = "month")%>%format("%Y-%m"), ordered = TRUE))%>%
     dplyr::select(!c(scientific_name, time))
-  
+
   return(data)
-  
+
 }
 
