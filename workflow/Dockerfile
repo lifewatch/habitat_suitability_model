@@ -52,7 +52,7 @@ RUN apt update && apt install -y \
         curl \
         ca-certificates \
         software-properties-common \
-        pandoc && \
+        pandoc \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
