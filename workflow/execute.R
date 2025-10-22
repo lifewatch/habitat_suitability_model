@@ -132,7 +132,7 @@ study_area <- ospar$area
 bbox <- ospar$bbox
 rm(ospar)
 
-variables_to_keep <- c("clean_variables", "variables_to_keep", "aphiaid", "temporal_extent", "copernicus_marine_username", "copernicus_marine_password", "study_area", "bbox")
+variables_to_keep <- c("scripts", "script", "clean_variables", "variables_to_keep", "aphiaid", "temporal_extent", "copernicus_marine_username", "copernicus_marine_password", "study_area", "bbox")
 
 clean_variables <- function() {
   rm(list = setdiff(ls(envir = .GlobalEnv), variables_to_keep), envir = .GlobalEnv)
