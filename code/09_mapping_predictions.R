@@ -144,7 +144,7 @@ for(i in 1:length(future_pred)){
   names(raster) <- year(decade_time)
   terra::time(raster) <- decade_time
   terra::writeCDF(x = raster,
-                  filename = file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","decade_future",name,".nc")),
+                  filename = file.path(mapsdir,paste0("HSM_",aphiaid,"_ensemble_","decade_future_",name,".nc")),
                   varname = "HS",
                   longname = "Future decadal habitat suitability under predicted climate scenario",
                   overwrite = TRUE)
