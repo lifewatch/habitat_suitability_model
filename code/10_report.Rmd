@@ -9,7 +9,7 @@ html_document:
 
 
 ```{r, echo=FALSE, include=FALSE}
-# source("code/01_setup.R")
+knitr::opts_knit$set(root.dir = "..")
 source("../load_common_packages.R")
 ```
 

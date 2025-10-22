@@ -163,18 +163,59 @@ for (script in scripts) {
     source(script)
 }
 clean_variables()
-rmarkdown::render("code/10_report.Rmd")
+rmarkdown::render(
+    input = "code/10_report.Rmd",
+    output_dir = normalizePath("results"),
+    output_file = "report.html"
+)
 
-
+#===============================================================================
 # build the output
+#===============================================================================
+
+collect_fold_performances <- function(path) {
+    do.call(rbind, lapply(lapply(
+        file.path(
+            path,
+            grep("^fold[0-9]+$", basename(list.dirs(path)), value = TRUE),
+            "performance.RDS"
+        ), readRDS
+    ), as.data.frame))
+}
+
+output_model <- function(out_path, in_path) {
+    file.rename(file.path(in_path, "final"), out_path)
+    saveRDS(collect_fold_performances(in_path),
+            file.path(out_path, "performance.RDS"))
+}
 
 output_result_folder <- function(zip_path, source_path) {
-    zip(zipfile = zip_path, files = list.files(source_path, full.names = TRUE))
-    if (!dir.exists("/mnt/outputs")) {
-        dir.create("/mnt/outputs", recursive = TRUE)
+    if (!dir.exists(source_path)) {
+        stop("The source_path does not exist: ", source_path)
     }
-    target_path <- file.path("/mnt/outputs", basename(name(zip_path, target_path)
-    file.rename(zip_path, target_path)
+    files_to_zip <- list.files(source_path, full.names = TRUE)
+    if (length(files_to_zip) == 0) {
+        warning("No files found in source_path: ", source_path)
+    }
+    zip_success <- zip::zipr(zipfile = zip_path, files = files_to_zip)
+    if (!file.exists(zip_path)) {
+        stop("Failed to create zip file at: ", zip_path)
+    }
+    output_dir <- "/mnt/outputs"
+    if (!dir.exists(output_dir)) {
+        dir.create(output_dir, recursive = TRUE)
+    }
+    target_path <- file.path(output_dir, basename(zip_path))
+    move_success <- file.rename(zip_path, target_path)
+    if (!move_success) {
+        stop("Failed to move zip file to: ", target_path)
+    }
+    message("Result archive created at: ", target_path)
+    return(invisible(target_path))
 }
-output_result_folder("hsm_data.zip", "data");
-output_result_folder("hsm_results.zip", "results");
+
+output_model("results/models/month", "data/derived_data/modelling_month")
+output_model("results/models/decade", "data/derived_data/modelling_decade")
+
+# output_result_folder("hsm_data.zip", "data");
+output_result_folder("hsm_results.zip", "results")
