@@ -160,7 +160,7 @@ scripts <- c(
 )
 for (script in scripts) {
     clean_variables()
-    print(paste("Running step ", scrip))
+    print(paste("Running step ", script))
     source(script)
 }
 clean_variables()
