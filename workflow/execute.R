@@ -190,6 +190,25 @@ output_model <- function(out_path, in_path) {
             file.path(out_path, "performance.RDS"))
 }
 
+copy_with_retries <- function(from, to, overwrite = FALSE, retries = 5, delay = 2) {
+  for (i in seq_len(retries)) {
+    ok <- tryCatch(
+      file.copy(from, to, overwrite = overwrite),
+      error = function(e) FALSE
+    )
+    if (ok) {
+      message("✅ Copy succeeded on attempt ", i)
+      return(TRUE)
+    } else {
+      message("⚠️  Copy attempt ", i, " failed; retrying in ", delay, "s...")
+      Sys.sleep(delay)
+    }
+  }
+  message("❌ Copy failed after ", retries, " attempts.")
+  return(FALSE)
+}
+
+
 output_result_folder <- function(zip_path, source_path) {
     if (!dir.exists(source_path)) {
         stop("The source_path does not exist: ", source_path)
@@ -207,7 +226,8 @@ output_result_folder <- function(zip_path, source_path) {
         dir.create(output_dir, recursive = TRUE)
     }
     target_path <- file.path(output_dir, basename(zip_path))
-    move_success <- file.rename(zip_path, target_path)
+
+    move_success <- copy_with_retries(zip_path, target_path, overwrite = TRUE)
     if (!move_success) {
         stop("Failed to move zip file to: ", target_path)
     }
@@ -218,5 +238,4 @@ output_result_folder <- function(zip_path, source_path) {
 output_model("results/models/month", "data/derived_data/modelling_month")
 output_model("results/models/decade", "data/derived_data/modelling_decade")
 
-# output_result_folder("hsm_data.zip", "data");
-output_result_folder("hsm_results.zip", "results")
+output_result_folder("results/hsm_results.zip", "results")
