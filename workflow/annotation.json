@@ -4,7 +4,7 @@
     "type": "DataCollection",
     "description": "This workflow can be used to better understand overall monthly trends of Aphia species and assess the evolution of habitat suitability under different climate scenarios.",
     "dockerImage": "vliz-habitat-suitability-model",
-    "version": "1.0.3",
+    "version": "3.0.0",
     "parameters": [
         {
             "type": "String",
