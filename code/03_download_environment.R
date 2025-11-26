@@ -58,7 +58,7 @@ cm$subset(
   overwrite = TRUE)
 
 cm$subset(
-  dataset_id="cmems_mod_glo_bgc_my_0.083deg-lmtl_PT1D-i",
+  dataset_id="cmems_mod_glo_bgc_my_0.083deg-lmtl_P1D-i",
   variables=list("npp"),
   minimum_longitude=xmin,
   maximum_longitude=xmax,
