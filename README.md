@@ -8,3 +8,6 @@ The scripts of the different workflow steps can be found in the code/ folder. Th
 
 ## License
 Contact johannes.nowe@vliz.be for more information.
+
+## DOI
+[![DOI](https://zenodo.org/badge/820339224.svg)](https://doi.org/10.5281/zenodo.19109948)
