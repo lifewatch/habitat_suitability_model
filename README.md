@@ -7,7 +7,8 @@ Task5.1.2 of the MARCO-BOLO project aims to understand the current and predict t
 The scripts of the different workflow steps can be found in the code/ folder. The 01_setup.R script is used to define several user choices e.g species. After running each of the chunks in TotalWorkflow.Rmd, run 12_report.Rmd.
 
 ## License
-Contact johannes.nowe@vliz.be for more information.
+Copyright (c) 2026 VLIZ
+Developed by Jo-Hannes Nowé as part of employment.
 
 ## DOI
 [![DOI](https://zenodo.org/badge/820339224.svg)](https://doi.org/10.5281/zenodo.19109948)
